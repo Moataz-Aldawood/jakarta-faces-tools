@@ -68,8 +68,34 @@
           "default": "3px",
           "order": 5,
           "description": "Border radius for EL Expressions."
+        },
+        "jakartaFacesTools.elAutocomplete.enable": {
+          "type": "boolean",
+          "default": false,
+          "order": 6,
+          "description": "(Beta Feature) Enable intelligent auto-complete for Java Managed Beans and properties inside #{...} expressions. Disabled by default."
+        },
+        "jakartaFacesTools.elAutocomplete.showStatusBarButton": {
+          "type": "boolean",
+          "default": true,
+          "order": 7,
+          "description": "(Beta Feature) Show the 'Clear EL Cache' button in the VS Code Status Bar when EL Auto-Complete is enabled."
         }
       }
+    },
+    "commands": [
+      {
+        "command": "jakartaFacesTools.clearElCache",
+        "title": "Clear EL Auto-Complete Cache (Beta Feature)",
+        "category": "Jakarta Faces Tools"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "jakartaFacesTools.clearElCache"
+        }
+      ]
     }
   },
   "main": "./out/extension.js",
