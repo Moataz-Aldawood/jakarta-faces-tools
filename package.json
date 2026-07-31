@@ -38,21 +38,21 @@
   "contributes": {
     "configuration": [
       {
-        "title": "Jakarta Faces Tools: Beta Features",
+        "title": "Jakarta Faces Tools: Expression Language (EL) Autocomplete [Beta Feature]",
         "properties": {
-          "jakartaFacesTools.betaFeature.enableElAutocomplete": {
+          "jakartaFacesTools.enableExpressionLanguageAutocomplete": {
             "type": "boolean",
             "default": false,
             "order": 1,
-            "description": "Enable intelligent auto-complete for Java Managed Beans and properties inside #{...} expressions. Disabled by default for early releases."
+            "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside #{...} expressions. Disabled by default for early releases."
           },
-          "jakartaFacesTools.betaFeature.showRebuildCacheButton": {
+          "jakartaFacesTools.showRebuildCacheButton": {
             "type": "boolean",
             "default": true,
             "order": 2,
-            "description": "Show the 'Rebuild JSF Cache' button in the VS Code Status Bar when EL Auto-Complete is enabled."
+            "description": "[Beta Feature] Show the 'Rebuild JSF Cache' button in the VS Code Status Bar when EL Auto-Complete is enabled."
           },
-          "jakartaFacesTools.betaFeature.rebuildCacheButtonPosition": {
+          "jakartaFacesTools.rebuildCacheButtonPosition": {
             "type": "string",
             "enum": [
               "Left",
@@ -60,7 +60,7 @@
             ],
             "default": "Left",
             "order": 3,
-            "description": "Position of the 'Rebuild JSF Cache' button in the VS Code Status Bar."
+            "description": "[Beta Feature] Position of the 'Rebuild JSF Cache' button in the VS Code Status Bar."
           }
         }
       },

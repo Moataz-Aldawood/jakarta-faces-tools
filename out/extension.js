@@ -22,8 +22,8 @@ function activate(context) {
     // Status Bar Item UI for rebuilding JSF Cache (Beta Feature)
     let elStatusBarItem;
     const updateStatusBarVisibility = () => {
-        const config = vscode.workspace.getConfiguration('jakartaFacesTools.betaFeature');
-        const enabled = config.get('enableElAutocomplete', false);
+        const config = vscode.workspace.getConfiguration('jakartaFacesTools');
+        const enabled = config.get('enableExpressionLanguageAutocomplete', false);
         const showButton = config.get('showRebuildCacheButton', true);
         const positionStr = config.get('rebuildCacheButtonPosition', 'Left');
         const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
@@ -34,7 +34,7 @@ function activate(context) {
         }
         if (!elStatusBarItem) {
             elStatusBarItem = vscode.window.createStatusBarItem(alignment, 100);
-            elStatusBarItem.text = '$(flame) Rebuild JSF Cache';
+            elStatusBarItem.text = '$(coffee) Rebuild JSF Cache';
             elStatusBarItem.tooltip = 'Jakarta Faces Tools (Beta Feature): Click to rebuild the in-memory Jakarta Faces / JSF Managed Bean cache';
             elStatusBarItem.command = 'jakartaFacesTools.rebuildJsfCache';
             context.subscriptions.push(elStatusBarItem);
@@ -53,9 +53,11 @@ function activate(context) {
     context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), elHighlighter, rebuildCacheCommand);
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('jakartaFacesTools.betaFeature')) {
+        if (e.affectsConfiguration('jakartaFacesTools.enableExpressionLanguageAutocomplete') ||
+            e.affectsConfiguration('jakartaFacesTools.showRebuildCacheButton') ||
+            e.affectsConfiguration('jakartaFacesTools.rebuildCacheButtonPosition')) {
             updateStatusBarVisibility();
-            if (!vscode.workspace.getConfiguration('jakartaFacesTools.betaFeature').get('enableElAutocomplete', false)) {
+            if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableExpressionLanguageAutocomplete', false)) {
                 (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
             }
         }
