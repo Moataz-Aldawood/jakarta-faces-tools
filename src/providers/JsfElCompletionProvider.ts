@@ -20,12 +20,12 @@ const beanMap: Map<string, ElBeanMetadata> = new Map();
 const classUriCache: Map<string, vscode.Uri> = new Map();
 let isCacheInitialized = false;
 
-export function clearElCache(showToast: boolean = true): void {
+export function rebuildJsfCache(showToast: boolean = true): void {
     beanMap.clear();
     classUriCache.clear();
     isCacheInitialized = false;
     if (showToast) {
-        vscode.window.showInformationMessage('Jakarta Faces Tools: EL Auto-Complete cache cleared!');
+        vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     }
 }
 
@@ -39,7 +39,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
     ): Promise<vscode.CompletionItem[] | undefined> {
 
         // Step 1: Check Beta Feature Configuration Toggle
-        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools.elAutocomplete').get<boolean>('enable', false);
+        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools.betaFeature').get<boolean>('enableElAutocomplete', false);
         if (!elAutocompleteEnabled) {
             return undefined;
         }

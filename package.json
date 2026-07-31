@@ -36,64 +36,81 @@
     "onLanguage:xml"
   ],
   "contributes": {
-    "configuration": {
-      "title": "Jakarta Faces Tools",
-      "properties": {
-        "jakartaFacesTools.elHighlight.enable": {
-          "type": "boolean",
-          "default": true,
-          "order": 1,
-          "description": "Enable highlighting for EL Expressions (#{...})."
-        },
-        "jakartaFacesTools.elHighlight.backgroundColor": {
-          "type": "string",
-          "default": "rgba(100, 150, 255, 0.15)",
-          "order": 2,
-          "description": "Background color for EL Expressions. Supports CSS colors (e.g. rgba, hex)."
-        },
-        "jakartaFacesTools.elHighlight.color": {
-          "type": "string",
-          "default": "",
-          "order": 3,
-          "description": "Text color for EL Expressions (leave empty to use theme default)."
-        },
-        "jakartaFacesTools.elHighlight.border": {
-          "type": "string",
-          "default": "1px solid rgba(100, 150, 255, 0.3)",
-          "order": 4,
-          "description": "Border for EL Expressions."
-        },
-        "jakartaFacesTools.elHighlight.borderRadius": {
-          "type": "string",
-          "default": "3px",
-          "order": 5,
-          "description": "Border radius for EL Expressions."
-        },
-        "jakartaFacesTools.elAutocomplete.enable": {
-          "type": "boolean",
-          "default": false,
-          "order": 6,
-          "description": "(Beta Feature) Enable intelligent auto-complete for Java Managed Beans and properties inside #{...} expressions. Disabled by default."
-        },
-        "jakartaFacesTools.elAutocomplete.showStatusBarButton": {
-          "type": "boolean",
-          "default": true,
-          "order": 7,
-          "description": "(Beta Feature) Show the 'Clear EL Cache' button in the VS Code Status Bar when EL Auto-Complete is enabled."
+    "configuration": [
+      {
+        "title": "Jakarta Faces Tools: Beta Features",
+        "properties": {
+          "jakartaFacesTools.betaFeature.enableElAutocomplete": {
+            "type": "boolean",
+            "default": false,
+            "order": 1,
+            "description": "Enable intelligent auto-complete for Java Managed Beans and properties inside #{...} expressions. Disabled by default for early releases."
+          },
+          "jakartaFacesTools.betaFeature.showRebuildCacheButton": {
+            "type": "boolean",
+            "default": true,
+            "order": 2,
+            "description": "Show the 'Rebuild JSF Cache' button in the VS Code Status Bar when EL Auto-Complete is enabled."
+          },
+          "jakartaFacesTools.betaFeature.rebuildCacheButtonPosition": {
+            "type": "string",
+            "enum": [
+              "Left",
+              "Right"
+            ],
+            "default": "Left",
+            "order": 3,
+            "description": "Position of the 'Rebuild JSF Cache' button in the VS Code Status Bar."
+          }
+        }
+      },
+      {
+        "title": "Jakarta Faces Tools: Expression Highlighting",
+        "properties": {
+          "jakartaFacesTools.elHighlight.enable": {
+            "type": "boolean",
+            "default": true,
+            "order": 10,
+            "description": "Enable highlighting for EL Expressions (#{...})."
+          },
+          "jakartaFacesTools.elHighlight.backgroundColor": {
+            "type": "string",
+            "default": "rgba(100, 150, 255, 0.15)",
+            "order": 11,
+            "description": "Background color for EL Expressions. Supports CSS colors (e.g. rgba, hex)."
+          },
+          "jakartaFacesTools.elHighlight.color": {
+            "type": "string",
+            "default": "",
+            "order": 12,
+            "description": "Text color for EL Expressions (leave empty to use theme default)."
+          },
+          "jakartaFacesTools.elHighlight.border": {
+            "type": "string",
+            "default": "1px solid rgba(100, 150, 255, 0.3)",
+            "order": 13,
+            "description": "Border for EL Expressions."
+          },
+          "jakartaFacesTools.elHighlight.borderRadius": {
+            "type": "string",
+            "default": "3px",
+            "order": 14,
+            "description": "Border radius for EL Expressions."
+          }
         }
       }
-    },
+    ],
     "commands": [
       {
-        "command": "jakartaFacesTools.clearElCache",
-        "title": "Clear EL Auto-Complete Cache (Beta Feature)",
+        "command": "jakartaFacesTools.rebuildJsfCache",
+        "title": "Rebuild JSF Cache (Beta Feature)",
         "category": "Jakarta Faces Tools"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "jakartaFacesTools.clearElCache"
+          "command": "jakartaFacesTools.rebuildJsfCache"
         }
       ]
     }

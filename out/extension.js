@@ -19,16 +19,26 @@ function activate(context) {
     const documentSelector = [
         { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
     ];
-    // Status Bar Item UI for clearing EL Cache (Beta Feature)
-    const elStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    elStatusBarItem.text = '$(trash) Clear EL Cache';
-    elStatusBarItem.tooltip = 'Jakarta Faces Tools (Beta Feature): Click to clear EL Auto-Complete in-memory cache';
-    elStatusBarItem.command = 'jakartaFacesTools.clearElCache';
-    context.subscriptions.push(elStatusBarItem);
+    // Status Bar Item UI for rebuilding JSF Cache (Beta Feature)
+    let elStatusBarItem;
     const updateStatusBarVisibility = () => {
-        const config = vscode.workspace.getConfiguration('jakartaFacesTools.elAutocomplete');
-        const enabled = config.get('enable', false);
-        const showButton = config.get('showStatusBarButton', true);
+        const config = vscode.workspace.getConfiguration('jakartaFacesTools.betaFeature');
+        const enabled = config.get('enableElAutocomplete', false);
+        const showButton = config.get('showRebuildCacheButton', true);
+        const positionStr = config.get('rebuildCacheButtonPosition', 'Left');
+        const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
+        // Dispose existing item if alignment changed
+        if (elStatusBarItem && elStatusBarItem.alignment !== alignment) {
+            elStatusBarItem.dispose();
+            elStatusBarItem = undefined;
+        }
+        if (!elStatusBarItem) {
+            elStatusBarItem = vscode.window.createStatusBarItem(alignment, 100);
+            elStatusBarItem.text = '$(flame) Rebuild JSF Cache';
+            elStatusBarItem.tooltip = 'Jakarta Faces Tools (Beta Feature): Click to rebuild the in-memory Jakarta Faces / JSF Managed Bean cache';
+            elStatusBarItem.command = 'jakartaFacesTools.rebuildJsfCache';
+            context.subscriptions.push(elStatusBarItem);
+        }
         if (enabled && showButton) {
             elStatusBarItem.show();
         }
@@ -37,23 +47,23 @@ function activate(context) {
         }
     };
     updateStatusBarVisibility();
-    const clearCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.clearElCache', () => {
-        (0, JsfElCompletionProvider_1.clearElCache)(true);
+    const rebuildCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.rebuildJsfCache', () => {
+        (0, JsfElCompletionProvider_1.rebuildJsfCache)(true);
     });
-    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), elHighlighter, clearCacheCommand);
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), elHighlighter, rebuildCacheCommand);
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('jakartaFacesTools.elAutocomplete')) {
+        if (e.affectsConfiguration('jakartaFacesTools.betaFeature')) {
             updateStatusBarVisibility();
-            if (!vscode.workspace.getConfiguration('jakartaFacesTools.elAutocomplete').get('enable', false)) {
-                (0, JsfElCompletionProvider_1.clearElCache)(false);
+            if (!vscode.workspace.getConfiguration('jakartaFacesTools.betaFeature').get('enableElAutocomplete', false)) {
+                (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
             }
         }
     }));
     // Auto-invalidate EL cache when Java files are saved
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
         if (doc.uri.fsPath.endsWith('.java')) {
-            (0, JsfElCompletionProvider_1.clearElCache)(false);
+            (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
         }
     }));
     const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
@@ -61,6 +71,6 @@ function activate(context) {
     (0, JsfDiagnostics_1.subscribeToDocumentChanges)(context, jsfDiagnostics);
 }
 function deactivate() {
-    (0, JsfElCompletionProvider_1.clearElCache)(false);
+    (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
 }
 //# sourceMappingURL=extension.js.map

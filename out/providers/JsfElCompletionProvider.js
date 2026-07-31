@@ -1,25 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsfElCompletionProvider = void 0;
-exports.clearElCache = clearElCache;
+exports.rebuildJsfCache = rebuildJsfCache;
 const vscode = require("vscode");
 const fs = require("fs");
 // In-memory cache for Managed Beans
 const beanMap = new Map();
 const classUriCache = new Map();
 let isCacheInitialized = false;
-function clearElCache(showToast = true) {
+function rebuildJsfCache(showToast = true) {
     beanMap.clear();
     classUriCache.clear();
     isCacheInitialized = false;
     if (showToast) {
-        vscode.window.showInformationMessage('Jakarta Faces Tools: EL Auto-Complete cache cleared!');
+        vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     }
 }
 class JsfElCompletionProvider {
     async provideCompletionItems(document, position, token, context) {
         // Step 1: Check Beta Feature Configuration Toggle
-        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools.elAutocomplete').get('enable', false);
+        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools.betaFeature').get('enableElAutocomplete', false);
         if (!elAutocompleteEnabled) {
             return undefined;
         }
