@@ -2,6 +2,16 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+## [2.1.0] - 2026-07-31
+### Added
+- **Experimental EL Autocomplete [Beta Feature]**: Added intelligent auto-complete for Java Managed Beans (`@Named`, `@ManagedBean`, `@Controller`, `@Component`) and properties inside Expression Language (EL) `#{...}` expressions. Disabled by default for early releases.
+- **Rebuild JSF Cache Action**: Added a convenient Status Bar item (`$(coffee) Rebuild JSF Cache`) and command (`jakartaFacesTools.rebuildJsfCache`) to force a fresh scan of project Managed Beans.
+- **Updated Logo**: New Java coffee cup logo!
+
+### Changed
+- **Settings Reorganization**: Split settings into `EL Autocomplete [Beta Feature]` and `EL Highlighting` sections with standardized titles and descriptions.
+- **Backward Compatibility**: Fully preserved legacy highlighting settings (`jakartaFacesTools.elHighlight.*`) so existing user customizations continue to work seamlessly.
+
 ## [2.0.2] - 2026-07-15
 ### Fixed
 - **Multi-line Tag Parsing Regression**: Fixed a critical issue where features like IntelliSense, Jump-to-Definition, and Hover Documentation failed to trigger for JSF tags (especially custom composite components) that spanned across multiple lines. The extension now uses an advanced robust tag parser that accurately extracts enclosing tags regardless of formatting.
