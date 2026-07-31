@@ -10,23 +10,41 @@ export class JsfELHighlighter {
         this.triggerUpdateDecorations();
     }
 
+    private getConfig<T>(key: string, defaultValue: T): T {
+        const newConfig = vscode.workspace.getConfiguration('jakartaFacesTools.ELHighlighting');
+        const oldConfig = vscode.workspace.getConfiguration('jakartaFacesTools.elHighlight');
+
+        // Check if user explicitly set the new key
+        const newInspect = newConfig.inspect<T>(key);
+        if (newInspect && (newInspect.globalValue !== undefined || newInspect.workspaceValue !== undefined || newInspect.workspaceFolderValue !== undefined)) {
+            return newConfig.get<T>(key, defaultValue);
+        }
+
+        // Check if user explicitly set the old key (backward compatibility for existing users)
+        const oldInspect = oldConfig.inspect<T>(key);
+        if (oldInspect && (oldInspect.globalValue !== undefined || oldInspect.workspaceValue !== undefined || oldInspect.workspaceFolderValue !== undefined)) {
+            return oldConfig.get<T>(key, defaultValue);
+        }
+
+        return newConfig.get<T>(key, defaultValue);
+    }
+
     private updateDecorationType() {
         if (this.decorationType) {
             this.decorationType.dispose();
         }
 
-        const config = vscode.workspace.getConfiguration('jakartaFacesTools.ELHighlighting');
-        const enable = config.get<boolean>('enable', true);
+        const enable = this.getConfig<boolean>('enable', true);
 
         if (!enable) {
             this.decorationType = undefined;
             return;
         }
 
-        const backgroundColor = config.get<string>('backgroundColor', 'rgba(100, 150, 255, 0.15)');
-        const color = config.get<string>('color', '');
-        const border = config.get<string>('border', '1px solid rgba(100, 150, 255, 0.3)');
-        const borderRadius = config.get<string>('borderRadius', '3px');
+        const backgroundColor = this.getConfig<string>('backgroundColor', 'rgba(100, 150, 255, 0.15)');
+        const color = this.getConfig<string>('color', '');
+        const border = this.getConfig<string>('border', '1px solid rgba(100, 150, 255, 0.3)');
+        const borderRadius = this.getConfig<string>('borderRadius', '3px');
 
         const decorationOptions: vscode.DecorationRenderOptions = {
             backgroundColor: backgroundColor || undefined,
@@ -56,10 +74,10 @@ export class JsfELHighlighter {
 
         // Handle configuration changes
         this.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event => {
-            if (event.affectsConfiguration('jakartaFacesTools.ELHighlighting')) {
+            if (event.affectsConfiguration('jakartaFacesTools.ELHighlighting') || event.affectsConfiguration('jakartaFacesTools.elHighlight')) {
                 this.updateDecorationType();
                 // Clear decorations from active editor if disabled
-                if (!vscode.workspace.getConfiguration('jakartaFacesTools.ELHighlighting').get<boolean>('enable', true)) {
+                if (!this.getConfig<boolean>('enable', true)) {
                     if (vscode.window.activeTextEditor && this.decorationType) {
                         vscode.window.activeTextEditor.setDecorations(this.decorationType, []);
                     }
