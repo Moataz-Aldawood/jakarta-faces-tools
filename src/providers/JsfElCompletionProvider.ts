@@ -39,7 +39,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
     ): Promise<vscode.CompletionItem[] | undefined> {
 
         // Step 1: Check Beta Feature Configuration Toggle
-        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableExpressionLanguageAutocomplete', false);
+        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableELAutocomplete', false);
         if (!elAutocompleteEnabled) {
             return undefined;
         }

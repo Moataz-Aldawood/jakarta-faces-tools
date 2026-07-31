@@ -19,7 +19,7 @@ function rebuildJsfCache(showToast = true) {
 class JsfElCompletionProvider {
     async provideCompletionItems(document, position, token, context) {
         // Step 1: Check Beta Feature Configuration Toggle
-        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools').get('enableExpressionLanguageAutocomplete', false);
+        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools').get('enableELAutocomplete', false);
         if (!elAutocompleteEnabled) {
             return undefined;
         }

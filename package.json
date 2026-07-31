@@ -38,19 +38,19 @@
   "contributes": {
     "configuration": [
       {
-        "title": "Jakarta Faces Tools: Expression Language (EL) Autocomplete [Beta Feature]",
+        "title": "Jakarta Faces Tools: EL Autocomplete [Beta Feature]",
         "properties": {
-          "jakartaFacesTools.enableExpressionLanguageAutocomplete": {
+          "jakartaFacesTools.enableELAutocomplete": {
             "type": "boolean",
             "default": false,
             "order": 1,
-            "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside #{...} expressions. Disabled by default for early releases."
+            "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions. Disabled by default for early releases."
           },
           "jakartaFacesTools.showRebuildCacheButton": {
             "type": "boolean",
             "default": true,
             "order": 2,
-            "description": "[Beta Feature] Show the 'Rebuild JSF Cache' button in the VS Code Status Bar when EL Auto-Complete is enabled."
+            "description": "[Beta Feature] Show the 'Rebuild JSF Cache' button in the VS Code Status Bar. Expression Language (EL) Autocomplete caches your Java Managed Beans in memory for fast performance; use this button to force a fresh scan of your project if beans change outside of normal edits."
           },
           "jakartaFacesTools.rebuildCacheButtonPosition": {
             "type": "string",
@@ -60,42 +60,42 @@
             ],
             "default": "Left",
             "order": 3,
-            "description": "[Beta Feature] Position of the 'Rebuild JSF Cache' button in the VS Code Status Bar."
+            "description": "[Beta Feature] Choose the position ('Left' or 'Right') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled."
           }
         }
       },
       {
-        "title": "Jakarta Faces Tools: Expression Highlighting",
+        "title": "Jakarta Faces Tools: EL Expression Highlighting",
         "properties": {
           "jakartaFacesTools.elHighlight.enable": {
             "type": "boolean",
             "default": true,
             "order": 10,
-            "description": "Enable highlighting for EL Expressions (#{...})."
+            "description": "Enable highlighting for Expression Language (EL) #{...} expressions."
           },
           "jakartaFacesTools.elHighlight.backgroundColor": {
             "type": "string",
             "default": "rgba(100, 150, 255, 0.15)",
             "order": 11,
-            "description": "Background color for EL Expressions. Supports CSS colors (e.g. rgba, hex)."
+            "description": "Background color for Expression Language (EL) #{...} expressions. Supports CSS colors (e.g. rgba, hex)."
           },
           "jakartaFacesTools.elHighlight.color": {
             "type": "string",
             "default": "",
             "order": 12,
-            "description": "Text color for EL Expressions (leave empty to use theme default)."
+            "description": "Text color for Expression Language (EL) #{...} expressions (leave empty to use theme default)."
           },
           "jakartaFacesTools.elHighlight.border": {
             "type": "string",
             "default": "1px solid rgba(100, 150, 255, 0.3)",
             "order": 13,
-            "description": "Border for EL Expressions."
+            "description": "Border for Expression Language (EL) #{...} expressions."
           },
           "jakartaFacesTools.elHighlight.borderRadius": {
             "type": "string",
             "default": "3px",
             "order": 14,
-            "description": "Border radius for EL Expressions."
+            "description": "Border radius for Expression Language (EL) #{...} expressions."
           }
         }
       }
@@ -103,7 +103,7 @@
     "commands": [
       {
         "command": "jakartaFacesTools.rebuildJsfCache",
-        "title": "Rebuild JSF Cache (Beta Feature)",
+        "title": "Rebuild JSF Cache (EL Autocomplete Beta Feature)",
         "category": "Jakarta Faces Tools"
       }
     ],
