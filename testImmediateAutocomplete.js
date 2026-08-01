@@ -28,6 +28,8 @@ class MockMarkdownString {
     }
 }
 
+let mockConfigStore = {};
+
 const mockVscode = {
     CompletionItem: MockCompletionItem,
     CompletionItemKind: {
@@ -48,8 +50,13 @@ const mockVscode = {
     },
     Range: class {
         constructor(startLine, startChar, endLine, endChar) {
-            this.start = { line: startLine, character: startChar };
-            this.end = { line: endLine, character: endChar };
+            if (typeof startLine === 'object' && typeof startChar === 'object') {
+                this.start = startLine;
+                this.end = startChar;
+            } else {
+                this.start = { line: startLine, character: startChar };
+                this.end = { line: endLine, character: endChar };
+            }
         }
     },
     Position: class {
@@ -58,8 +65,14 @@ const mockVscode = {
             this.character = char;
         }
     },
+    Hover: class {
+        constructor(contents, range) {
+            this.contents = contents;
+            this.range = range;
+        }
+    },
     workspace: {
-        getConfiguration: () => ({ get: (k, d) => d }),
+        getConfiguration: () => ({ get: (k, d) => (k in mockConfigStore ? mockConfigStore[k] : d) }),
         asRelativePath: (uri) => uri && uri.fsPath ? uri.fsPath : String(uri),
         findFiles: async () => [],
         createFileSystemWatcher: () => ({
@@ -85,14 +98,17 @@ Module.prototype.require = function(path) {
 // Import providers after mocking vscode
 const { JsfCompletionProvider } = require('./out/providers/JsfCompletionProvider');
 const { JsfElCompletionProvider, getSharedBeanMap, setCacheInitializedForTest } = require('./out/providers/JsfElCompletionProvider');
+const { JsfHoverProvider } = require('./out/providers/JsfHoverProvider');
 
 class MockTextDocument {
     constructor(text) {
         this.text = text;
         this.lines = text.split(/\r?\n/);
     }
-    getText() {
-        return this.text;
+    getText(range) {
+        if (!range) return this.text;
+        const lineText = this.lines[range.start.line] || '';
+        return lineText.substring(range.start.character, range.end.character);
     }
     lineAt(line) {
         const lineNum = typeof line === 'object' ? line.line : line;
@@ -119,11 +135,24 @@ class MockTextDocument {
         }
         return offset + position.character;
     }
+    getWordRangeAtPosition(position, regex) {
+        const lineText = this.lines[position.line] || '';
+        const re = new RegExp(regex || /[a-zA-Z0-9_:-]+/, 'g');
+        let match;
+        while ((match = re.exec(lineText)) !== null) {
+            const start = match.index;
+            const end = start + match[0].length;
+            if (position.character >= start && position.character <= end) {
+                return new mockVscode.Range(new mockVscode.Position(position.line, start), new mockVscode.Position(position.line, end));
+            }
+        }
+        return null;
+    }
 }
 
 async function runTests() {
     console.log('==============================================');
-    console.log('RUNNING IMMEDIATE QUOTE AUTOCOMPLETE TESTS');
+    console.log('RUNNING IMMEDIATE QUOTE AUTOCOMPLETE & HOVER TESTS');
     console.log('==============================================');
 
     // Setup dummy beans in cache for EL testing
@@ -210,8 +239,22 @@ async function runTests() {
     assert.ok(userBeanItem.documentation.value.includes('*$(coffee) Jakarta Faces Tools*'), 'Expected signature at the bottom of markdown documentation');
     console.log('  [PASS] Root beans returned immediately after "{" with Class icon, SnippetString positioning, and signature.');
 
+    // Test 4: Hover Cards enable/disable setting test
+    console.log('Testing jakartaFacesTools.enableHoverCards configuration setting...');
+    const hoverProvider = new JsfHoverProvider();
+    const hoverDoc = new MockTextDocument(`<h:outputText value="test" />`);
+    
+    mockConfigStore.enableHoverCards = true;
+    const hoverEnabled = await hoverProvider.provideHover(hoverDoc, new mockVscode.Position(0, 5), null);
+    assert.ok(hoverEnabled, 'Expected hover card when enableHoverCards is true');
+
+    mockConfigStore.enableHoverCards = false;
+    const hoverDisabled = await hoverProvider.provideHover(hoverDoc, new mockVscode.Position(0, 5), null);
+    assert.strictEqual(hoverDisabled, undefined, 'Expected undefined when enableHoverCards is false');
+    console.log('  [PASS] Hover cards toggle cleanly via enableHoverCards setting.');
+
     console.log('==============================================');
-    console.log('ALL IMMEDIATE AUTOCOMPLETE TESTS PASSED! ☕');
+    console.log('ALL IMMEDIATE AUTOCOMPLETE & HOVER TESTS PASSED! ☕');
     console.log('==============================================');
 }
 

@@ -11,7 +11,11 @@ export class JsfHoverProvider implements vscode.HoverProvider {
         position: vscode.Position,
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
-        
+        const config = vscode.workspace.getConfiguration('jakartaFacesTools');
+        if (!config.get<boolean>('enableHoverCards', true)) {
+            return undefined;
+        }
+
         // Check if hovering over id="val" or for="val" (Component ID Linking & Navigation)
         const idOrFor = getIdOrForAtPosition(document, position);
         if (idOrFor) {

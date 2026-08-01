@@ -111,6 +111,17 @@
             "description": "Border radius for Expression Language (EL) #{...} expressions."
           }
         }
+      },
+      {
+        "title": "Jakarta Faces Tools: Documentation & Hover Cards",
+        "properties": {
+          "jakartaFacesTools.enableHoverCards": {
+            "type": "boolean",
+            "default": true,
+            "order": 20,
+            "description": "Enable rich documentation hover cards when hovering over JSF tags, attributes, namespaces, and component IDs."
+          }
+        }
       }
     ],
     "commands": [

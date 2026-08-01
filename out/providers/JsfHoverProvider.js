@@ -8,6 +8,10 @@ const tagParser_1 = require("./tagParser");
 const JsfIdHighlightProvider_1 = require("./JsfIdHighlightProvider");
 class JsfHoverProvider {
     provideHover(document, position, token) {
+        const config = vscode.workspace.getConfiguration('jakartaFacesTools');
+        if (!config.get('enableHoverCards', true)) {
+            return undefined;
+        }
         // Check if hovering over id="val" or for="val" (Component ID Linking & Navigation)
         const idOrFor = (0, JsfIdHighlightProvider_1.getIdOrForAtPosition)(document, position);
         if (idOrFor) {
