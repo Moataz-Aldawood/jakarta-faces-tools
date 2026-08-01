@@ -10,13 +10,13 @@ A powerful Visual Studio Code extension designed to supercharge your Jakarta Fac
 
 ## Features:
 
-### 1. Experimental EL Autocomplete [Beta Feature]
-Get intelligent auto-complete for your Java Managed Beans and properties inside Expression Language (EL) `#{...}` expressions!
-- **Managed Bean Discovery**: Automatically detects Java beans annotated with `@Named`, `@ManagedBean`, `@Controller`, or `@Component` across your workspace.
-- **Property & Method Suggestions**: Type inside `#{myBean.|}` to instantly view available fields, getters, and methods with their return types.
+### 1. Expression Language (EL) Autocomplete [Enabled by Default]
+Get intelligent auto-complete for your Java Managed Beans, iteration variables, and properties inside Expression Language (EL) `#{...}` expressions! Enabled by default (`jakartaFacesTools.enableELAutocomplete: true`).
+- **Iteration Variable Support (`var="..."`)**: Full intelligence for JSF iteration variables in `.xhtml` and `.jsf` files (`<ui:repeat>`, `<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<p:carousel>`, `<c:forEach>`). Typing inside `#{u.|}` resolves `u` to its collection element type (stripping generic wrappers like `List<User>` → `User`) and suggests methods and properties of `User.java`.
+- **Standards-Compliant Property & Method Suggestions**: Follows JSF & NetBeans completion standards by filtering out `get`/`is` prefixes from completion lists (suggesting clean `.property` and `.method()` names) and automatically inserting snippet parens for methods (`method($0)`). Also supports direct method resolution (e.g. `#{user.getName}`).
+- **Rich Inline Data Types & API Cards**: Every item in the completion list displays its data type with a clean colon prefix (` : String`, ` : ArrayList<User>`, ` : int`), along with a beautifully styled Markdown documentation fly-out card.
+- **Comment-Stripped Safe Resolution**: Smart regex scanning ignores commented-out Java methods and properties (`//` and `/* ... */`) while preserving 100% accurate line numbers and columns for `Ctrl+Click` definition jumps.
 - **Status Bar Cache Manager**: Includes a convenient Status Bar button (`$(coffee) Rebuild JSF Cache`) to force an in-memory bean scan when beans are added or modified outside of normal edits.
-- **Why is it Disabled by Default? (Opt-in Beta)**: Our core JSF tools are rock-solid and stable. EL Autocomplete requires in-memory cache management and background scanning of Java Managed Beans across your workspace, which is currently in an early experimental phase. To guarantee zero disruption or caching issues for current users, this feature is **disabled by default** for early releases.
-- **How to Enable**: Easily turn it on anytime under **`Settings > Jakarta Faces Tools > Enable EL Autocomplete`** (`jakartaFacesTools.enableELAutocomplete`).
 
 
 ### 2. Configurable EL Highlighting
@@ -35,7 +35,8 @@ Navigate seamlessly through your JSF project structure and Java backend with sta
 
 ### 4. Standard and 3rd-Party Tag Intelligence
 Enjoy first-class support for standard JSF 4.1 tags (`<h:`, `<f:`, `<ui:`) as well as major 3rd-party libraries including **PrimeFaces**, **OmniFaces**, and **BootsFaces**.
-- **Auto-Complete**: Start typing a tag or hit `Ctrl+Space` inside a tag to get auto-complete suggestions for both standard/3rd-party JSF tags and all their available attributes.
+- **Auto-Complete with Inline Types**: Start typing a tag or hit `Ctrl+Space` inside a tag to get auto-complete suggestions for standard and 3rd-party JSF attributes, displaying their data types (` : String`, ` : boolean`) right in the completion list!
+- **Interactive Documentation Fly-out Cards**: Press `Ctrl+Space` while browsing attributes in the autocomplete list to view live, formatted Markdown documentation cards with type badges and clean API descriptions without having to type the attribute.
 - **Rich Tag Documentation Hover**: Hover over any standard or supported 3rd-party JSF tag to see a concise description of what the component does, along with a direct link to the official documentation.
 - **Attribute Hover Documentation**: Hover over any standard or 3rd-party JSF attribute (e.g. `value`, `rendered`) to see a rich markdown popup containing the attribute's description and type!
 

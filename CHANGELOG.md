@@ -4,9 +4,15 @@ All notable changes to the "jakarta-faces-tools" extension will be documented in
 
 ## [2.2.0] - 2026-08-01
 ### Added
+- **EL Autocomplete Enabled by Default**: Enabled `jakartaFacesTools.enableELAutocomplete` by default (`true`).
 - **Iteration Variable Support (`var="..."`)**: Full intelligence for iteration variables in `.xhtml` and `.jsf` files (`<ui:repeat>`, `<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<p:carousel>`, `<c:forEach>`).
 - **Iteration Variable EL Autocomplete**: Typing inside `#{u.|}` resolves `u` to its collection element type (stripping generic wrappers like `List<User>` → `User`) and suggests methods and properties of `User.java`.
 - **Iteration Variable Jump-to-Definition**: `Ctrl+Click` on variable names jumps directly to `var="..."` in the `.xhtml` file; clicking properties jumps directly to Java property definitions in `User.java`.
+- **Standards-Compliant Method Snippets**: Automatically inserts method call snippets (`method($0)`) when selecting methods in EL completion lists, and supports direct method resolution (`#{user.getName}`).
+- **Rich Inline Data Types**: All completion items (properties, methods, managed beans, iteration variables, and tag attributes) now display their data types with a clean colon prefix (` : String`, ` : ArrayList<User>`, ` : int`).
+- **Interactive Documentation Fly-out Cards**: Tag attribute completions now feature styled Markdown documentation cards with prominent headers, type badges (`**Type:** String`), and cleaned description text when browsing via `Ctrl+Space`.
+- **Comment-Stripped Safe Resolution**: Smart regex scanning ignores commented-out Java methods and properties (`//` and `/* ... */`) while preserving 100% accurate line numbers and columns for `Ctrl+Click` definition jumps.
+- **Unannotated Bean Fallback**: Automatic class name fallback resolution for unannotated managed beans.
 
 ## [2.1.0] - 2026-07-31
 ### Added
