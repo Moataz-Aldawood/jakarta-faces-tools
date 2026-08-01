@@ -2,6 +2,15 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+## [2.3.0] - 2026-08-01
+### Added
+- **Component Linking & Navigation (`for="..."` ↔ `id="..."`)**: Full NetBeans and Eclipse-grade form wiring for Jakarta Faces, PrimeFaces, OmniFaces, and BootsFaces `.xhtml` and `.jsf` files.
+- **Component ID Autocomplete**: Typing inside `for="..."` or `target="..."` lists all available component `id="..."` declarations in the active file with clean right-aligned tag name descriptions (` : h:inputText`).
+- **Jump-to-Definition (`Ctrl+Click` / F12)**: Clicking on `for="myInput"` or `target="myDialog"` instantly jumps the cursor directly to `<h:inputText id="myInput">` or `<p:dialog id="myDialog">`.
+- **Simultaneous Document Highlighting**: Placing the cursor on any `id="foo"` or `for="foo"` value automatically illuminates both the ID declaration (`Write` highlight) and all linked references (`Read` highlight) across the entire editor.
+- **Interactive Hover Summary Cards**: Hovering over `id="foo"` displays a styled Markdown card summarizing all linked components and line numbers; hovering over `for="foo"` displays the target tag declaration and line number.
+- **Standardized Visual Branding**: Standardized all documentation popups, hover cards, and status bar items to use the monochrome VS Code Codicon coffee cup (`*$(coffee) Jakarta Faces Tools*`) with automatic theme adaptation.
+
 ## [2.2.0] - 2026-08-01
 ### Added
 - **EL Autocomplete Enabled by Default**: Enabled `jakartaFacesTools.enableELAutocomplete` by default (`true`).
