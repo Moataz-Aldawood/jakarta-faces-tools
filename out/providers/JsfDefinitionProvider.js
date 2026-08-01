@@ -261,26 +261,27 @@ class JsfDefinitionProvider {
         return rawType.replace(/\[\]/g, '').trim();
     }
     findPropertyTypeInContent(content, propertyName) {
+        const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
         if (prop.endsWith('()')) {
             prop = prop.substring(0, prop.length - 2).trim();
         }
         // 1. Check exact method name (e.g. getUsers)
         const methodRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${prop}\\s*\\(`);
-        let match = methodRegex.exec(content);
+        let match = methodRegex.exec(cleanContent);
         if (match) {
             return this.extractBaseType(match[1]);
         }
         const capitalizedProp = prop.charAt(0).toUpperCase() + prop.slice(1);
         // 2. Check getter
         const getterRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+(?:get|is)${capitalizedProp}\\s*\\(`);
-        match = getterRegex.exec(content);
+        match = getterRegex.exec(cleanContent);
         if (match) {
             return this.extractBaseType(match[1]);
         }
         // 3. Check field
         const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${prop}\\s*[;=]`);
-        match = fieldRegex.exec(content);
+        match = fieldRegex.exec(cleanContent);
         if (match) {
             return this.extractBaseType(match[1]);
         }
@@ -325,8 +326,18 @@ class JsfDefinitionProvider {
         const document = await vscode.workspace.openTextDocument(uri);
         return document.getText();
     }
+    stripJavaComments(content) {
+        let clean = content.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+            return match.replace(/[^\n]/g, ' ');
+        });
+        clean = clean.replace(/\/\/.*$/gm, (match) => {
+            return ' '.repeat(match.length);
+        });
+        return clean;
+    }
     createLocation(uri, content, regex) {
-        const match = regex.exec(content);
+        const cleanContent = this.stripJavaComments(content);
+        const match = regex.exec(cleanContent);
         if (match) {
             const lines = content.substring(0, match.index).split('\n');
             const line = lines.length - 1;

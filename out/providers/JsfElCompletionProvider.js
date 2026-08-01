@@ -151,7 +151,8 @@ class JsfElCompletionProvider {
         }
         const javaFiles = await vscode.workspace.findFiles('**/*.java', '**/node_modules/**');
         for (const file of javaFiles) {
-            const content = await this.readFile(file);
+            const rawContent = await this.readFile(file);
+            const content = this.stripJavaComments(rawContent);
             // Check for explicit @Named("foo") or @ManagedBean(name="foo")
             const explicitRegex = /@(Named|ManagedBean|Controller|Component)\s*\(\s*(?:value\s*=\s*|name\s*=\s*)?"([a-zA-Z0-9_-]+)"\s*\)/g;
             let match;
@@ -191,13 +192,25 @@ class JsfElCompletionProvider {
         const classMatch = /(?:public|protected|private|abstract)?\s*class\s+([A-Za-z0-9_]+)/.exec(content);
         return classMatch ? classMatch[1] : null;
     }
+    stripJavaComments(content) {
+        // Replace block comments /* ... */ with spaces (preserving newlines for accurate offsets)
+        let clean = content.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+            return match.replace(/[^\n]/g, ' ');
+        });
+        // Replace single-line comments // ... with spaces
+        clean = clean.replace(/\/\/.*$/gm, (match) => {
+            return ' '.repeat(match.length);
+        });
+        return clean;
+    }
     extractClassPropertiesAndMethods(content) {
+        const cleanContent = this.stripJavaComments(content);
         const results = [];
         const seenNames = new Set();
         // 1. Getters: public String getFoo() or public boolean isBar()
         const getterRegex = /public\s+([\w<>\[\]\?,\s]+?)\s+(get|is)([A-Z]\w*)\s*\(/g;
         let getterMatch;
-        while ((getterMatch = getterRegex.exec(content)) !== null) {
+        while ((getterMatch = getterRegex.exec(cleanContent)) !== null) {
             const rawType = getterMatch[1].trim();
             const propName = getterMatch[3].charAt(0).toLowerCase() + getterMatch[3].slice(1);
             if (!seenNames.has(propName)) {
@@ -213,7 +226,7 @@ class JsfElCompletionProvider {
         // 2. Public Methods (action / listener methods e.g. public String save() or public void doSomething())
         const methodRegex = /public\s+([\w<>\[\]\?,\s]+?)\s+([a-z]\w*)\s*\([^)]*\)/g;
         let methodMatch;
-        while ((methodMatch = methodRegex.exec(content)) !== null) {
+        while ((methodMatch = methodRegex.exec(cleanContent)) !== null) {
             const rawType = methodMatch[1].trim();
             const methodName = methodMatch[2];
             // Skip standard Object methods, or zero-arg getters (get.../is...) per JSF standard / NetBeans convention
@@ -236,26 +249,27 @@ class JsfElCompletionProvider {
         return results;
     }
     findPropertyTypeInContent(content, propertyName) {
+        const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
         if (prop.endsWith('()')) {
             prop = prop.substring(0, prop.length - 2).trim();
         }
         // 1. Check for exact method name match: public ReturnType methodName(
         const methodRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*\\(`);
-        const methodMatch = methodRegex.exec(content);
+        const methodMatch = methodRegex.exec(cleanContent);
         if (methodMatch && methodMatch[1]) {
             return this.extractBaseType(methodMatch[1].trim());
         }
         // 2. Try getter: public ReturnType getPropertyName() or isPropertyName()
         const capitalized = prop.charAt(0).toUpperCase() + prop.slice(1);
         const getterRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+(get|is)${capitalized}\\s*\\(`);
-        const getterMatch = getterRegex.exec(content);
+        const getterMatch = getterRegex.exec(cleanContent);
         if (getterMatch && getterMatch[1]) {
             return this.extractBaseType(getterMatch[1].trim());
         }
         // 3. Try field: private FieldType propertyName;
         const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*[;=]`);
-        const fieldMatch = fieldRegex.exec(content);
+        const fieldMatch = fieldRegex.exec(cleanContent);
         if (fieldMatch && fieldMatch[1]) {
             return this.extractBaseType(fieldMatch[1].trim());
         }

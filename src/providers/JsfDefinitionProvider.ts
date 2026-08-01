@@ -312,6 +312,7 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
     }
 
     private findPropertyTypeInContent(content: string, propertyName: string): string | null {
+        const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
         if (prop.endsWith('()')) {
             prop = prop.substring(0, prop.length - 2).trim();
@@ -319,7 +320,7 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
 
         // 1. Check exact method name (e.g. getUsers)
         const methodRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${prop}\\s*\\(`);
-        let match = methodRegex.exec(content);
+        let match = methodRegex.exec(cleanContent);
         if (match) {
             return this.extractBaseType(match[1]);
         }
@@ -328,14 +329,14 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
         
         // 2. Check getter
         const getterRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+(?:get|is)${capitalizedProp}\\s*\\(`);
-        match = getterRegex.exec(content);
+        match = getterRegex.exec(cleanContent);
         if (match) {
             return this.extractBaseType(match[1]);
         }
         
         // 3. Check field
         const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${prop}\\s*[;=]`);
-        match = fieldRegex.exec(content);
+        match = fieldRegex.exec(cleanContent);
         if (match) {
             return this.extractBaseType(match[1]);
         }
@@ -389,8 +390,19 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
         return document.getText();
     }
 
+    private stripJavaComments(content: string): string {
+        let clean = content.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+            return match.replace(/[^\n]/g, ' ');
+        });
+        clean = clean.replace(/\/\/.*$/gm, (match) => {
+            return ' '.repeat(match.length);
+        });
+        return clean;
+    }
+
     private createLocation(uri: vscode.Uri, content: string, regex: RegExp): vscode.Location | null {
-        const match = regex.exec(content);
+        const cleanContent = this.stripJavaComments(content);
+        const match = regex.exec(cleanContent);
         if (match) {
             const lines = content.substring(0, match.index).split('\n');
             const line = lines.length - 1;
