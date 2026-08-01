@@ -2,6 +2,12 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+## [2.2.0] - 2026-08-01
+### Added
+- **Iteration Variable Support (`var="..."`)**: Full intelligence for iteration variables in `.xhtml` and `.jsf` files (`<ui:repeat>`, `<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<p:carousel>`, `<c:forEach>`).
+- **Iteration Variable EL Autocomplete**: Typing inside `#{u.|}` resolves `u` to its collection element type (stripping generic wrappers like `List<User>` → `User`) and suggests methods and properties of `User.java`.
+- **Iteration Variable Jump-to-Definition**: `Ctrl+Click` on variable names jumps directly to `var="..."` in the `.xhtml` file; clicking properties jumps directly to Java property definitions in `User.java`.
+
 ## [2.1.0] - 2026-07-31
 ### Added
 - **Experimental EL Autocomplete [Beta Feature]**: Added intelligent auto-complete for Java Managed Beans (`@Named`, `@ManagedBean`, `@Controller`, `@Component`) and properties inside Expression Language (EL) `#{...}` expressions. Disabled by default for early releases.
