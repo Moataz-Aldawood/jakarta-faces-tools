@@ -56,7 +56,7 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                 const markdown = new vscode.MarkdownString();
                 markdown.appendMarkdown(`${tag.description}\n\n`);
                 markdown.appendMarkdown(`[Read full documentation](${docUrl})\n\n`);
-                markdown.appendMarkdown(`---\n*⚡ Jakarta Faces Tools*`);
+                markdown.appendMarkdown(`---\n*☕ Jakarta Faces Tools*`);
                 
                 item.documentation = markdown;
                 items.push(item);
@@ -83,7 +83,7 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                         }
                         item.detail = `Custom Composite Component (${folder})`;
                         const md = new vscode.MarkdownString(`Custom JSF component loaded from resources/${folder}/${baseName}.xhtml\n\n`);
-                        md.appendMarkdown(`---\n*⚡ Jakarta Faces Tools*`);
+                        md.appendMarkdown(`---\n*☕ Jakarta Faces Tools*`);
                         item.documentation = md;
                         items.push(item);
                     }
@@ -115,7 +115,7 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                         md.appendMarkdown(`**Type:** \`${attr.type}\`\n\n`);
                     }
                     md.appendMarkdown(`${this.cleanHtmlDescription(attr.description)}\n\n`);
-                    md.appendMarkdown(`---\n*⚡ Jakarta Faces Tools*`);
+                    md.appendMarkdown(`---\n*☕ Jakarta Faces Tools*`);
                     item.documentation = md;
                     item.insertText = new vscode.SnippetString(`${attr.name}="$1"`);
                     items.push(item);
@@ -149,7 +149,7 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                                 md.appendMarkdown(`**Type:** \`${attr.type}\`\n\n`);
                             }
                             md.appendMarkdown(`${this.cleanHtmlDescription(attr.description)}\n\n`);
-                            md.appendMarkdown(`---\n*⚡ Jakarta Faces Tools*`);
+                            md.appendMarkdown(`---\n*☕ Jakarta Faces Tools*`);
                             item.documentation = md;
                             item.insertText = new vscode.SnippetString(`${attr.name}="$1"`);
                             items.push(item);

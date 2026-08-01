@@ -76,7 +76,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 item.documentation = new vscode.MarkdownString(
                     `**Jakarta Managed Bean: \`${beanName}\`**\n\n` +
                     `- Class: \`${meta.className}\`\n` +
-                    `- File: \`${vscode.workspace.asRelativePath(meta.uri)}\``
+                    `- File: \`${vscode.workspace.asRelativePath(meta.uri)}\`\n\n` +
+                    `---\n*☕ Jakarta Faces Tools*`
                 );
                 completions.push(item);
             }
@@ -93,7 +94,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 item.documentation = new vscode.MarkdownString(
                     `**JSF Iteration Variable: \`${v.varName}\`**\n\n` +
                     `- Iterates over collection: \`#{${v.collectionEl}}\`\n` +
-                    `- Enclosing Scope: Tag at line ${v.tagRange.start.line + 1}`
+                    `- Enclosing Scope: Tag at line ${v.tagRange.start.line + 1}\n\n` +
+                    `---\n*☕ Jakarta Faces Tools*`
                 );
                 completions.push(item);
             }
@@ -159,7 +161,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 item.insertText = prop.name;
             }
             item.documentation = new vscode.MarkdownString(
-                `**${prop.name}**\n\n\`${prop.description}\` -> \`${prop.type}\``
+                `**${prop.name}**\n\n\`${prop.description}\` -> \`${prop.type}\`\n\n` +
+                `---\n*☕ Jakarta Faces Tools*`
             );
             completions.push(item);
         }

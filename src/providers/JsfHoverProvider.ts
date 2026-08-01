@@ -51,7 +51,7 @@ export class JsfHoverProvider implements vscode.HoverProvider {
             }
 
             markdown.appendMarkdown(`*${library}*`);
-            markdown.appendMarkdown(`\n\n---\n*⚡ Jakarta Faces Tools*`);
+            markdown.appendMarkdown(`\n\n---\n*☕ Jakarta Faces Tools*`);
             return new vscode.Hover(markdown, wordRange);
         }
 
@@ -90,7 +90,7 @@ export class JsfHoverProvider implements vscode.HoverProvider {
                     // We will just point to the page, and if the anchor exists the browser will scroll to it.
                     markdown.appendMarkdown(`[🌐 Read full documentation online](${docUrl}#${attr.name})\n\n`);
 
-                    markdown.appendMarkdown(`\n\n---\n*⚡ Jakarta Faces Tools*`);
+                    markdown.appendMarkdown(`\n\n---\n*☕ Jakarta Faces Tools*`);
                     return new vscode.Hover(markdown, wordRange);
                 }
             }
