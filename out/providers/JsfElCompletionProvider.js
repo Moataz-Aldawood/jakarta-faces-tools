@@ -3,6 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsfElCompletionProvider = void 0;
 exports.rebuildJsfCache = rebuildJsfCache;
 exports.getSharedBeanMap = getSharedBeanMap;
+exports.getSharedClassUriCache = getSharedClassUriCache;
+exports.isJsfCacheInitialized = isJsfCacheInitialized;
+exports.setCacheInitializedForTest = setCacheInitializedForTest;
+exports.removeJavaBeanFromCache = removeJavaBeanFromCache;
+exports.updateJavaBeanInCache = updateJavaBeanInCache;
+exports.startJavaFileWatcher = startJavaFileWatcher;
 const vscode = require("vscode");
 const fs = require("fs");
 const iterationParser_1 = require("./iterationParser");
@@ -20,6 +26,99 @@ function rebuildJsfCache(showToast = true) {
 }
 function getSharedBeanMap() {
     return beanMap;
+}
+function getSharedClassUriCache() {
+    return classUriCache;
+}
+function isJsfCacheInitialized() {
+    return isCacheInitialized;
+}
+function setCacheInitializedForTest(val) {
+    isCacheInitialized = val;
+}
+function removeJavaBeanFromCache(uri) {
+    const fsPath = uri.fsPath || uri.toString();
+    for (const [beanName, meta] of beanMap.entries()) {
+        const metaPath = meta.uri.fsPath || meta.uri.toString();
+        if (metaPath === fsPath) {
+            beanMap.delete(beanName);
+        }
+    }
+    for (const [className, cachedUri] of classUriCache.entries()) {
+        const cachedPath = cachedUri.fsPath || cachedUri.toString();
+        if (cachedPath === fsPath) {
+            classUriCache.delete(className);
+        }
+    }
+}
+async function updateJavaBeanInCache(uri, readFileFn) {
+    if (!isCacheInitialized) {
+        return;
+    }
+    removeJavaBeanFromCache(uri);
+    try {
+        let rawContent;
+        if (readFileFn) {
+            rawContent = await readFileFn(uri);
+        }
+        else if (vscode.workspace && vscode.workspace.fs) {
+            const buf = await vscode.workspace.fs.readFile(uri);
+            rawContent = new TextDecoder().decode(buf);
+        }
+        else {
+            rawContent = await fs.promises.readFile(uri.fsPath, 'utf8');
+        }
+        const provider = new JsfElCompletionProvider();
+        const content = provider.stripJavaComments(rawContent);
+        const explicitRegex = /@(Named|ManagedBean|Controller|Component)\s*\(\s*(?:value\s*=\s*|name\s*=\s*)?"([a-zA-Z0-9_-]+)"\s*\)/g;
+        let match;
+        while ((match = explicitRegex.exec(content)) !== null) {
+            const beanName = match[2];
+            const className = provider.extractClassName(content) || beanName;
+            beanMap.set(beanName, {
+                beanName,
+                className,
+                uri: uri,
+                properties: []
+            });
+        }
+        const implicitRegex = /@(Named|ManagedBean|Controller|Component)(?!\s*\()/g;
+        if (implicitRegex.test(content)) {
+            const className = provider.extractClassName(content);
+            if (className) {
+                const beanName = className.charAt(0).toLowerCase() + className.slice(1);
+                beanMap.set(beanName, {
+                    beanName,
+                    className,
+                    uri: uri,
+                    properties: []
+                });
+            }
+        }
+        const className = provider.extractClassName(content);
+        if (className) {
+            classUriCache.set(className, uri);
+        }
+    }
+    catch (e) {
+        // Ignore read error if file was deleted simultaneously
+    }
+}
+function startJavaFileWatcher(context, onCacheUpdated) {
+    const watcher = vscode.workspace.createFileSystemWatcher('**/*.java');
+    watcher.onDidCreate(async (uri) => {
+        await updateJavaBeanInCache(uri);
+        onCacheUpdated?.();
+    });
+    watcher.onDidChange(async (uri) => {
+        await updateJavaBeanInCache(uri);
+        onCacheUpdated?.();
+    });
+    watcher.onDidDelete((uri) => {
+        removeJavaBeanFromCache(uri);
+        onCacheUpdated?.();
+    });
+    context.subscriptions.push(watcher);
 }
 class JsfElCompletionProvider {
     async provideCompletionItems(document, position, token, context) {

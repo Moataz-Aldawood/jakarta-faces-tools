@@ -125,7 +125,10 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "test:el": "node testElDiagnostics.js",
+    "test:cache": "node testIncrementalCache.js",
+    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js"
   },
   "devDependencies": {
     "@types/node": "18.x",

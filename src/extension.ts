@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import { JsfDefinitionProvider } from './providers/JsfDefinitionProvider';
 import { JsfCompletionProvider } from './providers/JsfCompletionProvider';
 import { JsfHoverProvider } from './providers/JsfHoverProvider';
-import { subscribeToDocumentChanges } from './providers/JsfDiagnostics';
+import { refreshDiagnostics, subscribeToDocumentChanges } from './providers/JsfDiagnostics';
 import { JsfELHighlighter } from './providers/JsfELHighlighter';
-import { JsfElCompletionProvider, rebuildJsfCache } from './providers/JsfElCompletionProvider';
+import { JsfElCompletionProvider, rebuildJsfCache, startJavaFileWatcher, updateJavaBeanInCache } from './providers/JsfElCompletionProvider';
 import { JsfIdHighlightProvider } from './providers/JsfIdHighlightProvider';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -82,18 +82,28 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // Auto-invalidate EL cache when Java files are saved
-    context.subscriptions.push(
-        vscode.workspace.onDidSaveTextDocument(doc => {
-            if (doc.uri.fsPath.endsWith('.java')) {
-                rebuildJsfCache(false);
-            }
-        })
-    );
-
     const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
     context.subscriptions.push(jsfDiagnostics);
     subscribeToDocumentChanges(context, jsfDiagnostics);
+
+    const onCacheUpdated = () => {
+        for (const editor of vscode.window.visibleTextEditors) {
+            refreshDiagnostics(editor.document, jsfDiagnostics);
+        }
+    };
+
+    // Incremental Bean Caching via File Watchers (create, change, delete .java files)
+    startJavaFileWatcher(context, onCacheUpdated);
+
+    // Also update cache incrementally when .java files are saved in the editor
+    context.subscriptions.push(
+        vscode.workspace.onDidSaveTextDocument(async doc => {
+            if (doc.uri.fsPath.endsWith('.java')) {
+                await updateJavaBeanInCache(doc.uri);
+                onCacheUpdated();
+            }
+        })
+    );
 }
 
 export function deactivate() {

@@ -64,15 +64,23 @@ function activate(context) {
             }
         }
     }));
-    // Auto-invalidate EL cache when Java files are saved
-    context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
-        if (doc.uri.fsPath.endsWith('.java')) {
-            (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
-        }
-    }));
     const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
     context.subscriptions.push(jsfDiagnostics);
     (0, JsfDiagnostics_1.subscribeToDocumentChanges)(context, jsfDiagnostics);
+    const onCacheUpdated = () => {
+        for (const editor of vscode.window.visibleTextEditors) {
+            (0, JsfDiagnostics_1.refreshDiagnostics)(editor.document, jsfDiagnostics);
+        }
+    };
+    // Incremental Bean Caching via File Watchers (create, change, delete .java files)
+    (0, JsfElCompletionProvider_1.startJavaFileWatcher)(context, onCacheUpdated);
+    // Also update cache incrementally when .java files are saved in the editor
+    context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(async (doc) => {
+        if (doc.uri.fsPath.endsWith('.java')) {
+            await (0, JsfElCompletionProvider_1.updateJavaBeanInCache)(doc.uri);
+            onCacheUpdated();
+        }
+    }));
 }
 function deactivate() {
     (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);

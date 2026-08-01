@@ -34,6 +34,112 @@ export function getSharedBeanMap(): Map<string, ElBeanMetadata> {
     return beanMap;
 }
 
+export function getSharedClassUriCache(): Map<string, vscode.Uri> {
+    return classUriCache;
+}
+
+export function isJsfCacheInitialized(): boolean {
+    return isCacheInitialized;
+}
+
+export function setCacheInitializedForTest(val: boolean): void {
+    isCacheInitialized = val;
+}
+
+export function removeJavaBeanFromCache(uri: vscode.Uri): void {
+    const fsPath = uri.fsPath || uri.toString();
+    for (const [beanName, meta] of beanMap.entries()) {
+        const metaPath = meta.uri.fsPath || meta.uri.toString();
+        if (metaPath === fsPath) {
+            beanMap.delete(beanName);
+        }
+    }
+    for (const [className, cachedUri] of classUriCache.entries()) {
+        const cachedPath = cachedUri.fsPath || cachedUri.toString();
+        if (cachedPath === fsPath) {
+            classUriCache.delete(className);
+        }
+    }
+}
+
+export async function updateJavaBeanInCache(uri: vscode.Uri, readFileFn?: (uri: vscode.Uri) => Promise<string>): Promise<void> {
+    if (!isCacheInitialized) {
+        return;
+    }
+
+    removeJavaBeanFromCache(uri);
+
+    try {
+        let rawContent: string;
+        if (readFileFn) {
+            rawContent = await readFileFn(uri);
+        } else if (vscode.workspace && vscode.workspace.fs) {
+            const buf = await vscode.workspace.fs.readFile(uri);
+            rawContent = new TextDecoder().decode(buf);
+        } else {
+            rawContent = await fs.promises.readFile(uri.fsPath, 'utf8');
+        }
+
+        const provider = new JsfElCompletionProvider();
+        const content = provider.stripJavaComments(rawContent);
+
+        const explicitRegex = /@(Named|ManagedBean|Controller|Component)\s*\(\s*(?:value\s*=\s*|name\s*=\s*)?"([a-zA-Z0-9_-]+)"\s*\)/g;
+        let match;
+        while ((match = explicitRegex.exec(content)) !== null) {
+            const beanName = match[2];
+            const className = provider.extractClassName(content) || beanName;
+            beanMap.set(beanName, {
+                beanName,
+                className,
+                uri: uri,
+                properties: []
+            });
+        }
+
+        const implicitRegex = /@(Named|ManagedBean|Controller|Component)(?!\s*\()/g;
+        if (implicitRegex.test(content)) {
+            const className = provider.extractClassName(content);
+            if (className) {
+                const beanName = className.charAt(0).toLowerCase() + className.slice(1);
+                beanMap.set(beanName, {
+                    beanName,
+                    className,
+                    uri: uri,
+                    properties: []
+                });
+            }
+        }
+
+        const className = provider.extractClassName(content);
+        if (className) {
+            classUriCache.set(className, uri);
+        }
+    } catch (e) {
+        // Ignore read error if file was deleted simultaneously
+    }
+}
+
+export function startJavaFileWatcher(context: vscode.ExtensionContext, onCacheUpdated?: () => void): void {
+    const watcher = vscode.workspace.createFileSystemWatcher('**/*.java');
+
+    watcher.onDidCreate(async (uri) => {
+        await updateJavaBeanInCache(uri);
+        onCacheUpdated?.();
+    });
+
+    watcher.onDidChange(async (uri) => {
+        await updateJavaBeanInCache(uri);
+        onCacheUpdated?.();
+    });
+
+    watcher.onDidDelete((uri) => {
+        removeJavaBeanFromCache(uri);
+        onCacheUpdated?.();
+    });
+
+    context.subscriptions.push(watcher);
+}
+
 export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
 
     public async provideCompletionItems(
@@ -269,12 +375,12 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         isCacheInitialized = true;
     }
 
-    private extractClassName(content: string): string | null {
+    public extractClassName(content: string): string | null {
         const classMatch = /(?:public|protected|private|abstract)?\s*class\s+([A-Za-z0-9_]+)/.exec(content);
         return classMatch ? classMatch[1] : null;
     }
 
-    private stripJavaComments(content: string): string {
+    public stripJavaComments(content: string): string {
         // Replace block comments /* ... */ with spaces (preserving newlines for accurate offsets)
         let clean = content.replace(/\/\*[\s\S]*?\*\//g, (match) => {
             return match.replace(/[^\n]/g, ' ');
