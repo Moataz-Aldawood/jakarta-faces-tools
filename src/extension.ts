@@ -73,8 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider),
-        vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'),
-        vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'),
+        vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':', '"', "'"),
+        vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{', '"', "'", '#', '='),
         vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider),
         vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider),
         elHighlighter,

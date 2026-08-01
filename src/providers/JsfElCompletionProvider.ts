@@ -159,7 +159,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
     ): Promise<vscode.CompletionItem[] | undefined> {
 
         // Step 1: Check Beta Feature Configuration Toggle
-        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableELAutocomplete', false);
+        const elAutocompleteEnabled = vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableELAutocomplete', true);
         if (!elAutocompleteEnabled) {
             return undefined;
         }
@@ -168,6 +168,60 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         const linePrefix = document.lineAt(position.line).text.substring(0, position.character);
         const lastElOpen = Math.max(linePrefix.lastIndexOf('#{'), linePrefix.lastIndexOf('${'));
         if (lastElOpen === -1) {
+            // Check if we are typing immediately inside an attribute value (e.g. value=" or action=' or rendered="u)
+            const quoteAttrMatch = /\b([a-zA-Z0-9_:-]+)\s*=\s*(['"])([^'"]*)$/.exec(linePrefix);
+            if (quoteAttrMatch) {
+                const attrName = quoteAttrMatch[1].toLowerCase();
+                // Exclude attributes that should not receive EL snippet suggestions
+                if (['id', 'var', 'for', 'target', 'name', 'xmlns'].includes(attrName) || attrName.startsWith('xmlns')) {
+                    return undefined;
+                }
+
+                await this.ensureBeansCached();
+                const completions: vscode.CompletionItem[] = [];
+
+                for (const [beanName, meta] of beanMap.entries()) {
+                    const item = new vscode.CompletionItem({
+                        label: `#{${beanName}}`,
+                        description: ` : ${meta.className}`
+                    }, vscode.CompletionItemKind.Snippet);
+                    item.insertText = `#{${beanName}}`;
+                    item.filterText = `${beanName} #{${beanName}}`;
+                    item.detail = `Managed Bean EL Snippet: ${meta.className}`;
+                    const md = new vscode.MarkdownString(
+                        `**Jakarta Managed Bean: \`${beanName}\`**\n\n` +
+                        `- Class: \`${meta.className}\`\n` +
+                        `- File: \`${vscode.workspace.asRelativePath(meta.uri)}\`\n\n` +
+                        `---\n*$(coffee) Jakarta Faces Tools*`
+                    );
+                    md.supportThemeIcons = true;
+                    item.documentation = md;
+                    completions.push(item);
+                }
+
+                const iterVars = findEnclosingIterationVariables(document, position);
+                for (const v of iterVars) {
+                    const item = new vscode.CompletionItem({
+                        label: `#{${v.varName}}`,
+                        description: ` : var (${v.collectionEl})`
+                    }, vscode.CompletionItemKind.Snippet);
+                    item.insertText = `#{${v.varName}}`;
+                    item.filterText = `${v.varName} #{${v.varName}}`;
+                    item.detail = `Iteration Variable EL Snippet (from #{${v.collectionEl}})`;
+                    const md = new vscode.MarkdownString(
+                        `**JSF Iteration Variable: \`${v.varName}\`**\n\n` +
+                        `- Iterates over collection: \`#{${v.collectionEl}}\`\n` +
+                        `- Enclosing Scope: Tag at line ${v.tagRange.start.line + 1}\n\n` +
+                        `---\n*$(coffee) Jakarta Faces Tools*`
+                    );
+                    md.supportThemeIcons = true;
+                    item.documentation = md;
+                    completions.push(item);
+                }
+
+                return completions;
+            }
+
             return undefined;
         }
 

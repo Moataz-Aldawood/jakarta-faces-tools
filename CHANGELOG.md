@@ -2,6 +2,14 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+## [2.6.0] - 2026-08-01
+### Added
+- **Immediate Quote Autocomplete for Component IDs (`for="..."` / `target="..."`)**: Autocomplete now triggers immediately after typing a quote (`"` or `'`) inside `for="..."` and `target="..."` attributes, displaying all available component IDs in the file without requiring typing the first character of the ID.
+- **Immediate Root Bean Completion (`#{...}`)**: Autocomplete inside Expression Language `#{|}` and `${|}` blocks now triggers immediately after typing `{`, displaying all available Managed Beans and iteration variables without requiring typing the first character of the bean name.
+- **Smart EL Snippets on Attribute Quotes**: Typing `"` or `'` after any EL-capable JSF tag attribute (e.g., `value="`, `action="`, `rendered="`, `actionListener="`, `test="`, `validator="`, etc.) immediately displays suggestions for all Java Managed Beans and iteration variables formatted as `#{beanName}` snippets. Selecting a bean snippet automatically inserts `#{beanName}` into the attribute value.
+- **Attribute Exclusion Protection**: Automatically prevents EL snippet noise when typing quotes inside non-EL attributes like `id="..."`, `var="..."`, `for="..."`, `target="..."`, `name="..."`, or namespace declarations (`xmlns:*`).
+- **Comprehensive Autocomplete Test Suite**: Added automated test suite `testImmediateAutocomplete.js` (`npm run test:autocomplete`) verifying instant ID completion, Smart EL Snippet insertion, filterText matching, and attribute exclusion rules.
+
 ## [2.5.0] - 2026-08-01
 ### Added
 - **Incremental Bean Caching (File Watchers)**: Real-time file system watchers (`**/*.java`) that detect `.java` file creations, modifications, and deletions without rebuilding the entire project cache.

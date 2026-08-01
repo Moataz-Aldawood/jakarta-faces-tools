@@ -3,8 +3,8 @@
   "author": "Moataz Aldawood and his friend Google Gemini ;)",
   "publisher": "moataz-aldawood",
   "displayName": "Jakarta Faces Tools",
-  "description": "Advanced Jakarta Faces (JSF) tools: Lombok annotation support (@Data, @Getter), incremental bean caching, EL semantic validation (real-time diagnostics), component linking & navigation (for <-> id), deep nested Java EL resolution, custom composite component intelligence, and hover documentation. GitHub: https://github.com/Moataz-Aldawood/jakarta-faces-tools",
-  "version": "2.5.0",
+  "description": "Advanced Jakarta Faces (JSF) tools: immediate quote auto-complete & smart EL snippets, Lombok annotation support (@Data, @Getter), incremental bean caching, EL semantic validation, component linking (for <-> id), deep nested Java EL resolution, custom composite component intelligence, and hover documentation. GitHub: https://github.com/Moataz-Aldawood/jakarta-faces-tools",
+  "version": "2.6.0",
   "icon": "logo.png",
   "license": "GPL-3.0",
   "repository": {
@@ -136,7 +136,8 @@
     "test:el": "node testElDiagnostics.js",
     "test:cache": "node testIncrementalCache.js",
     "test:lombok": "node testLombokSupport.js",
-    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js && node testLombokSupport.js"
+    "test:autocomplete": "node testImmediateAutocomplete.js",
+    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js && node testLombokSupport.js && node testImmediateAutocomplete.js"
   },
   "devDependencies": {
     "@types/node": "18.x",

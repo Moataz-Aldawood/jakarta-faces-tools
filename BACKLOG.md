@@ -19,6 +19,10 @@
 - [x] **Incremental Bean Caching (File Watchers)**: Automatically update the in-memory Java Managed Bean cache whenever a `.java` file is created, modified, or deleted without requiring a manual cache rebuild.
 - [x] **Lombok Annotation Support**: Fully support `@Data`, `@Getter`, `@Value`, `@Builder`, and selective field-level `@Getter` annotations from Lombok when inspecting Java Managed Beans for EL properties.
 
-## 🚀 Next Up (v2.6.0 / Future Releases)
+## ✅ Completed (v2.6.0)
+- [x] **Immediate Quote Autocomplete for Component IDs**: Typing a quote (`"` or `'`) inside `for="..."` or `target="..."` immediately triggers autocomplete displaying all component IDs without requiring typing the first letter.
+- **Immediate Root Bean & Smart EL Snippets**: Typing `{` inside `#{|}` immediately pops up all Managed Beans and iteration variables. Typing a quote after any EL-capable JSF tag attribute immediately suggests `#{beanName}` snippets, inserting `#{beanName}` automatically when selected while excluding non-EL attributes like `id="..."` and `for="..."`.
+
+## 🚀 Next Up (v2.7.0 / Future Releases)
 - [ ] **Custom Composite Component Support (`<cc:attribute>`)**: Intelligent auto-complete, diagnostics, and hover documentation for custom composite component attributes and metadata.
 - [ ] **JSF/Faces Config XML Parsing (`faces-config.xml`)**: Support explicit bean declarations and navigation rule mappings defined in XML configuration files.
