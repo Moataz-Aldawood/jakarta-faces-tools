@@ -166,6 +166,21 @@ async function runTests() {
     assert.ok(idLabels.includes('myForm') && idLabels.includes('username'), `Expected myForm and username IDs, got: ${idLabels.join(', ')}`);
     console.log('  [PASS] Component IDs returned immediately after for="..." quote.');
 
+    // Test 1b: Verify attribute completion items automatically re-trigger IntelliSense when inserted
+    console.log('Testing attribute completion items for automatic triggerSuggest command...');
+    const attrDocument = new MockTextDocument(`<h:outputLabel `);
+    const attrResults = await jsfProvider.provideCompletionItems(
+        attrDocument,
+        new mockVscode.Position(0, 15),
+        null,
+        {}
+    );
+    assert.ok(Array.isArray(attrResults), 'Expected array of attribute completion items');
+    const forAttr = attrResults.find(r => r.label === 'for');
+    assert.ok(forAttr, 'Expected "for" attribute in completion list');
+    assert.strictEqual(forAttr.command.command, 'editor.action.triggerSuggest', 'Expected editor.action.triggerSuggest command on attribute completion');
+    console.log('  [PASS] Attribute completion items include triggerSuggest command.');
+
     // Test 2: Ensure EL autocomplete does NOT trigger on attribute quotes (only on #{ or ${)
     console.log('Testing exclusion of EL autocomplete after attribute quotes...');
     const noQuoteElResults = await elProvider.provideCompletionItems(

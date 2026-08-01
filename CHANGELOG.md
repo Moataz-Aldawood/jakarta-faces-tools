@@ -9,8 +9,8 @@ All notable changes to the "jakarta-faces-tools" extension will be documented in
 - **Clean EL Triggering & No Quote Interference**: EL autocomplete triggers exclusively inside `#{...}` and `${...}` expressions—never on attribute quotes (`"`)—preventing unwanted popups when typing simple string attribute values.
 - **Smart Cursor Positioning Before Closing Brace**: Selecting a Managed Bean or iteration variable inside `#{|}` inserts the bean name and positions the cursor (`$0`) before the closing brace (`}`), allowing developers to immediately type `.` without manually navigating past closing braces or duplicating symbols (`#{{...}}`).
 - **Official Class Icon (`C`) for Managed Beans**: Root Java Managed Beans now render with VS Code's official Class badge icon (`CompletionItemKind.Class`), visually distinguishing Java backend classes from iteration variables and properties.
-- **Standardized Signature Branding**: Every completion item across tags, attributes, component IDs, Managed Beans, iteration variables, properties, and methods features our signature `$(coffee) Jakarta Faces Tools` footer at the bottom of its Markdown documentation card.
-- **Comprehensive Autocomplete Test Suite**: Added automated test suite `testImmediateAutocomplete.js` (`npm run test:autocomplete`) verifying instant ID completion, Class icon rendering, cursor positioning, and clean trigger behavior.
+- **Automatic IntelliSense Re-triggering on Attribute Insertion**: Selecting any tag attribute from autocomplete (e.g., `for`, `target`, `value`, `rendered`, etc.) inserts `attr=""`, positions the cursor inside the quotes, and automatically executes `editor.action.triggerSuggest`. This ensures immediate Component ID autocomplete when choosing `for` or `target` without needing to manually press `Ctrl+Space`.
+- **Comprehensive Autocomplete Test Suite**: Added automated test suite `testImmediateAutocomplete.js` (`npm run test:autocomplete`) verifying instant ID completion, automatic `triggerSuggest` execution, Class icon rendering, cursor positioning, and clean trigger behavior.
 
 ## [2.5.0] - 2026-08-01
 ### Added

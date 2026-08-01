@@ -151,6 +151,10 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                     md.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
                     item.documentation = md;
                     item.insertText = new vscode.SnippetString(`${attr.name}="$1"`);
+                    item.command = {
+                        command: 'editor.action.triggerSuggest',
+                        title: 'Trigger Suggest'
+                    };
                     items.push(item);
                 }
                 return items;
@@ -186,6 +190,10 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                             md.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
                             item.documentation = md;
                             item.insertText = new vscode.SnippetString(`${attr.name}="$1"`);
+                            item.command = {
+                                command: 'editor.action.triggerSuggest',
+                                title: 'Trigger Suggest'
+                            };
                             items.push(item);
                         }
                         return items;
