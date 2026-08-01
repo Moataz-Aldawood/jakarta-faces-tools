@@ -46,6 +46,12 @@
             "order": 1,
             "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions."
           },
+          "jakartaFacesTools.enableELDiagnostics": {
+            "type": "boolean",
+            "default": true,
+            "order": 2,
+            "description": "Enable real-time semantic diagnostics (warnings) for unknown Java Managed Beans and mistyped property names inside #{...} EL expressions."
+          },
           "jakartaFacesTools.showRebuildCacheButton": {
             "type": "boolean",
             "default": true,

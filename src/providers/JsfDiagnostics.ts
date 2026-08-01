@@ -2,8 +2,109 @@ import * as vscode from 'vscode';
 import { JSF_CATALOG } from './jsfCatalog';
 import { getCompositeNamespaces } from './namespaceParser';
 import { getActiveThirdPartyCatalogs } from './ThirdPartyCatalogs';
+import { JsfElCompletionProvider, getSharedBeanMap, ElBeanMetadata } from './JsfElCompletionProvider';
+import { findIterationVariableByName } from './iterationParser';
 
-export function refreshDiagnostics(document: vscode.TextDocument, jsfDiagnostics: vscode.DiagnosticCollection): void {
+const EL_IMPLICIT_OBJECTS = new Set([
+    'param', 'paramValues', 'header', 'headerValues', 'cookie', 'initParam',
+    'request', 'response', 'session', 'application', 'facesContext',
+    'view', 'component', 'resource', 'cc', 'requestScope', 'sessionScope',
+    'applicationScope', 'flash', 'flowScope',
+    'true', 'false', 'null', 'not', 'empty', 'and', 'or', 'eq', 'ne',
+    'lt', 'gt', 'le', 'ge', 'mod', 'div', 'instanceof'
+]);
+
+const OBJECT_METHODS = new Set(['class', 'classLoader', 'classReference', 'equals', 'hashCode', 'toString']);
+
+export interface IElProvider {
+    readFile(uri: vscode.Uri): Promise<string>;
+    findPropertyTypeInContent(content: string, propertyName: string): string | null;
+}
+
+export async function computeElDiagnostics(
+    document: vscode.TextDocument,
+    beanMap: Map<string, ElBeanMetadata>,
+    elProvider: IElProvider
+): Promise<vscode.Diagnostic[]> {
+    const diagnostics: vscode.Diagnostic[] = [];
+    const text = document.getText();
+    const elRegex = /#\{([^\}]+)\}/g;
+    let elMatch;
+
+    while ((elMatch = elRegex.exec(text)) !== null) {
+        const rawEl = elMatch[1];
+        const elStartOffset = elMatch.index + 2; // +2 for #{
+
+        // Replace string literals ('...' or "...") with spaces to prevent false matches inside strings
+        const noStrings = rawEl.replace(/(['"])(?:(?!\1)[^\\]|\\.)*\1/g, match => ' '.repeat(match.length));
+
+        // Find identifier chains separated by dot
+        const chainRegex = /[a-zA-Z_$][a-zA-Z0-9_$]*(?:\.[a-zA-Z_$][a-zA-Z0-9_$]*)+|[a-zA-Z_$][a-zA-Z0-9_$]*/g;
+        let chainMatch;
+        while ((chainMatch = chainRegex.exec(noStrings)) !== null) {
+            const chain = chainMatch[0];
+            const chainOffset = elStartOffset + chainMatch.index;
+            const parts = chain.split('.');
+            const rootName = parts[0];
+
+            // Ignore implicit objects, keywords, literals
+            if (EL_IMPLICIT_OBJECTS.has(rootName)) {
+                continue;
+            }
+
+            // Check if it is an iteration variable in scope (e.g., <ui:repeat var="u">)
+            const startPos = document.positionAt(chainOffset);
+            const iterVar = findIterationVariableByName(document, startPos, rootName);
+            if (iterVar) {
+                continue; // Valid iteration variable
+            }
+
+            // Check if rootName is a known Managed Bean
+            if (!beanMap.has(rootName)) {
+                const endPos = document.positionAt(chainOffset + rootName.length);
+                const range = new vscode.Range(startPos, endPos);
+                const diagnostic = new vscode.Diagnostic(
+                    range,
+                    `Jakarta Faces: Unknown Managed Bean or EL variable '${rootName}'.`,
+                    vscode.DiagnosticSeverity.Warning
+                );
+                diagnostic.source = 'Jakarta Faces Tools';
+                diagnostics.push(diagnostic);
+                continue;
+            }
+
+            // If rootName IS a known Managed Bean, check second segment property if present
+            if (parts.length >= 2) {
+                const bean = beanMap.get(rootName)!;
+                const propName = parts[1];
+
+                if (OBJECT_METHODS.has(propName)) {
+                    continue;
+                }
+
+                const beanContent = await elProvider.readFile(bean.uri);
+                const returnType = elProvider.findPropertyTypeInContent(beanContent, propName);
+                if (!returnType) {
+                    const propOffset = chainOffset + rootName.length + 1; // +1 for '.'
+                    const propStartPos = document.positionAt(propOffset);
+                    const propEndPos = document.positionAt(propOffset + propName.length);
+                    const range = new vscode.Range(propStartPos, propEndPos);
+                    const diagnostic = new vscode.Diagnostic(
+                        range,
+                        `Jakarta Faces: Property '${propName}' not found in Managed Bean '${rootName}' (${bean.className}).`,
+                        vscode.DiagnosticSeverity.Warning
+                    );
+                    diagnostic.source = 'Jakarta Faces Tools';
+                    diagnostics.push(diagnostic);
+                }
+            }
+        }
+    }
+
+    return diagnostics;
+}
+
+export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagnostics: vscode.DiagnosticCollection): Promise<void> {
     if (document.languageId !== 'jsf' && document.languageId !== 'html' && document.languageId !== 'xml') {
         return;
     }
@@ -110,8 +211,6 @@ export function refreshDiagnostics(document: vscode.TextDocument, jsfDiagnostics
                 
                 if (!validAttrs.has(attrName)) {
                     // Calculate absolute position
-                    // The matched string from attrRegex starts with whitespace(s).
-                    // We need to find the exact index of the attribute name within the match.
                     const matchString = attrMatch[0];
                     const nameOffset = matchString.indexOf(attrName);
                     
@@ -130,6 +229,20 @@ export function refreshDiagnostics(document: vscode.TextDocument, jsfDiagnostics
                     diagnostics.push(diagnostic);
                 }
             }
+        }
+    }
+
+    // 4. Check for EL Semantic Validation (unknown Managed Beans and mistyped properties)
+    const enableELDiagnostics = vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableELDiagnostics', true);
+    if (enableELDiagnostics) {
+        try {
+            const elProvider = new JsfElCompletionProvider();
+            await elProvider.ensureBeansCached();
+            const beanMap = getSharedBeanMap();
+            const elDiagnostics = await computeElDiagnostics(document, beanMap, elProvider);
+            diagnostics.push(...elDiagnostics);
+        } catch (e) {
+            // Keep existing diagnostics even if EL check encounters an issue
         }
     }
 

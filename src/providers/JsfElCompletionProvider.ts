@@ -30,6 +30,10 @@ export function rebuildJsfCache(showToast: boolean = true): void {
     }
 }
 
+export function getSharedBeanMap(): Map<string, ElBeanMetadata> {
+    return beanMap;
+}
+
 export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
 
     public async provideCompletionItems(
@@ -215,7 +219,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return currentUri;
     }
 
-    private async ensureBeansCached(): Promise<void> {
+    public async ensureBeansCached(): Promise<void> {
         if (isCacheInitialized) {
             return;
         }
@@ -331,7 +335,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return results;
     }
 
-    private findPropertyTypeInContent(content: string, propertyName: string): string | null {
+    public findPropertyTypeInContent(content: string, propertyName: string): string | null {
         const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
         if (prop.endsWith('()')) {
@@ -389,7 +393,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return null;
     }
 
-    private readFile(uri: vscode.Uri): Promise<string> {
+    public readFile(uri: vscode.Uri): Promise<string> {
         return new Promise((resolve) => {
             fs.readFile(uri.fsPath, 'utf8', (err, data) => {
                 if (err) {

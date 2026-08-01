@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsfElCompletionProvider = void 0;
 exports.rebuildJsfCache = rebuildJsfCache;
+exports.getSharedBeanMap = getSharedBeanMap;
 const vscode = require("vscode");
 const fs = require("fs");
 const iterationParser_1 = require("./iterationParser");
@@ -16,6 +17,9 @@ function rebuildJsfCache(showToast = true) {
     if (showToast) {
         vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     }
+}
+function getSharedBeanMap() {
+    return beanMap;
 }
 class JsfElCompletionProvider {
     async provideCompletionItems(document, position, token, context) {
