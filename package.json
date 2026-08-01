@@ -128,7 +128,8 @@
     "watch": "tsc -watch -p ./",
     "test:el": "node testElDiagnostics.js",
     "test:cache": "node testIncrementalCache.js",
-    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js"
+    "test:lombok": "node testLombokSupport.js",
+    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js && node testLombokSupport.js"
   },
   "devDependencies": {
     "@types/node": "18.x",

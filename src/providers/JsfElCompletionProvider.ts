@@ -392,7 +392,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return clean;
     }
 
-    private extractClassPropertiesAndMethods(content: string): ElPropertyMetadata[] {
+    public extractClassPropertiesAndMethods(content: string): ElPropertyMetadata[] {
         const cleanContent = this.stripJavaComments(content);
         const results: ElPropertyMetadata[] = [];
         const seenNames = new Set<string>();
@@ -438,7 +438,120 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             }
         }
 
+        // 3. Lombok properties from non-static fields (@Data, @Getter, @Value, @Builder, or field-level @Getter)
+        const classMatchIdx = cleanContent.search(/\b(class|record|enum|interface)\b/);
+        const firstBrace = classMatchIdx !== -1 ? cleanContent.indexOf('{', classMatchIdx) : cleanContent.indexOf('{');
+        const classHeader = firstBrace !== -1 ? cleanContent.substring(0, firstBrace) : cleanContent;
+        const hasClassLombokGetter = /@(?:lombok\.)?(Data|Getter|Value|Builder)\b/.test(classHeader);
+        const fields = this.extractFieldsFromContent(content);
+        for (const field of fields) {
+            if (hasClassLombokGetter || field.hasGetterAnnotation) {
+                let propName = field.name;
+                let getterPrefix = 'get';
+                if (/^boolean$/.test(field.type)) {
+                    if (/^is[A-Z]/.test(field.name)) {
+                        propName = field.name.charAt(2).toLowerCase() + field.name.slice(3);
+                        getterPrefix = 'is';
+                    } else {
+                        getterPrefix = 'is';
+                    }
+                }
+                if (!seenNames.has(propName)) {
+                    seenNames.add(propName);
+                    const capitalized = propName.charAt(0).toUpperCase() + propName.slice(1);
+                    results.push({
+                        name: propName,
+                        type: this.cleanType(field.type),
+                        isMethod: false,
+                        description: `getter: ${getterPrefix}${capitalized}() (Lombok)`
+                    });
+                }
+            }
+        }
+
         return results;
+    }
+
+    private splitTopLevelCommas(input: string): string[] {
+        const result: string[] = [];
+        let current = '';
+        let depth = 0;
+        for (let i = 0; i < input.length; i++) {
+            const char = input[i];
+            if (char === '<' || char === '(' || char === '[') {
+                depth++;
+                current += char;
+            } else if (char === '>' || char === ')' || char === ']') {
+                depth = Math.max(0, depth - 1);
+                current += char;
+            } else if (char === ',' && depth === 0) {
+                result.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        if (current.trim()) {
+            result.push(current.trim());
+        }
+        return result;
+    }
+
+    public extractFieldsFromContent(content: string): Array<{ name: string; type: string; hasGetterAnnotation: boolean }> {
+        const cleanContent = this.stripJavaComments(content);
+        const classMatchIdx = cleanContent.search(/\b(class|record|enum|interface)\b/);
+        const firstBrace = classMatchIdx !== -1 ? cleanContent.indexOf('{', classMatchIdx) : cleanContent.indexOf('{');
+        const lastBrace = cleanContent.lastIndexOf('}');
+        const body = (firstBrace !== -1 && lastBrace !== -1) ? cleanContent.substring(firstBrace + 1, lastBrace) : cleanContent;
+
+        const statements = body.split(';');
+        const fields: Array<{ name: string; type: string; hasGetterAnnotation: boolean }> = [];
+
+        for (const stmt of statements) {
+            if (/\bstatic\b/.test(stmt) || /\bclass\b/.test(stmt) || /\breturn\b/.test(stmt) || /{/.test(stmt) || /}/.test(stmt)) {
+                continue;
+            }
+
+            const eqIdx = stmt.indexOf('=');
+            const leftSide = eqIdx !== -1 ? stmt.substring(0, eqIdx) : stmt;
+            const trimmed = leftSide.trim();
+            if (!trimmed) {
+                continue;
+            }
+
+            const hasGetterAnnotation = /@(?:lombok\.)?Getter\b/.test(trimmed);
+
+            let cleanLeft = trimmed.replace(/@[A-Za-z0-9_.]+(?:\([^)]*\))?/g, '').trim();
+            cleanLeft = cleanLeft.replace(/\b(public|protected|private|final|transient|volatile)\b/g, '').trim();
+
+            if (!cleanLeft || cleanLeft.includes('(')) {
+                continue;
+            }
+
+            const parts = this.splitTopLevelCommas(cleanLeft);
+            if (parts.length === 0) {
+                continue;
+            }
+
+            const firstTokens = parts[0].trim().split(/\s+/);
+            if (firstTokens.length >= 2) {
+                const firstVarName = firstTokens[firstTokens.length - 1];
+                const typeName = parts[0].trim().substring(0, parts[0].trim().lastIndexOf(firstVarName)).trim();
+
+                if (typeName && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(firstVarName)) {
+                    fields.push({ name: firstVarName, type: typeName, hasGetterAnnotation });
+
+                    for (let i = 1; i < parts.length; i++) {
+                        const nextVarName = parts[i].trim();
+                        if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(nextVarName)) {
+                            fields.push({ name: nextVarName, type: typeName, hasGetterAnnotation });
+                        }
+                    }
+                }
+            }
+        }
+
+        return fields;
     }
 
     public findPropertyTypeInContent(content: string, propertyName: string): string | null {
@@ -464,23 +577,30 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             return this.extractBaseType(getterMatch[1].trim());
         }
 
-        // 3. Try field: private FieldType propertyName;
-        const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*[;=]`);
-        const fieldMatch = fieldRegex.exec(cleanContent);
-        if (fieldMatch && fieldMatch[1]) {
-            return this.extractBaseType(fieldMatch[1].trim());
+        // 3. Try Lombok / standard fields using robust field extraction
+        const fields = this.extractFieldsFromContent(content);
+        for (const field of fields) {
+            if (field.name === prop) {
+                return this.extractBaseType(field.type);
+            }
+            if (/^boolean$/.test(field.type) && field.name === 'is' + capitalized) {
+                return this.extractBaseType(field.type);
+            }
         }
 
         return null;
     }
 
-    private extractBaseType(rawType: string): string {
-        const genericMatch = /<([^>]+)>/.exec(rawType);
+    public extractBaseType(rawType: string): string {
+        let cleaned = rawType.replace(/@[A-Za-z0-9_.]+(?:\([^)]*\))?\s*/g, '').trim();
+        cleaned = cleaned.replace(/\b(public|protected|private|static|final|transient|volatile)\b\s*/g, '').trim();
+
+        const genericMatch = /<([^>]+)>/.exec(cleaned);
         if (genericMatch) {
             const parts = genericMatch[1].split(',');
             return parts[parts.length - 1].trim();
         }
-        return rawType.replace(/\[\]/g, '').trim();
+        return cleaned.replace(/\[\]/g, '').trim();
     }
 
     private cleanType(rawType: string): string {
