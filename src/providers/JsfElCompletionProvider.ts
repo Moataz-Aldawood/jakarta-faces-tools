@@ -141,6 +141,9 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             const kind = prop.isMethod ? vscode.CompletionItemKind.Method : vscode.CompletionItemKind.Property;
             const item = new vscode.CompletionItem(prop.name, kind);
             item.detail = `${prop.isMethod ? 'Method' : 'Property'} : ${prop.type}`;
+            if (prop.isMethod) {
+                item.insertText = new vscode.SnippetString(`${prop.name}($0)`);
+            }
             item.documentation = new vscode.MarkdownString(
                 `**${prop.name}**\n\n\`${prop.description}\` -> \`${prop.type}\``
             );
@@ -270,8 +273,11 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         while ((methodMatch = methodRegex.exec(content)) !== null) {
             const rawType = methodMatch[1].trim();
             const methodName = methodMatch[2];
-            // Skip standard Object methods or getters we already captured
+            // Skip standard Object methods, or zero-arg getters (get.../is...) per JSF standard / NetBeans convention
             if (['equals', 'hashCode', 'toString', 'getClass', 'notify', 'notifyAll', 'wait'].includes(methodName)) {
+                continue;
+            }
+            if (/^(get|is)[A-Z]/.test(methodName)) {
                 continue;
             }
             if (!seenNames.has(methodName) && !seenNames.has(methodName + '()')) {
