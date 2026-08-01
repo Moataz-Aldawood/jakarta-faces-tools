@@ -27,6 +27,7 @@ export async function computeElDiagnostics(
     beanMap: Map<string, ElBeanMetadata>,
     elProvider: IElProvider
 ): Promise<vscode.Diagnostic[]> {
+    const docVersion = document.version;
     const diagnostics: vscode.Diagnostic[] = [];
     const text = document.getText();
     const elRegex = /#\{([^\}]+)\}/g;
@@ -93,6 +94,9 @@ export async function computeElDiagnostics(
                     }
 
                     const beanContent = await elProvider.readFile(currentUri);
+                    if (document.version !== undefined && document.version !== docVersion) {
+                        return diagnostics;
+                    }
                     const returnType = elProvider.findPropertyTypeInContent(beanContent, propName);
                     if (!returnType) {
                         const propStartPos = document.positionAt(currentOffset);
@@ -134,6 +138,7 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
         return;
     }
 
+    const docVersion = document.version;
     const diagnostics: vscode.Diagnostic[] = [];
     const text = document.getText();
 
@@ -258,18 +263,41 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
         try {
             const elProvider = new JsfElCompletionProvider();
             await elProvider.ensureBeansCached();
+            if (document.version !== undefined && document.version !== docVersion) {
+                return;
+            }
             const beanMap = getSharedBeanMap();
             const elDiagnostics = await computeElDiagnostics(document, beanMap, elProvider);
+            if (document.version !== undefined && document.version !== docVersion) {
+                return;
+            }
             diagnostics.push(...elDiagnostics);
         } catch (e) {
             // Keep existing diagnostics even if EL check encounters an issue
         }
     }
 
+    if (document.version !== undefined && document.version !== docVersion) {
+        return;
+    }
     jsfDiagnostics.set(document.uri, diagnostics);
 }
 
 export function subscribeToDocumentChanges(context: vscode.ExtensionContext, jsfDiagnostics: vscode.DiagnosticCollection): void {
+    const debounceTimers = new Map<string, NodeJS.Timeout>();
+    const debouncedRefresh = (doc: vscode.TextDocument) => {
+        const key = doc.uri.toString();
+        const existing = debounceTimers.get(key);
+        if (existing) {
+            clearTimeout(existing);
+        }
+        const timer = setTimeout(() => {
+            debounceTimers.delete(key);
+            refreshDiagnostics(doc, jsfDiagnostics);
+        }, 250);
+        debounceTimers.set(key, timer);
+    };
+
     if (vscode.window.activeTextEditor) {
         refreshDiagnostics(vscode.window.activeTextEditor.document, jsfDiagnostics);
     }
@@ -283,10 +311,18 @@ export function subscribeToDocumentChanges(context: vscode.ExtensionContext, jsf
     );
 
     context.subscriptions.push(
-        vscode.workspace.onDidChangeTextDocument(e => refreshDiagnostics(e.document, jsfDiagnostics))
+        vscode.workspace.onDidChangeTextDocument(e => debouncedRefresh(e.document))
     );
 
     context.subscriptions.push(
-        vscode.workspace.onDidCloseTextDocument(doc => jsfDiagnostics.delete(doc.uri))
+        vscode.workspace.onDidCloseTextDocument(doc => {
+            const key = doc.uri.toString();
+            const existing = debounceTimers.get(key);
+            if (existing) {
+                clearTimeout(existing);
+                debounceTimers.delete(key);
+            }
+            jsfDiagnostics.delete(doc.uri);
+        })
     );
 }

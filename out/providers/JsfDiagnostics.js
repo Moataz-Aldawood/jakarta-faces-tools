@@ -19,6 +19,7 @@ const EL_IMPLICIT_OBJECTS = new Set([
 ]);
 const OBJECT_METHODS = new Set(['class', 'classLoader', 'classReference', 'equals', 'hashCode', 'toString']);
 async function computeElDiagnostics(document, beanMap, elProvider) {
+    const docVersion = document.version;
     const diagnostics = [];
     const text = document.getText();
     const elRegex = /#\{([^\}]+)\}/g;
@@ -70,6 +71,9 @@ async function computeElDiagnostics(document, beanMap, elProvider) {
                         break; // Cannot check source of external or JDK library class
                     }
                     const beanContent = await elProvider.readFile(currentUri);
+                    if (document.version !== undefined && document.version !== docVersion) {
+                        return diagnostics;
+                    }
                     const returnType = elProvider.findPropertyTypeInContent(beanContent, propName);
                     if (!returnType) {
                         const propStartPos = document.positionAt(currentOffset);
@@ -103,6 +107,7 @@ async function refreshDiagnostics(document, jsfDiagnostics) {
     if (!document.fileName.endsWith('.xhtml') && !document.fileName.endsWith('.jsf')) {
         return;
     }
+    const docVersion = document.version;
     const diagnostics = [];
     const text = document.getText();
     // 1. Check for unclosed EL expressions
@@ -197,17 +202,39 @@ async function refreshDiagnostics(document, jsfDiagnostics) {
         try {
             const elProvider = new JsfElCompletionProvider_1.JsfElCompletionProvider();
             await elProvider.ensureBeansCached();
+            if (document.version !== undefined && document.version !== docVersion) {
+                return;
+            }
             const beanMap = (0, JsfElCompletionProvider_1.getSharedBeanMap)();
             const elDiagnostics = await computeElDiagnostics(document, beanMap, elProvider);
+            if (document.version !== undefined && document.version !== docVersion) {
+                return;
+            }
             diagnostics.push(...elDiagnostics);
         }
         catch (e) {
             // Keep existing diagnostics even if EL check encounters an issue
         }
     }
+    if (document.version !== undefined && document.version !== docVersion) {
+        return;
+    }
     jsfDiagnostics.set(document.uri, diagnostics);
 }
 function subscribeToDocumentChanges(context, jsfDiagnostics) {
+    const debounceTimers = new Map();
+    const debouncedRefresh = (doc) => {
+        const key = doc.uri.toString();
+        const existing = debounceTimers.get(key);
+        if (existing) {
+            clearTimeout(existing);
+        }
+        const timer = setTimeout(() => {
+            debounceTimers.delete(key);
+            refreshDiagnostics(doc, jsfDiagnostics);
+        }, 250);
+        debounceTimers.set(key, timer);
+    };
     if (vscode.window.activeTextEditor) {
         refreshDiagnostics(vscode.window.activeTextEditor.document, jsfDiagnostics);
     }
@@ -216,7 +243,15 @@ function subscribeToDocumentChanges(context, jsfDiagnostics) {
             refreshDiagnostics(editor.document, jsfDiagnostics);
         }
     }));
-    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => refreshDiagnostics(e.document, jsfDiagnostics)));
-    context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(doc => jsfDiagnostics.delete(doc.uri)));
+    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => debouncedRefresh(e.document)));
+    context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(doc => {
+        const key = doc.uri.toString();
+        const existing = debounceTimers.get(key);
+        if (existing) {
+            clearTimeout(existing);
+            debounceTimers.delete(key);
+        }
+        jsfDiagnostics.delete(doc.uri);
+    }));
 }
 //# sourceMappingURL=JsfDiagnostics.js.map
