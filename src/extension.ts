@@ -38,8 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
         const enabled = config.get<boolean>('enableELAutocomplete', true);
         const showButton = config.get<boolean>('showRebuildCacheButton', true);
-        const positionStr = config.get<string>('rebuildCacheButtonPosition', 'Left');
-        const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
+        const positionStr = config.get<string>('rebuildCacheButtonPosition', 'Right');
+        const alignment = positionStr === 'Left' ? vscode.StatusBarAlignment.Left : vscode.StatusBarAlignment.Right;
 
         // Dispose existing item if alignment changed
         if (elStatusBarItem && elStatusBarItem.alignment !== alignment) {

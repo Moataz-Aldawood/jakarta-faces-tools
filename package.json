@@ -33,7 +33,8 @@
   "activationEvents": [
     "onLanguage:jsf",
     "onLanguage:html",
-    "onLanguage:xml"
+    "onLanguage:xml",
+    "onStartupFinished"
   ],
   "contributes": {
     "configuration": [
@@ -67,12 +68,12 @@
           "jakartaFacesTools.rebuildCacheButtonPosition": {
             "type": "string",
             "enum": [
-              "Left",
-              "Right"
+              "Right",
+              "Left"
             ],
-            "default": "Left",
+            "default": "Right",
             "order": 5,
-            "description": "[Beta Feature] Choose the position ('Left' or 'Right') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled."
+            "description": "[Beta Feature] Choose the position ('Right' or 'Left') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled."
           }
         }
       },
