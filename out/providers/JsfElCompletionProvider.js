@@ -279,8 +279,9 @@ class JsfElCompletionProvider {
     findPropertyTypeInContent(content, propertyName) {
         const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
-        if (prop.endsWith('()')) {
-            prop = prop.substring(0, prop.length - 2).trim();
+        const parenIdx = prop.indexOf('(');
+        if (parenIdx !== -1) {
+            prop = prop.substring(0, parenIdx).trim();
         }
         // 1. Check for exact method name match: public ReturnType methodName(
         const methodRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*\\(`);

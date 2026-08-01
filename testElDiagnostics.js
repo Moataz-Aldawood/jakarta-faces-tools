@@ -91,10 +91,30 @@ mockBeanMap.set('userController', {
     uri: { fsPath: '/path/to/UserController.java' },
     properties: []
 });
+mockBeanMap.set('qrDesignTemplate', {
+    beanName: 'qrDesignTemplate',
+    className: 'QrDesignTemplate',
+    uri: { fsPath: '/path/to/QrDesignTemplate.java' },
+    properties: []
+});
 
 // Mock IElProvider
 const mockElProvider = {
     async readFile(uri) {
+        if (uri.fsPath === '/path/to/QrDesignTemplate.java') {
+            return `
+                public class QrDesignTemplate {
+                    public QrCodeDesignTemplate getQrCodeDesignTemplate() { return null; }
+                }
+            `;
+        }
+        if (uri.fsPath === '/path/to/QrCodeDesignTemplate.java') {
+            return `
+                public class QrCodeDesignTemplate {
+                    public String getValidProp() { return ""; }
+                }
+            `;
+        }
         return `
             public class UserController {
                 private String name;
@@ -106,6 +126,18 @@ const mockElProvider = {
     findPropertyTypeInContent(content, propertyName) {
         if (propertyName === 'name' || propertyName === 'getName') {
             return 'String';
+        }
+        if (propertyName === 'qrCodeDesignTemplate' || propertyName === 'getQrCodeDesignTemplate') {
+            return 'QrCodeDesignTemplate';
+        }
+        if (propertyName === 'validProp' || propertyName === 'getValidProp') {
+            return 'String';
+        }
+        return null;
+    },
+    async findJavaClassUri(className) {
+        if (className === 'QrCodeDesignTemplate') {
+            return { fsPath: '/path/to/QrCodeDesignTemplate.java' };
         }
         return null;
     }
@@ -166,6 +198,19 @@ async function testIterationVariable() {
     console.log('  [PASS] Iteration variable u recognized in scope.');
 }
 
+async function testDeepNestedUnknownProperty() {
+    console.log('Testing deep nested unknown property on known Managed Bean...');
+    const xhtml = `<h:outputText value="#{qrDesignTemplate.qrCodeDesignTemplate.relativeSquareBorderRoundxxxx}" />`;
+    const doc = new MockTextDocument(xhtml);
+    const diags = await computeElDiagnostics(doc, mockBeanMap, mockElProvider);
+    assert.strictEqual(diags.length, 1, 'Deep unknown property must produce 1 warning');
+    assert.ok(
+        diags[0].message.includes("Property 'relativeSquareBorderRoundxxxx' not found in Managed Bean 'qrDesignTemplate' (QrCodeDesignTemplate)"),
+        'Must contain deep property not found message'
+    );
+    console.log('  [PASS] Deep mistyped property name correctly flagged with Warning.');
+}
+
 async function runAllTests() {
     console.log('==============================================');
     console.log('RUNNING EL SEMANTIC VALIDATION DIAGNOSTICS TESTS');
@@ -175,6 +220,7 @@ async function runAllTests() {
     await testUnknownBeanProperty();
     await testValidBeanProperty();
     await testIterationVariable();
+    await testDeepNestedUnknownProperty();
     console.log('==============================================');
     console.log('ALL EL DIAGNOSTIC TESTS PASSED SUCCESSFULLY! ☕');
     console.log('==============================================');

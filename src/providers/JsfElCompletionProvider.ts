@@ -338,8 +338,9 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
     public findPropertyTypeInContent(content: string, propertyName: string): string | null {
         const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
-        if (prop.endsWith('()')) {
-            prop = prop.substring(0, prop.length - 2).trim();
+        const parenIdx = prop.indexOf('(');
+        if (parenIdx !== -1) {
+            prop = prop.substring(0, parenIdx).trim();
         }
 
         // 1. Check for exact method name match: public ReturnType methodName(
@@ -380,7 +381,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return rawType.replace(/\s+/g, ' ').trim();
     }
 
-    private async findJavaClassUri(className: string): Promise<vscode.Uri | null> {
+    public async findJavaClassUri(className: string): Promise<vscode.Uri | null> {
         if (classUriCache.has(className)) {
             return classUriCache.get(className)!;
         }

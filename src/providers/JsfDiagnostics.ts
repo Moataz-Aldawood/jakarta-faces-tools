@@ -19,6 +19,7 @@ const OBJECT_METHODS = new Set(['class', 'classLoader', 'classReference', 'equal
 export interface IElProvider {
     readFile(uri: vscode.Uri): Promise<string>;
     findPropertyTypeInContent(content: string, propertyName: string): string | null;
+    findJavaClassUri?(className: string): Promise<vscode.Uri | null>;
 }
 
 export async function computeElDiagnostics(
@@ -73,29 +74,48 @@ export async function computeElDiagnostics(
                 continue;
             }
 
-            // If rootName IS a known Managed Bean, check second segment property if present
+            // If rootName IS a known Managed Bean, recursively validate all segments in the property chain
             if (parts.length >= 2) {
                 const bean = beanMap.get(rootName)!;
-                const propName = parts[1];
+                let currentUri: vscode.Uri | null = bean.uri;
+                let currentClassName = bean.className;
+                let currentOffset = chainOffset + rootName.length + 1; // +1 for '.'
 
-                if (OBJECT_METHODS.has(propName)) {
-                    continue;
-                }
+                for (let i = 1; i < parts.length; i++) {
+                    const propName = parts[i];
 
-                const beanContent = await elProvider.readFile(bean.uri);
-                const returnType = elProvider.findPropertyTypeInContent(beanContent, propName);
-                if (!returnType) {
-                    const propOffset = chainOffset + rootName.length + 1; // +1 for '.'
-                    const propStartPos = document.positionAt(propOffset);
-                    const propEndPos = document.positionAt(propOffset + propName.length);
-                    const range = new vscode.Range(propStartPos, propEndPos);
-                    const diagnostic = new vscode.Diagnostic(
-                        range,
-                        `Jakarta Faces: Property '${propName}' not found in Managed Bean '${rootName}' (${bean.className}).`,
-                        vscode.DiagnosticSeverity.Warning
-                    );
-                    diagnostic.source = 'Jakarta Faces Tools';
-                    diagnostics.push(diagnostic);
+                    if (OBJECT_METHODS.has(propName)) {
+                        break; // Standard Object method, valid
+                    }
+
+                    if (!currentUri) {
+                        break; // Cannot check source of external or JDK library class
+                    }
+
+                    const beanContent = await elProvider.readFile(currentUri);
+                    const returnType = elProvider.findPropertyTypeInContent(beanContent, propName);
+                    if (!returnType) {
+                        const propStartPos = document.positionAt(currentOffset);
+                        const propEndPos = document.positionAt(currentOffset + propName.length);
+                        const range = new vscode.Range(propStartPos, propEndPos);
+                        const diagnostic = new vscode.Diagnostic(
+                            range,
+                            `Jakarta Faces: Property '${propName}' not found in Managed Bean '${rootName}' (${currentClassName}).`,
+                            vscode.DiagnosticSeverity.Warning
+                        );
+                        diagnostic.source = 'Jakarta Faces Tools';
+                        diagnostics.push(diagnostic);
+                        break; // Stop checking deeper segments if this property failed
+                    }
+
+                    // Move to the return type class for the next property segment in the chain
+                    currentClassName = returnType;
+                    if (elProvider.findJavaClassUri) {
+                        currentUri = await elProvider.findJavaClassUri(returnType);
+                    } else {
+                        currentUri = null;
+                    }
+                    currentOffset += propName.length + 1; // +1 for '.'
                 }
             }
         }
