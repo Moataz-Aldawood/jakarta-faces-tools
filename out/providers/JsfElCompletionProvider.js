@@ -107,14 +107,23 @@ async function updateJavaBeanInCache(uri, readFileFn) {
 function startJavaFileWatcher(context, onCacheUpdated) {
     const watcher = vscode.workspace.createFileSystemWatcher('**/*.java');
     watcher.onDidCreate(async (uri) => {
+        if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableIncrementalCache', true)) {
+            return;
+        }
         await updateJavaBeanInCache(uri);
         onCacheUpdated?.();
     });
     watcher.onDidChange(async (uri) => {
+        if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableIncrementalCache', true)) {
+            return;
+        }
         await updateJavaBeanInCache(uri);
         onCacheUpdated?.();
     });
     watcher.onDidDelete((uri) => {
+        if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableIncrementalCache', true)) {
+            return;
+        }
         removeJavaBeanFromCache(uri);
         onCacheUpdated?.();
     });

@@ -76,6 +76,9 @@ function activate(context) {
     (0, JsfElCompletionProvider_1.startJavaFileWatcher)(context, onCacheUpdated);
     // Also update cache incrementally when .java files are saved in the editor
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(async (doc) => {
+        if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableIncrementalCache', true)) {
+            return;
+        }
         if (doc.uri.fsPath.endsWith('.java')) {
             await (0, JsfElCompletionProvider_1.updateJavaBeanInCache)(doc.uri);
             onCacheUpdated();

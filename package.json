@@ -52,10 +52,16 @@
             "order": 2,
             "description": "Enable real-time semantic diagnostics (warnings) for unknown Java Managed Beans and mistyped property names inside #{...} EL expressions."
           },
+          "jakartaFacesTools.enableIncrementalCache": {
+            "type": "boolean",
+            "default": true,
+            "order": 3,
+            "description": "Enable real-time Java file watching (**/*.java) and incremental cache updates when Managed Bean files are saved. Disable this in very large repositories or network drives if file watching causes performance issues."
+          },
           "jakartaFacesTools.showRebuildCacheButton": {
             "type": "boolean",
             "default": true,
-            "order": 2,
+            "order": 4,
             "description": "[Beta Feature] Show the 'Rebuild JSF Cache' button in the VS Code Status Bar. Expression Language (EL) Autocomplete caches your Java Managed Beans in memory for fast performance; use this button to force a fresh scan of your project if beans change outside of normal edits."
           },
           "jakartaFacesTools.rebuildCacheButtonPosition": {

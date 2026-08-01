@@ -98,6 +98,9 @@ export function activate(context: vscode.ExtensionContext) {
     // Also update cache incrementally when .java files are saved in the editor
     context.subscriptions.push(
         vscode.workspace.onDidSaveTextDocument(async doc => {
+            if (!vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableIncrementalCache', true)) {
+                return;
+            }
             if (doc.uri.fsPath.endsWith('.java')) {
                 await updateJavaBeanInCache(doc.uri);
                 onCacheUpdated();
