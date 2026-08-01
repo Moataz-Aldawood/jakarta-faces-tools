@@ -20,9 +20,16 @@
 - [x] **Lombok Annotation Support**: Fully support `@Data`, `@Getter`, `@Value`, `@Builder`, and selective field-level `@Getter` annotations from Lombok when inspecting Java Managed Beans for EL properties.
 
 ## ✅ Completed (v2.6.0)
-- [x] **Immediate Quote Autocomplete for Component IDs**: Typing a quote (`"` or `'`) inside `for="..."` or `target="..."` immediately triggers autocomplete displaying all component IDs without requiring typing the first letter.
-- **Immediate Root Bean & Smart EL Snippets**: Typing `{` inside `#{|}` immediately pops up all Managed Beans and iteration variables. Typing a quote after any EL-capable JSF tag attribute immediately suggests `#{beanName}` snippets, inserting `#{beanName}` automatically when selected while excluding non-EL attributes like `id="..."` and `for="..."`.
+- [x] **Immediate Quote Autocomplete for Component IDs (`for="..."` / `target="..."`)**: Autocomplete triggers immediately after typing a quote (`"` or `'`) inside `for="..."` and `target="..."` attributes, displaying all available component IDs without requiring typing the first character.
+- [x] **Automatic Attribute TriggerSuggest**: Selecting any tag attribute from autocomplete inserts `attr=""`, positions cursor inside quotes, and automatically executes `editor.action.triggerSuggest`.
+- [x] **Clean EL Triggering**: EL autocomplete triggers exclusively inside `#{...}` and `${...}` expressions—never on attribute quotes (`"`)—preventing unwanted popups when typing simple string attribute values.
+- [x] **Smart Cursor Positioning (`$0`)**: Selecting a Managed Bean inside `#{|}` inserts the bean name and positions the cursor before `}` (`${beanName}$0`), allowing immediate `.` typing without duplicate braces (`#{{...}}`).
+- [x] **Official Class Icon (`C`) & Signature Branding**: Managed Beans display VS Code's official Class badge icon (`CompletionItemKind.Class`). All Markdown hover and completion documentation cards standardize on our `$(coffee) Jakarta Faces Tools` signature.
+- [x] **Dedicated Hover Cards UI Setting**: Added `"Jakarta Faces Tools: Documentation & Hover Cards"` settings category with `jakartaFacesTools.enableHoverCards` (default `true`) to toggle hover cards from the Settings UI.
 
 ## 🚀 Next Up (v2.7.0 / Future Releases)
-- [ ] **Custom Composite Component Support (`<cc:attribute>`)**: Intelligent auto-complete, diagnostics, and hover documentation for custom composite component attributes and metadata.
-- [ ] **JSF/Faces Config XML Parsing (`faces-config.xml`)**: Support explicit bean declarations and navigation rule mappings defined in XML configuration files.
+- [ ] **Spring Boot / CDI Annotation Support (`@Component`, `@Service`, `@Controller`, `@Model`, `@Inject`)**: Extend Java Bean scanning to recognize Spring Boot and Jakarta CDI component annotations for EL-accessible beans (crucial for JoinFaces & modern Spring Boot + JSF apps).
+- [ ] **i18n Resource Bundle EL Support (`#{msg['...']}`)**: Parse `.properties` message bundles and `<f:loadBundle>` / `faces-config.xml` resource bundles to provide auto-complete and hover translation previews for internationalization keys.
+- [ ] **EL Quick Fixes & Code Actions (`Ctrl+.`)**: Provide VS Code Lightbulb Quick Fixes for EL semantic warnings (e.g., suggesting "Did you mean `username`?" for mistyped properties or generating missing Java getter methods).
+- [ ] **JSF/Faces Config XML Parsing (`faces-config.xml`)**: Support explicit `<managed-bean>` declarations and navigation rule outcome autocomplete (`action="..."`) from XML configuration files.
+- [ ] **Custom Composite Component Support (`<cc:attribute>`)**: Enhanced auto-complete, diagnostics, and hover documentation for custom composite component attributes and metadata across project namespaces.
