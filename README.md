@@ -19,6 +19,8 @@ Enjoy NetBeans and Eclipse-grade form wiring for Jakarta Faces, PrimeFaces, Omni
 
 ### 2. Expression Language (EL) Autocomplete [Enabled by Default]
 Get intelligent auto-complete for your Java Managed Beans, iteration variables, and properties inside Expression Language (EL) `#{...}` expressions! Enabled by default (`jakartaFacesTools.enableELAutocomplete: true`).
+- **Lombok Annotation Support**: Fully supports Project Lombok annotations (`@Data`, `@Getter`, `@Value`, `@Builder`, and field-level `@Getter`). Automatically recognizes Lombok-annotated Java classes and maps fields to EL getter properties (`.username`, `.active`), including primitive `boolean` (`is...()`) vs boxed `Boolean` (`get...()`) return types!
+- **Incremental Bean Caching**: Equipped with real-time Java file system watchers (`**/*.java`) that update or remove beans from cache non-destructively as you create, edit, or delete `.java` files without needing to rebuild the entire project cache.
 - **Iteration Variable Support (`var="..."`)**: Full intelligence for JSF iteration variables in `.xhtml` and `.jsf` files (`<ui:repeat>`, `<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<p:carousel>`, `<c:forEach>`). Typing inside `#{u.|}` resolves `u` to its collection element type (stripping generic wrappers like `List<User>` → `User`) and suggests methods and properties of `User.java`.
 - **Standards-Compliant Property & Method Suggestions**: Follows JSF & NetBeans completion standards by filtering out `get`/`is` prefixes from completion lists (suggesting clean `.property` and `.method()` names) and automatically inserting snippet parens for methods (`method($0)`). Also supports direct method resolution (e.g. `#{user.getName}`).
 - **Rich Inline Data Types & API Cards**: Every item in the completion list displays its data type with a clean colon prefix (` : String`, ` : ArrayList<User>`, ` : int`), along with a beautifully styled Markdown documentation fly-out card.
@@ -31,7 +33,6 @@ Make your code pop and significantly improve readability with native syntax high
 - **EL Block Highlighting**: All EL expressions (`#{...}`) are automatically highlighted to distinguish them from standard HTML/XML.
 - **Highly Customizable**: Head to your VS Code Settings (`Jakarta Faces Tools: EL Highlighting`) to completely customize the background color, text color, borders, and border-radius of your EL expressions.
 - **Backward Compatible**: Existing user customizations from legacy settings (`elHighlight.*`) are fully preserved.
-
 
 
 ### 4. Advanced Jump-to-Definition (Ctrl+Click)
@@ -57,7 +58,7 @@ Built-in intelligence for your workspace's custom JSF Composite Components witho
 
 ### 7. Real-time EL & Syntax Diagnostics
 Catch JSF and Expression Language mistakes before you ever run the application.
-- **EL Semantic Validation**: Real-time semantic checking inside `#{...}` Expression Language expressions. Warns if you reference an unknown Managed Bean name (`#{unknownBean.foo}`) or a mistyped property (`#{userController.naem}`) that does not exist on your Java class. Supports recursive checking across deeply nested property chains (`#{a.b.c.d}`). Automatically whitelists all standard JSF implicit objects (`resource`, `cc`, `param`, `session`, etc.), EL keywords, and iteration variables (`<ui:repeat var="u">`). Includes intelligent debouncing and document version checking for stable, flicker-free squigglies.
+- **EL Semantic Validation**: Real-time semantic checking inside `#{...}` Expression Language expressions. Warns if you reference an unknown Managed Bean name (`#{unknownBean.foo}`) or a mistyped property (`#{userController.naem}`) that does not exist on your Java class. Supports Lombok `@Data`, `@Getter`, `@Value`, and `@Builder` annotations as well as recursive checking across deeply nested property chains (`#{a.b.c.d}`). Automatically refreshes diagnostics immediately when a Managed Bean `.java` file is saved! Automatically whitelists all standard JSF implicit objects (`resource`, `cc`, `param`, `session`, etc.), EL keywords, and iteration variables (`<ui:repeat var="u">`). Includes intelligent debouncing and document version checking for stable, flicker-free squigglies.
 - **EL Syntax Checking**: The extension runs in the background and will flag unmatched Expression Language brackets (e.g. `#{myBean` missing the closing `}`) with a red error squiggly.
 - **Unknown Tag and Attribute Detection**: Mistyped standard or 3rd-party tags (e.g., `<h:outpottText>`) as well as unrecognized attributes will be flagged with a yellow warning squiggly.
 

@@ -2,6 +2,15 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+## [2.5.0] - 2026-08-01
+### Added
+- **Incremental Bean Caching (File Watchers)**: Real-time file system watchers (`**/*.java`) that detect `.java` file creations, modifications, and deletions without rebuilding the entire project cache.
+- **Non-Destructive Java Cache Updates**: Selectively updates or removes modified/deleted beans from memory and automatically refreshes open `.xhtml` diagnostics upon file save.
+- **Lombok Annotation Support**: Complete recognition for Lombok annotations (`@Data`, `@Getter`, `@Value`, `@Builder`) in JavaBeans property resolution.
+- **Selective Field-Level `@Getter` Support**: Correctly maps fields individually annotated with `@Getter` or `@lombok.Getter` to EL property getters when class-level annotations are absent.
+- **Primitive vs Boxed Boolean Compatibility**: Automatically generates `is...()` getters for primitive `boolean` fields and `get...()` getters for boxed `Boolean` fields per JavaBeans standard.
+- **Safe Generic Declaration Parsing**: Accurately parses comma-separated declarations and generics (e.g., `private Map<String, Object> metadata;`) without splitting generic type parameters.
+
 ## [2.4.0] - 2026-08-01
 ### Added
 - **EL Semantic Validation (Real-time Diagnostics)**: Real-time semantic diagnostics to flag mistyped Java Managed Bean names and property names inside `#{...}` Expression Language blocks.
