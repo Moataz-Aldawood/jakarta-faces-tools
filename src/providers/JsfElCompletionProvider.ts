@@ -67,7 +67,11 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         if (parts.length === 1) {
             const completions: vscode.CompletionItem[] = [];
             for (const [beanName, meta] of beanMap.entries()) {
-                const item = new vscode.CompletionItem(beanName, vscode.CompletionItemKind.Variable);
+                const item = new vscode.CompletionItem({
+                    label: beanName,
+                    description: meta.className
+                }, vscode.CompletionItemKind.Variable);
+                item.insertText = beanName;
                 item.detail = `Managed Bean: ${meta.className}`;
                 item.documentation = new vscode.MarkdownString(
                     `**Jakarta Managed Bean: \`${beanName}\`**\n\n` +
@@ -80,7 +84,11 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             // Also suggest iteration variables in scope (e.g., u in <ui:repeat var="u">)
             const iterVars = findEnclosingIterationVariables(document, position);
             for (const v of iterVars) {
-                const item = new vscode.CompletionItem(v.varName, vscode.CompletionItemKind.Variable);
+                const item = new vscode.CompletionItem({
+                    label: v.varName,
+                    description: `var (${v.collectionEl})`
+                }, vscode.CompletionItemKind.Variable);
+                item.insertText = v.varName;
                 item.detail = `Iteration Variable (from #{${v.collectionEl}})`;
                 item.documentation = new vscode.MarkdownString(
                     `**JSF Iteration Variable: \`${v.varName}\`**\n\n` +
@@ -139,10 +147,16 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         const completions: vscode.CompletionItem[] = [];
         for (const prop of properties) {
             const kind = prop.isMethod ? vscode.CompletionItemKind.Method : vscode.CompletionItemKind.Property;
-            const item = new vscode.CompletionItem(prop.name, kind);
+            const item = new vscode.CompletionItem({
+                label: prop.name,
+                detail: prop.isMethod ? '()' : '',
+                description: prop.type
+            }, kind);
             item.detail = `${prop.isMethod ? 'Method' : 'Property'} : ${prop.type}`;
             if (prop.isMethod) {
                 item.insertText = new vscode.SnippetString(`${prop.name}($0)`);
+            } else {
+                item.insertText = prop.name;
             }
             item.documentation = new vscode.MarkdownString(
                 `**${prop.name}**\n\n\`${prop.description}\` -> \`${prop.type}\``
