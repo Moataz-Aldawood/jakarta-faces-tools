@@ -55,8 +55,9 @@ Built-in intelligence for your workspace's custom JSF Composite Components witho
 - **Jump to Custom Component**: `Ctrl+Click` on a custom tag name to jump directly to the component's `.xhtml` file in your workspace.
 - **Jump to Custom Attribute**: `Ctrl+Click` on a specific attribute in your custom tag to jump precisely to that `<cc:attribute>` definition line inside the component file!
 
-### 7. Real-time Syntax Error Diagnostics
-Catch JSF mistakes before you ever run the application.
+### 7. Real-time EL & Syntax Diagnostics
+Catch JSF and Expression Language mistakes before you ever run the application.
+- **EL Semantic Validation**: Real-time semantic checking inside `#{...}` Expression Language expressions. Warns if you reference an unknown Managed Bean name (`#{unknownBean.foo}`) or a mistyped property (`#{userController.naem}`) that does not exist on your Java class. Automatically whitelists all standard JSF implicit objects (`resource`, `cc`, `param`, `session`, etc.), EL keywords, and iteration variables (`<ui:repeat var="u">`).
 - **EL Syntax Checking**: The extension runs in the background and will flag unmatched Expression Language brackets (e.g. `#{myBean` missing the closing `}`) with a red error squiggly.
 - **Unknown Tag and Attribute Detection**: Mistyped standard or 3rd-party tags (e.g., `<h:outpottText>`) as well as unrecognized attributes will be flagged with a yellow warning squiggly.
 

@@ -2,6 +2,14 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+## [2.4.0] - 2026-08-01
+### Added
+- **EL Semantic Validation (Real-time Diagnostics)**: Real-time semantic diagnostics to flag mistyped Java Managed Bean names and property names inside `#{...}` Expression Language blocks.
+- **Unknown Root Bean Warnings**: Automatically flags expressions referencing non-existent bean names with a yellow warning squiggly (`Jakarta Faces: Unknown Managed Bean or EL variable 'foo'.`).
+- **Unknown Property Warnings**: Verifies whether `.propertyName` exists on the target Managed Bean Java class and warns if mistyped (`Jakarta Faces: Property 'naem' not found in Managed Bean 'userController' (UserController).`).
+- **Whitelisted Implicit Objects & Keywords**: Built-in protection against false positives by whitelisting all standard JSF/EL implicit objects (`resource`, `cc`, `param`, `session`, `request`, etc.), operators, literals, and iteration variables (`<ui:repeat var="u">`).
+- **Configurable Toggle**: Added setting `jakartaFacesTools.enableELDiagnostics` (enabled by default) to customize or toggle semantic EL warnings in VS Code Settings.
+
 ## [2.3.0] - 2026-08-01
 ### Added
 - **Component Linking & Navigation (`for="..."` ↔ `id="..."`)**: Full NetBeans and Eclipse-grade form wiring for Jakarta Faces, PrimeFaces, OmniFaces, and BootsFaces `.xhtml` and `.jsf` files.
