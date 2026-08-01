@@ -5,9 +5,26 @@ const vscode = require("vscode");
 const namespaceParser_1 = require("./namespaceParser");
 const tagParser_1 = require("./tagParser");
 const iterationParser_1 = require("./iterationParser");
+const JsfIdHighlightProvider_1 = require("./JsfIdHighlightProvider");
 class JsfDefinitionProvider {
     async provideDefinition(document, position, token) {
         const lineText = document.lineAt(position.line).text;
+        // Check if clicking inside a for="..." or target="..." attribute (Component ID navigation)
+        const forAttrRegex = /\b(for|target)\s*=\s*['"]([^'"]+)['"]/g;
+        let forMatch;
+        while ((forMatch = forAttrRegex.exec(lineText)) !== null) {
+            const idVal = forMatch[2];
+            const startCol = forMatch.index + forMatch[0].indexOf(idVal);
+            const endCol = startCol + idVal.length;
+            if (position.character >= startCol && position.character <= endCol) {
+                const ids = (0, JsfIdHighlightProvider_1.findComponentIds)(document);
+                const matchId = ids.find(item => item.id === idVal);
+                if (matchId) {
+                    return new vscode.Location(document.uri, matchId.range);
+                }
+                return null;
+            }
+        }
         // Phase 2: Template and src navigation
         const templateRegex = /(template|src)\s*=\s*['"]([^'"]+)['"]/g;
         let templateMatch;

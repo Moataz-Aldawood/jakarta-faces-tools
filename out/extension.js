@@ -9,12 +9,14 @@ const JsfHoverProvider_1 = require("./providers/JsfHoverProvider");
 const JsfDiagnostics_1 = require("./providers/JsfDiagnostics");
 const JsfELHighlighter_1 = require("./providers/JsfELHighlighter");
 const JsfElCompletionProvider_1 = require("./providers/JsfElCompletionProvider");
+const JsfIdHighlightProvider_1 = require("./providers/JsfIdHighlightProvider");
 function activate(context) {
     console.log('Congratulations, your extension "jakarta-ee-tools" is now active!');
     const jsfDefinitionProvider = new JsfDefinitionProvider_1.JsfDefinitionProvider();
     const jsfCompletionProvider = new JsfCompletionProvider_1.JsfCompletionProvider();
     const jsfHoverProvider = new JsfHoverProvider_1.JsfHoverProvider();
     const jsfElCompletionProvider = new JsfElCompletionProvider_1.JsfElCompletionProvider();
+    const jsfIdHighlightProvider = new JsfIdHighlightProvider_1.JsfIdHighlightProvider();
     const elHighlighter = new JsfELHighlighter_1.JsfELHighlighter();
     const documentSelector = [
         { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
@@ -25,7 +27,7 @@ function activate(context) {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
         const enabled = config.get('enableELAutocomplete', false);
         const showButton = config.get('showRebuildCacheButton', true);
-        const positionStr = config.get('rebuildCacheButtonPosition', 'Left');
+        const positionStr = config.get('rebuildCacheButtonPosition', 'Right');
         const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
         // Dispose existing item if alignment changed
         if (elStatusBarItem && elStatusBarItem.alignment !== alignment) {
@@ -50,7 +52,7 @@ function activate(context) {
     const rebuildCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.rebuildJsfCache', () => {
         (0, JsfElCompletionProvider_1.rebuildJsfCache)(true);
     });
-    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), elHighlighter, rebuildCacheCommand);
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider), elHighlighter, rebuildCacheCommand);
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('jakartaFacesTools.enableELAutocomplete') ||

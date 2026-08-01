@@ -5,8 +5,42 @@ const vscode = require("vscode");
 const jsfCatalog_1 = require("./jsfCatalog");
 const ThirdPartyCatalogs_1 = require("./ThirdPartyCatalogs");
 const tagParser_1 = require("./tagParser");
+const JsfIdHighlightProvider_1 = require("./JsfIdHighlightProvider");
 class JsfHoverProvider {
     provideHover(document, position, token) {
+        // Check if hovering over id="val" or for="val" (Component ID Linking & Navigation)
+        const idOrFor = (0, JsfIdHighlightProvider_1.getIdOrForAtPosition)(document, position);
+        if (idOrFor) {
+            const md = new vscode.MarkdownString();
+            md.supportThemeIcons = true;
+            if (idOrFor.type === 'id') {
+                const refs = (0, JsfIdHighlightProvider_1.findComponentReferences)(document, idOrFor.value);
+                md.appendMarkdown(`**Component ID: \`${idOrFor.value}\`** *(Declaration)*\n\n`);
+                if (refs.length > 0) {
+                    md.appendMarkdown(`Linked by **${refs.length}** component${refs.length > 1 ? 's' : ''} in this file:\n\n`);
+                    for (const ref of refs) {
+                        md.appendMarkdown(`- \`<${ref.tagName} ${ref.attrName}="${idOrFor.value}">\` (Line ${ref.range.start.line + 1})\n`);
+                    }
+                }
+                else {
+                    md.appendMarkdown(`*No \`for\` or \`target\` references found in this file.*\n`);
+                }
+            }
+            else {
+                const ids = (0, JsfIdHighlightProvider_1.findComponentIds)(document);
+                const target = ids.find(i => i.id === idOrFor.value);
+                md.appendMarkdown(`**Target Component ID: \`${idOrFor.value}\`** *(Reference)*\n\n`);
+                if (target) {
+                    md.appendMarkdown(`- Declared by: \`<${target.tagName} id="${idOrFor.value}">\`\n`);
+                    md.appendMarkdown(`- Declared at: **Line ${target.range.start.line + 1}**\n`);
+                }
+                else {
+                    md.appendMarkdown(`*Warning: No component with \`id="${idOrFor.value}"\` found in this file.*\n`);
+                }
+            }
+            md.appendMarkdown(`\n---\n*$(coffee) Jakarta Faces Tools*`);
+            return new vscode.Hover(md, idOrFor.range);
+        }
         const wordRange = document.getWordRangeAtPosition(position, /[a-zA-Z0-9_:-]+/);
         if (!wordRange) {
             return null;

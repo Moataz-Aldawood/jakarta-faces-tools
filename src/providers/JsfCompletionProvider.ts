@@ -3,6 +3,7 @@ import { JSF_CATALOG } from './jsfCatalog';
 import { getCompositeNamespaces, resolveCompositeComponent, getCompositeAttributes } from './namespaceParser';
 import { getEnclosingTag } from './tagParser';
 import { getActiveThirdPartyCatalogs } from './ThirdPartyCatalogs';
+import { findComponentIds } from './JsfIdHighlightProvider';
 
 export class JsfCompletionProvider implements vscode.CompletionItemProvider {
     public async provideCompletionItems(
@@ -13,6 +14,35 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
     ): Promise<vscode.CompletionItem[] | vscode.CompletionList | undefined> {
         
         const linePrefix = document.lineAt(position).text.substring(0, position.character);
+
+        // Check if typing inside for="..." or target="..." (Component ID Auto-complete)
+        const idAttrMatch = /\b(for|target)\s*=\s*(['"])([^'"]*)$/.exec(linePrefix);
+        if (idAttrMatch) {
+            const typedIdPrefix = idAttrMatch[3];
+            const foundIds = findComponentIds(document);
+            const items: vscode.CompletionItem[] = [];
+            for (const item of foundIds) {
+                if (typedIdPrefix && !item.id.startsWith(typedIdPrefix)) {
+                    continue;
+                }
+                const compItem = new vscode.CompletionItem({
+                    label: item.id,
+                    description: ` : ${item.tagName}`
+                }, vscode.CompletionItemKind.Reference);
+                compItem.detail = `Component ID (from <${item.tagName}>)`;
+                const md = new vscode.MarkdownString(
+                    `**JSF Component ID: \`${item.id}\`**\n\n` +
+                    `- Tag Name: \`<${item.tagName}>\`\n` +
+                    `- Declared at line ${item.range.start.line + 1}\n\n` +
+                    `---\n*$(coffee) Jakarta Faces Tools*`
+                );
+                md.supportThemeIcons = true;
+                compItem.documentation = md;
+                compItem.insertText = item.id;
+                items.push(compItem);
+            }
+            return items;
+        }
 
         const docText = document.getText();
         const namespaces = getCompositeNamespaces(docText);

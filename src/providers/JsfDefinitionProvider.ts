@@ -4,6 +4,7 @@ import { getEnclosingTag } from './tagParser';
 import { JSF_CATALOG } from './jsfCatalog';
 import { getActiveThirdPartyCatalogs } from './ThirdPartyCatalogs';
 import { findIterationVariableByName } from './iterationParser';
+import { findComponentIds } from './JsfIdHighlightProvider';
 
 export class JsfDefinitionProvider implements vscode.DefinitionProvider {
     
@@ -14,6 +15,23 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
     ): Promise<vscode.Definition | vscode.LocationLink[] | null> {
         
         const lineText = document.lineAt(position.line).text;
+        
+        // Check if clicking inside a for="..." or target="..." attribute (Component ID navigation)
+        const forAttrRegex = /\b(for|target)\s*=\s*['"]([^'"]+)['"]/g;
+        let forMatch;
+        while ((forMatch = forAttrRegex.exec(lineText)) !== null) {
+            const idVal = forMatch[2];
+            const startCol = forMatch.index + forMatch[0].indexOf(idVal);
+            const endCol = startCol + idVal.length;
+            if (position.character >= startCol && position.character <= endCol) {
+                const ids = findComponentIds(document);
+                const matchId = ids.find(item => item.id === idVal);
+                if (matchId) {
+                    return new vscode.Location(document.uri, matchId.range);
+                }
+                return null;
+            }
+        }
         
         // Phase 2: Template and src navigation
         const templateRegex = /(template|src)\s*=\s*['"]([^'"]+)['"]/g;

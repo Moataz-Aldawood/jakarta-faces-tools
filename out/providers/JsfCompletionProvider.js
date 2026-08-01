@@ -6,9 +6,36 @@ const jsfCatalog_1 = require("./jsfCatalog");
 const namespaceParser_1 = require("./namespaceParser");
 const tagParser_1 = require("./tagParser");
 const ThirdPartyCatalogs_1 = require("./ThirdPartyCatalogs");
+const JsfIdHighlightProvider_1 = require("./JsfIdHighlightProvider");
 class JsfCompletionProvider {
     async provideCompletionItems(document, position, token, context) {
         const linePrefix = document.lineAt(position).text.substring(0, position.character);
+        // Check if typing inside for="..." or target="..." (Component ID Auto-complete)
+        const idAttrMatch = /\b(for|target)\s*=\s*(['"])([^'"]*)$/.exec(linePrefix);
+        if (idAttrMatch) {
+            const typedIdPrefix = idAttrMatch[3];
+            const foundIds = (0, JsfIdHighlightProvider_1.findComponentIds)(document);
+            const items = [];
+            for (const item of foundIds) {
+                if (typedIdPrefix && !item.id.startsWith(typedIdPrefix)) {
+                    continue;
+                }
+                const compItem = new vscode.CompletionItem({
+                    label: item.id,
+                    description: ` : ${item.tagName}`
+                }, vscode.CompletionItemKind.Reference);
+                compItem.detail = `Component ID (from <${item.tagName}>)`;
+                const md = new vscode.MarkdownString(`**JSF Component ID: \`${item.id}\`**\n\n` +
+                    `- Tag Name: \`<${item.tagName}>\`\n` +
+                    `- Declared at line ${item.range.start.line + 1}\n\n` +
+                    `---\n*$(coffee) Jakarta Faces Tools*`);
+                md.supportThemeIcons = true;
+                compItem.documentation = md;
+                compItem.insertText = item.id;
+                items.push(compItem);
+            }
+            return items;
+        }
         const docText = document.getText();
         const namespaces = (0, namespaceParser_1.getCompositeNamespaces)(docText);
         // Check if we are typing inside a tag (e.g., <h:out or <tc:lab)

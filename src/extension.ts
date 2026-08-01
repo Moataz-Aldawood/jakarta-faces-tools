@@ -5,6 +5,7 @@ import { JsfHoverProvider } from './providers/JsfHoverProvider';
 import { subscribeToDocumentChanges } from './providers/JsfDiagnostics';
 import { JsfELHighlighter } from './providers/JsfELHighlighter';
 import { JsfElCompletionProvider, rebuildJsfCache } from './providers/JsfElCompletionProvider';
+import { JsfIdHighlightProvider } from './providers/JsfIdHighlightProvider';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "jakarta-ee-tools" is now active!');
@@ -13,6 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
     const jsfCompletionProvider = new JsfCompletionProvider();
     const jsfHoverProvider = new JsfHoverProvider();
     const jsfElCompletionProvider = new JsfElCompletionProvider();
+    const jsfIdHighlightProvider = new JsfIdHighlightProvider();
     const elHighlighter = new JsfELHighlighter();
     
     const documentSelector: vscode.DocumentSelector = [
@@ -26,7 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
         const enabled = config.get<boolean>('enableELAutocomplete', false);
         const showButton = config.get<boolean>('showRebuildCacheButton', true);
-        const positionStr = config.get<string>('rebuildCacheButtonPosition', 'Left');
+        const positionStr = config.get<string>('rebuildCacheButtonPosition', 'Right');
         const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
 
         // Dispose existing item if alignment changed
@@ -61,6 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'),
         vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'),
         vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider),
+        vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider),
         elHighlighter,
         rebuildCacheCommand
     );
