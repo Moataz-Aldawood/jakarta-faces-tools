@@ -21,13 +21,21 @@ function activate(context) {
     const documentSelector = [
         { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
     ];
+    const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
+    context.subscriptions.push(jsfDiagnostics);
+    (0, JsfDiagnostics_1.subscribeToDocumentChanges)(context, jsfDiagnostics);
+    const onCacheUpdated = () => {
+        for (const editor of vscode.window.visibleTextEditors) {
+            (0, JsfDiagnostics_1.refreshDiagnostics)(editor.document, jsfDiagnostics);
+        }
+    };
     // Status Bar Item UI for rebuilding JSF Cache (Beta Feature)
     let elStatusBarItem;
     const updateStatusBarVisibility = () => {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
-        const enabled = config.get('enableELAutocomplete', false);
+        const enabled = config.get('enableELAutocomplete', true);
         const showButton = config.get('showRebuildCacheButton', true);
-        const positionStr = config.get('rebuildCacheButtonPosition', 'Right');
+        const positionStr = config.get('rebuildCacheButtonPosition', 'Left');
         const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
         // Dispose existing item if alignment changed
         if (elStatusBarItem && elStatusBarItem.alignment !== alignment) {
@@ -49,29 +57,23 @@ function activate(context) {
         }
     };
     updateStatusBarVisibility();
-    const rebuildCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.rebuildJsfCache', () => {
-        (0, JsfElCompletionProvider_1.rebuildJsfCache)(true);
+    const rebuildCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.rebuildJsfCache', async () => {
+        (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
+        await jsfElCompletionProvider.ensureBeansCached();
+        onCacheUpdated();
+        vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     });
     context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':'), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider), elHighlighter, rebuildCacheCommand);
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('jakartaFacesTools.enableELAutocomplete') ||
-            e.affectsConfiguration('jakartaFacesTools.showRebuildCacheButton') ||
-            e.affectsConfiguration('jakartaFacesTools.rebuildCacheButtonPosition')) {
+        if (e.affectsConfiguration('jakartaFacesTools')) {
             updateStatusBarVisibility();
-            if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableELAutocomplete', false)) {
+            if (!vscode.workspace.getConfiguration('jakartaFacesTools').get('enableELAutocomplete', true)) {
                 (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);
+                onCacheUpdated();
             }
         }
     }));
-    const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
-    context.subscriptions.push(jsfDiagnostics);
-    (0, JsfDiagnostics_1.subscribeToDocumentChanges)(context, jsfDiagnostics);
-    const onCacheUpdated = () => {
-        for (const editor of vscode.window.visibleTextEditors) {
-            (0, JsfDiagnostics_1.refreshDiagnostics)(editor.document, jsfDiagnostics);
-        }
-    };
     // Incremental Bean Caching via File Watchers (create, change, delete .java files)
     (0, JsfElCompletionProvider_1.startJavaFileWatcher)(context, onCacheUpdated);
     // Also update cache incrementally when .java files are saved in the editor

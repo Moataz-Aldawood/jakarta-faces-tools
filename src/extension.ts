@@ -21,14 +21,24 @@ export function activate(context: vscode.ExtensionContext) {
         { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
     ];
 
+    const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
+    context.subscriptions.push(jsfDiagnostics);
+    subscribeToDocumentChanges(context, jsfDiagnostics);
+
+    const onCacheUpdated = () => {
+        for (const editor of vscode.window.visibleTextEditors) {
+            refreshDiagnostics(editor.document, jsfDiagnostics);
+        }
+    };
+
     // Status Bar Item UI for rebuilding JSF Cache (Beta Feature)
     let elStatusBarItem: vscode.StatusBarItem | undefined;
 
     const updateStatusBarVisibility = () => {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
-        const enabled = config.get<boolean>('enableELAutocomplete', false);
+        const enabled = config.get<boolean>('enableELAutocomplete', true);
         const showButton = config.get<boolean>('showRebuildCacheButton', true);
-        const positionStr = config.get<string>('rebuildCacheButtonPosition', 'Right');
+        const positionStr = config.get<string>('rebuildCacheButtonPosition', 'Left');
         const alignment = positionStr === 'Right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
 
         // Dispose existing item if alignment changed
@@ -54,8 +64,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     updateStatusBarVisibility();
 
-    const rebuildCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.rebuildJsfCache', () => {
-        rebuildJsfCache(true);
+    const rebuildCacheCommand = vscode.commands.registerCommand('jakartaFacesTools.rebuildJsfCache', async () => {
+        rebuildJsfCache(false);
+        await jsfElCompletionProvider.ensureBeansCached();
+        onCacheUpdated();
+        vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     });
 
     context.subscriptions.push(
@@ -71,26 +84,15 @@ export function activate(context: vscode.ExtensionContext) {
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration(e => {
-            if (e.affectsConfiguration('jakartaFacesTools.enableELAutocomplete') ||
-                e.affectsConfiguration('jakartaFacesTools.showRebuildCacheButton') ||
-                e.affectsConfiguration('jakartaFacesTools.rebuildCacheButtonPosition')) {
+            if (e.affectsConfiguration('jakartaFacesTools')) {
                 updateStatusBarVisibility();
-                if (!vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableELAutocomplete', false)) {
+                if (!vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('enableELAutocomplete', true)) {
                     rebuildJsfCache(false);
+                    onCacheUpdated();
                 }
             }
         })
     );
-
-    const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
-    context.subscriptions.push(jsfDiagnostics);
-    subscribeToDocumentChanges(context, jsfDiagnostics);
-
-    const onCacheUpdated = () => {
-        for (const editor of vscode.window.visibleTextEditors) {
-            refreshDiagnostics(editor.document, jsfDiagnostics);
-        }
-    };
 
     // Incremental Bean Caching via File Watchers (create, change, delete .java files)
     startJavaFileWatcher(context, onCacheUpdated);
