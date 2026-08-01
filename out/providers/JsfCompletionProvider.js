@@ -81,10 +81,17 @@ class JsfCompletionProvider {
             if (tag) {
                 const items = [];
                 for (const attr of tag.attributes) {
-                    const item = new vscode.CompletionItem(attr.name, vscode.CompletionItemKind.Property);
+                    const item = new vscode.CompletionItem({
+                        label: attr.name,
+                        description: attr.type ? ` : ${attr.type}` : ''
+                    }, vscode.CompletionItemKind.Property);
                     item.detail = attr.type ? `JSF Attribute (${attr.type})` : 'JSF Attribute';
                     const md = new vscode.MarkdownString();
-                    md.appendMarkdown(`${attr.description}\n\n`);
+                    md.appendMarkdown(`### \`${attr.name}\` *(Attribute)*\n\n`);
+                    if (attr.type) {
+                        md.appendMarkdown(`**Type:** \`${attr.type}\`\n\n`);
+                    }
+                    md.appendMarkdown(`${this.cleanHtmlDescription(attr.description)}\n\n`);
                     md.appendMarkdown(`---\n*⚡ Jakarta Faces Tools*`);
                     item.documentation = md;
                     item.insertText = new vscode.SnippetString(`${attr.name}="$1"`);
@@ -104,10 +111,17 @@ class JsfCompletionProvider {
                         customAttrs.push({ name: 'id', type: 'String', description: 'Component identifier' });
                         customAttrs.push({ name: 'rendered', type: 'boolean', description: 'Flag indicating whether or not this component should be rendered' });
                         for (const attr of customAttrs) {
-                            const item = new vscode.CompletionItem(attr.name, vscode.CompletionItemKind.Property);
+                            const item = new vscode.CompletionItem({
+                                label: attr.name,
+                                description: attr.type ? ` : ${attr.type}` : ''
+                            }, vscode.CompletionItemKind.Property);
                             item.detail = attr.type ? `Custom Attribute (${attr.type})` : 'Custom Attribute';
                             const md = new vscode.MarkdownString();
-                            md.appendMarkdown(`${attr.description}\n\n`);
+                            md.appendMarkdown(`### \`${attr.name}\` *(Custom Attribute)*\n\n`);
+                            if (attr.type) {
+                                md.appendMarkdown(`**Type:** \`${attr.type}\`\n\n`);
+                            }
+                            md.appendMarkdown(`${this.cleanHtmlDescription(attr.description)}\n\n`);
                             md.appendMarkdown(`---\n*⚡ Jakarta Faces Tools*`);
                             item.documentation = md;
                             item.insertText = new vscode.SnippetString(`${attr.name}="$1"`);
@@ -119,6 +133,18 @@ class JsfCompletionProvider {
             }
         }
         return undefined;
+    }
+    cleanHtmlDescription(desc) {
+        if (!desc)
+            return '';
+        let cleaned = desc.replace(/<\/?p>/gi, '\n\n')
+            .replace(/<\/?code>/gi, '`')
+            .replace(/<\/?b>/gi, '**')
+            .replace(/<\/?i>/gi, '*')
+            .replace(/<[^>]+>/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        return cleaned;
     }
 }
 exports.JsfCompletionProvider = JsfCompletionProvider;
