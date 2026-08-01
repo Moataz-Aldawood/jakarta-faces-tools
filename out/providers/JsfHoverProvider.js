@@ -44,8 +44,9 @@ class JsfHoverProvider {
                 const docUrl = `https://jakarta.ee/specifications/faces/4.1/vdldoc/${prefix}/${tagName}.html`;
                 markdown.appendMarkdown(`[🌐 Read full documentation online](${docUrl})\n\n`);
             }
+            markdown.supportThemeIcons = true;
             markdown.appendMarkdown(`*${library}*`);
-            markdown.appendMarkdown(`\n\n---\n*☕ Jakarta Faces Tools*`);
+            markdown.appendMarkdown(`\n\n---\n*$(coffee) Jakarta Faces Tools*`);
             return new vscode.Hover(markdown, wordRange);
         }
         // Check if the hovered word is a JSF tag attribute
@@ -81,8 +82,9 @@ class JsfHoverProvider {
                     }
                     // Primefaces doesn't support anchors for attributes on their new page, but standard JSF/Omnifaces do.
                     // We will just point to the page, and if the anchor exists the browser will scroll to it.
+                    markdown.supportThemeIcons = true;
                     markdown.appendMarkdown(`[🌐 Read full documentation online](${docUrl}#${attr.name})\n\n`);
-                    markdown.appendMarkdown(`\n\n---\n*☕ Jakarta Faces Tools*`);
+                    markdown.appendMarkdown(`\n\n---\n*$(coffee) Jakarta Faces Tools*`);
                     return new vscode.Hover(markdown, wordRange);
                 }
             }

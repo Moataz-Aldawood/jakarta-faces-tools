@@ -73,12 +73,14 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 }, vscode.CompletionItemKind.Variable);
                 item.insertText = beanName;
                 item.detail = `Managed Bean: ${meta.className}`;
-                item.documentation = new vscode.MarkdownString(
+                const md = new vscode.MarkdownString(
                     `**Jakarta Managed Bean: \`${beanName}\`**\n\n` +
                     `- Class: \`${meta.className}\`\n` +
                     `- File: \`${vscode.workspace.asRelativePath(meta.uri)}\`\n\n` +
-                    `---\n*☕ Jakarta Faces Tools*`
+                    `---\n*$(coffee) Jakarta Faces Tools*`
                 );
+                md.supportThemeIcons = true;
+                item.documentation = md;
                 completions.push(item);
             }
 
@@ -91,12 +93,14 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 }, vscode.CompletionItemKind.Variable);
                 item.insertText = v.varName;
                 item.detail = `Iteration Variable (from #{${v.collectionEl}})`;
-                item.documentation = new vscode.MarkdownString(
+                const md = new vscode.MarkdownString(
                     `**JSF Iteration Variable: \`${v.varName}\`**\n\n` +
                     `- Iterates over collection: \`#{${v.collectionEl}}\`\n` +
                     `- Enclosing Scope: Tag at line ${v.tagRange.start.line + 1}\n\n` +
-                    `---\n*☕ Jakarta Faces Tools*`
+                    `---\n*$(coffee) Jakarta Faces Tools*`
                 );
+                md.supportThemeIcons = true;
+                item.documentation = md;
                 completions.push(item);
             }
 
@@ -160,10 +164,12 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             } else {
                 item.insertText = prop.name;
             }
-            item.documentation = new vscode.MarkdownString(
+            const md = new vscode.MarkdownString(
                 `**${prop.name}**\n\n\`${prop.description}\` -> \`${prop.type}\`\n\n` +
-                `---\n*☕ Jakarta Faces Tools*`
+                `---\n*$(coffee) Jakarta Faces Tools*`
             );
+            md.supportThemeIcons = true;
+            item.documentation = md;
             completions.push(item);
         }
 
