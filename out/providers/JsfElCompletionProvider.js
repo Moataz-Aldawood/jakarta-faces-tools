@@ -44,7 +44,7 @@ class JsfElCompletionProvider {
             for (const [beanName, meta] of beanMap.entries()) {
                 const item = new vscode.CompletionItem({
                     label: beanName,
-                    description: meta.className
+                    description: ` : ${meta.className}`
                 }, vscode.CompletionItemKind.Variable);
                 item.insertText = beanName;
                 item.detail = `Managed Bean: ${meta.className}`;
@@ -58,7 +58,7 @@ class JsfElCompletionProvider {
             for (const v of iterVars) {
                 const item = new vscode.CompletionItem({
                     label: v.varName,
-                    description: `var (${v.collectionEl})`
+                    description: ` : var (${v.collectionEl})`
                 }, vscode.CompletionItemKind.Variable);
                 item.insertText = v.varName;
                 item.detail = `Iteration Variable (from #{${v.collectionEl}})`;
@@ -112,7 +112,7 @@ class JsfElCompletionProvider {
             const item = new vscode.CompletionItem({
                 label: prop.name,
                 detail: prop.isMethod ? '()' : '',
-                description: prop.type
+                description: ` : ${prop.type}`
             }, kind);
             item.detail = `${prop.isMethod ? 'Method' : 'Property'} : ${prop.type}`;
             if (prop.isMethod) {
