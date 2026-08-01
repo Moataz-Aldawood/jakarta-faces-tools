@@ -3,6 +3,7 @@ import { getCompositeNamespaces, resolveCompositeComponent } from './namespacePa
 import { getEnclosingTag } from './tagParser';
 import { JSF_CATALOG } from './jsfCatalog';
 import { getActiveThirdPartyCatalogs } from './ThirdPartyCatalogs';
+import { findIterationVariableByName } from './iterationParser';
 
 export class JsfDefinitionProvider implements vscode.DefinitionProvider {
     
@@ -143,15 +144,32 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
 
         const beanName = parts[0];
         
-        const beanLocation = await this.findBeanDefinition(beanName);
-        if (!beanLocation) return null;
+        let beanLocation = await this.findBeanDefinition(beanName);
+        let currentUri: vscode.Uri | null = null;
 
-        // If clicking on the bean itself
-        if (currentPartIndex === 0) {
-            return beanLocation;
+        if (beanLocation) {
+            if (currentPartIndex === 0) {
+                return beanLocation;
+            }
+            currentUri = beanLocation.uri;
+        } else {
+            // Check if beanName is an iteration variable in scope
+            const iterVar = findIterationVariableByName(document, position, beanName);
+            if (iterVar) {
+                if (currentPartIndex === 0) {
+                    return new vscode.Location(document.uri, iterVar.varAttributeRange);
+                }
+                const elementUri = await this.resolveIterationVariableElementUri(iterVar.collectionEl);
+                if (elementUri) {
+                    currentUri = elementUri;
+                }
+            }
         }
 
-        let currentUri = beanLocation.uri;
+        if (!currentUri) {
+            return null;
+        }
+
         let finalLocation: vscode.Location | null = null;
 
         for (let i = 1; i <= currentPartIndex; i++) {
@@ -184,6 +202,33 @@ export class JsfDefinitionProvider implements vscode.DefinitionProvider {
         }
 
         return finalLocation;
+    }
+
+    private async resolveIterationVariableElementUri(collectionEl: string): Promise<vscode.Uri | null> {
+        const chain = collectionEl.split('.');
+        const rootBeanLoc = await this.findBeanDefinition(chain[0]);
+        if (!rootBeanLoc) {
+            return null;
+        }
+
+        let currentUri: vscode.Uri = rootBeanLoc.uri;
+
+        for (let i = 1; i < chain.length; i++) {
+            let propName = chain[i];
+            const content = await this.readFile(currentUri);
+            const typeName = this.findPropertyTypeInContent(content, propName);
+            if (!typeName) {
+                return null;
+            }
+
+            const nextClassUri = await this.findJavaClass(typeName, content);
+            if (!nextClassUri) {
+                return null;
+            }
+            currentUri = nextClassUri;
+        }
+
+        return currentUri;
     }
 
     private async findBeanDefinition(beanName: string): Promise<vscode.Location | null> {

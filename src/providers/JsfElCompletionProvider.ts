@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import { findEnclosingIterationVariables, findIterationVariableByName } from './iterationParser';
 
 export interface ElBeanMetadata {
     beanName: string;
@@ -75,17 +76,41 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 );
                 completions.push(item);
             }
+
+            // Also suggest iteration variables in scope (e.g., u in <ui:repeat var="u">)
+            const iterVars = findEnclosingIterationVariables(document, position);
+            for (const v of iterVars) {
+                const item = new vscode.CompletionItem(v.varName, vscode.CompletionItemKind.Variable);
+                item.detail = `Iteration Variable (from #{${v.collectionEl}})`;
+                item.documentation = new vscode.MarkdownString(
+                    `**JSF Iteration Variable: \`${v.varName}\`**\n\n` +
+                    `- Iterates over collection: \`#{${v.collectionEl}}\`\n` +
+                    `- Enclosing Scope: Tag at line ${v.tagRange.start.line + 1}`
+                );
+                completions.push(item);
+            }
+
             return completions;
         }
 
-        // Case 2: Property & Method Completion after dot (e.g. #{c_UserRegistration.newUser.|)
+        // Case 2: Property & Method Completion after dot (e.g. #{c_UserRegistration.newUser.| or #{u.|)
         const rootBeanName = parts[0];
-        const meta = beanMap.get(rootBeanName);
-        if (!meta) {
-            return undefined;
+        let meta = beanMap.get(rootBeanName);
+        let currentUri: vscode.Uri | null = null;
+
+        if (meta) {
+            currentUri = meta.uri;
+        } else {
+            // Check if rootBeanName is an iteration variable in scope (e.g. var="u")
+            const iterVar = findIterationVariableByName(document, position, rootBeanName);
+            if (iterVar) {
+                currentUri = await this.resolveIterationVariableElementUri(iterVar.collectionEl);
+            }
         }
 
-        let currentUri = meta.uri;
+        if (!currentUri) {
+            return undefined;
+        }
 
         // Traverse intermediate properties in the chain (e.g., in #{bean.user.address.}, step through 'user')
         for (let i = 1; i < parts.length - 1; i++) {
@@ -123,6 +148,39 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         }
 
         return completions;
+    }
+
+    private async resolveIterationVariableElementUri(collectionEl: string): Promise<vscode.Uri | null> {
+        await this.ensureBeansCached();
+        const chain = collectionEl.split('.');
+        const rootBeanName = chain[0];
+        const meta = beanMap.get(rootBeanName);
+        if (!meta) {
+            return null;
+        }
+
+        let currentUri: vscode.Uri = meta.uri;
+
+        for (let i = 1; i < chain.length; i++) {
+            let propName = chain[i];
+            if (propName.endsWith('()')) {
+                propName = propName.substring(0, propName.length - 2);
+            }
+
+            const content = await this.readFile(currentUri);
+            const returnType = this.findPropertyTypeInContent(content, propName);
+            if (!returnType) {
+                return null;
+            }
+
+            const nextUri = await this.findJavaClassUri(returnType);
+            if (!nextUri) {
+                return null;
+            }
+            currentUri = nextUri;
+        }
+
+        return currentUri;
     }
 
     private async ensureBeansCached(): Promise<void> {
@@ -247,8 +305,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
     private extractBaseType(rawType: string): string {
         const genericMatch = /<([^>]+)>/.exec(rawType);
         if (genericMatch) {
-            const inner = genericMatch[1].split(',')[0].trim();
-            return inner;
+            const parts = genericMatch[1].split(',');
+            return parts[parts.length - 1].trim();
         }
         return rawType.replace(/\[\]/g, '').trim();
     }
