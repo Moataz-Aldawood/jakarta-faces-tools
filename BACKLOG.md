@@ -15,6 +15,10 @@
 - [x] **EL Expression Highlighting**: Customizable syntax highlighting for JSF Expression Language `#{...}` blocks.
 - [x] **EL Auto-Complete (IntelliSense) [Beta]**: Auto-complete for Java Managed Beans, properties, and methods inside `#{...}` blocks, with Status Bar cache management.
 
-## 🚀 Next Up (v2.5.0 / Future Releases)
-- [ ] **Incremental Bean Caching (File Watchers)**: Automatically update the in-memory Java Managed Bean cache whenever a `.java` file is created, modified, or deleted without requiring a manual cache rebuild.
-- [ ] **Lombok Annotation Support**: Fully support `@Getter`, `@Setter`, and `@Data` from Lombok when inspecting Java Managed Beans for EL properties.
+## ✅ Completed (v2.5.0)
+- [x] **Incremental Bean Caching (File Watchers)**: Automatically update the in-memory Java Managed Bean cache whenever a `.java` file is created, modified, or deleted without requiring a manual cache rebuild.
+- [x] **Lombok Annotation Support**: Fully support `@Data`, `@Getter`, `@Value`, `@Builder`, and selective field-level `@Getter` annotations from Lombok when inspecting Java Managed Beans for EL properties.
+
+## 🚀 Next Up (v2.6.0 / Future Releases)
+- [ ] **Custom Composite Component Support (`<cc:attribute>`)**: Intelligent auto-complete, diagnostics, and hover documentation for custom composite component attributes and metadata.
+- [ ] **JSF/Faces Config XML Parsing (`faces-config.xml`)**: Support explicit bean declarations and navigation rule mappings defined in XML configuration files.
