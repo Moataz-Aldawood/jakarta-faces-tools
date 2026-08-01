@@ -7,6 +7,8 @@ All notable changes to the "jakarta-faces-tools" extension will be documented in
 - **EL Semantic Validation (Real-time Diagnostics)**: Real-time semantic diagnostics to flag mistyped Java Managed Bean names and property names inside `#{...}` Expression Language blocks.
 - **Unknown Root Bean Warnings**: Automatically flags expressions referencing non-existent bean names with a yellow warning squiggly (`Jakarta Faces: Unknown Managed Bean or EL variable 'foo'.`).
 - **Unknown Property Warnings**: Verifies whether `.propertyName` exists on the target Managed Bean Java class and warns if mistyped (`Jakarta Faces: Property 'naem' not found in Managed Bean 'userController' (UserController).`).
+- **Deep Nested Property Chain Validation**: Recursively inspects arbitrary depths of dotted property chains (e.g., `#{a.b.c.d}`), resolving return types across multiple Java classes and warning on mistyped segments.
+- **Stable Debounced Diagnostics**: Built-in 250ms debouncing and document version checking to prevent squiggly lines from flashing, shifting left, or jumping while editing.
 - **Whitelisted Implicit Objects & Keywords**: Built-in protection against false positives by whitelisting all standard JSF/EL implicit objects (`resource`, `cc`, `param`, `session`, `request`, etc.), operators, literals, and iteration variables (`<ui:repeat var="u">`).
 - **Configurable Toggle**: Added setting `jakartaFacesTools.enableELDiagnostics` (enabled by default) to customize or toggle semantic EL warnings in VS Code Settings.
 

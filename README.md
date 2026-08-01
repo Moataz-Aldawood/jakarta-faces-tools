@@ -57,7 +57,7 @@ Built-in intelligence for your workspace's custom JSF Composite Components witho
 
 ### 7. Real-time EL & Syntax Diagnostics
 Catch JSF and Expression Language mistakes before you ever run the application.
-- **EL Semantic Validation**: Real-time semantic checking inside `#{...}` Expression Language expressions. Warns if you reference an unknown Managed Bean name (`#{unknownBean.foo}`) or a mistyped property (`#{userController.naem}`) that does not exist on your Java class. Automatically whitelists all standard JSF implicit objects (`resource`, `cc`, `param`, `session`, etc.), EL keywords, and iteration variables (`<ui:repeat var="u">`).
+- **EL Semantic Validation**: Real-time semantic checking inside `#{...}` Expression Language expressions. Warns if you reference an unknown Managed Bean name (`#{unknownBean.foo}`) or a mistyped property (`#{userController.naem}`) that does not exist on your Java class. Supports recursive checking across deeply nested property chains (`#{a.b.c.d}`). Automatically whitelists all standard JSF implicit objects (`resource`, `cc`, `param`, `session`, etc.), EL keywords, and iteration variables (`<ui:repeat var="u">`). Includes intelligent debouncing and document version checking for stable, flicker-free squigglies.
 - **EL Syntax Checking**: The extension runs in the background and will flag unmatched Expression Language brackets (e.g. `#{myBean` missing the closing `}`) with a red error squiggly.
 - **Unknown Tag and Attribute Detection**: Mistyped standard or 3rd-party tags (e.g., `<h:outpottText>`) as well as unrecognized attributes will be flagged with a yellow warning squiggly.
 

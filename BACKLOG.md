@@ -1,7 +1,7 @@
 # Jakarta Faces Tools Backlog & Roadmap
 
 ## ✅ Completed (v2.4.0)
-- [x] **EL Semantic Validation (Diagnostics)**: Optional real-time semantic diagnostics to flag mistyped Java Managed Bean names or missing property names inside `#{...}` expressions (e.g., warning on `#{userController.naem}`), with automatic whitelisting of standard implicit objects and keywords.
+- [x] **EL Semantic Validation (Diagnostics)**: Optional real-time semantic diagnostics to flag mistyped Java Managed Bean names or missing property names inside `#{...}` expressions (e.g., warning on `#{userController.naem}`), with deep recursive property chain resolution (`#{a.b.c.d}`), debounced document version checking for stable squigglies, and automatic whitelisting of standard implicit objects and keywords.
 
 ## ✅ Completed (v2.3.0)
 - [x] **Component Linking & Navigation (`for="..."` ↔ `id="..."`)**: Auto-complete available `id="..."` values when typing inside `for="..."` or `target="..."`, interactive Hover summary cards for `id`/`for`, simultaneous Document Highlighting of declarations and references, and `Ctrl+Click` jump-to-definition.
