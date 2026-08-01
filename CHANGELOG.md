@@ -6,9 +6,11 @@ All notable changes to the "jakarta-faces-tools" extension will be documented in
 ### Added
 - **Immediate Quote Autocomplete for Component IDs (`for="..."` / `target="..."`)**: Autocomplete now triggers immediately after typing a quote (`"` or `'`) inside `for="..."` and `target="..."` attributes, displaying all available component IDs in the file without requiring typing the first character of the ID.
 - **Immediate Root Bean Completion (`#{...}`)**: Autocomplete inside Expression Language `#{|}` and `${|}` blocks now triggers immediately after typing `{`, displaying all available Managed Beans and iteration variables without requiring typing the first character of the bean name.
-- **Smart EL Snippets on Attribute Quotes**: Typing `"` or `'` after any EL-capable JSF tag attribute (e.g., `value="`, `action="`, `rendered="`, `actionListener="`, `test="`, `validator="`, etc.) immediately displays suggestions for all Java Managed Beans and iteration variables formatted as `#{beanName}` snippets. Selecting a bean snippet automatically inserts `#{beanName}` into the attribute value.
-- **Attribute Exclusion Protection**: Automatically prevents EL snippet noise when typing quotes inside non-EL attributes like `id="..."`, `var="..."`, `for="..."`, `target="..."`, `name="..."`, or namespace declarations (`xmlns:*`).
-- **Comprehensive Autocomplete Test Suite**: Added automated test suite `testImmediateAutocomplete.js` (`npm run test:autocomplete`) verifying instant ID completion, Smart EL Snippet insertion, filterText matching, and attribute exclusion rules.
+- **Clean EL Triggering & No Quote Interference**: EL autocomplete triggers exclusively inside `#{...}` and `${...}` expressions—never on attribute quotes (`"`)—preventing unwanted popups when typing simple string attribute values.
+- **Smart Cursor Positioning Before Closing Brace**: Selecting a Managed Bean or iteration variable inside `#{|}` inserts the bean name and positions the cursor (`$0`) before the closing brace (`}`), allowing developers to immediately type `.` without manually navigating past closing braces or duplicating symbols (`#{{...}}`).
+- **Official Class Icon (`C`) for Managed Beans**: Root Java Managed Beans now render with VS Code's official Class badge icon (`CompletionItemKind.Class`), visually distinguishing Java backend classes from iteration variables and properties.
+- **Standardized Signature Branding**: Every completion item across tags, attributes, component IDs, Managed Beans, iteration variables, properties, and methods features our signature `$(coffee) Jakarta Faces Tools` footer at the bottom of its Markdown documentation card.
+- **Comprehensive Autocomplete Test Suite**: Added automated test suite `testImmediateAutocomplete.js` (`npm run test:autocomplete`) verifying instant ID completion, Class icon rendering, cursor positioning, and clean trigger behavior.
 
 ## [2.5.0] - 2026-08-01
 ### Added

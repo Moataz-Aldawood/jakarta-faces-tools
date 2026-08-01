@@ -63,7 +63,7 @@ function activate(context) {
         onCacheUpdated();
         vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     });
-    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':', '"', "'"), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{', '"', "'", '#', '='), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider), elHighlighter, rebuildCacheCommand);
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':', '"', "'"), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{', '#'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider), elHighlighter, rebuildCacheCommand);
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('jakartaFacesTools')) {

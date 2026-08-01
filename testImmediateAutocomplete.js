@@ -166,35 +166,18 @@ async function runTests() {
     assert.ok(idLabels.includes('myForm') && idLabels.includes('username'), `Expected myForm and username IDs, got: ${idLabels.join(', ')}`);
     console.log('  [PASS] Component IDs returned immediately after for="..." quote.');
 
-    // Test 2: Immediate EL Snippet completion in value="..." after quote
-    console.log('Testing immediate EL Snippet autocomplete after value="..." quote...');
-    const elSnippetResults = await elProvider.provideCompletionItems(
+    // Test 2: Ensure EL autocomplete does NOT trigger on attribute quotes (only on #{ or ${)
+    console.log('Testing exclusion of EL autocomplete after attribute quotes...');
+    const noQuoteElResults = await elProvider.provideCompletionItems(
         mockDocument,
         new mockVscode.Position(3, 23), // end of `  <h:outputText value="`
         null,
         {}
     );
-    assert.ok(Array.isArray(elSnippetResults), 'Expected array of CompletionItem for EL Snippets');
-    const snippetLabels = elSnippetResults.map(r => r.label);
-    assert.ok(snippetLabels.includes('#{userController}') && snippetLabels.includes('#{orderService}'),
-        `Expected #{userController} and #{orderService}, got: ${snippetLabels.join(', ')}`);
-    const userSnippet = elSnippetResults.find(r => r.label === '#{userController}');
-    assert.strictEqual(userSnippet.insertText, '#{userController}', 'Expected insertText to be full #{userController} snippet');
-    assert.strictEqual(userSnippet.filterText, 'userController #{userController}', 'Expected filterText to support both direct and #{ typed prefixes');
-    console.log('  [PASS] EL Snippets returned immediately after value="..." quote.');
+    assert.strictEqual(noQuoteElResults, undefined, 'Expected undefined for attribute quote in EL completion (only triggers on #{ or ${)');
+    console.log('  [PASS] EL autocomplete correctly ignores attribute quotes.');
 
-    // Test 3: Exclude EL Snippets on non-EL attributes like id="..." or for="..."
-    console.log('Testing exclusion of EL Snippets on id="..." attributes...');
-    const excludedResults = await elProvider.provideCompletionItems(
-        mockDocument,
-        new mockVscode.Position(5, 19), // end of `  <h:inputText id="`
-        null,
-        {}
-    );
-    assert.strictEqual(excludedResults, undefined, 'Expected undefined for id="..." attribute in EL completion');
-    console.log('  [PASS] EL Snippets correctly bypassed for id="..." and for="..." attributes.');
-
-    // Test 4: Immediate root bean completion inside #{...} after '{'
+    // Test 3: Immediate root bean completion inside #{...} after '{' with Class icon and cursor positioning
     console.log('Testing immediate root bean completion inside #{...}...');
     const rootElResults = await elProvider.provideCompletionItems(
         mockDocument,
@@ -207,8 +190,10 @@ async function runTests() {
     assert.ok(rootLabels.includes('userController') && rootLabels.includes('orderService'),
         `Expected userController and orderService, got: ${rootLabels.join(', ')}`);
     const userBeanItem = rootElResults.find(r => r.label === 'userController');
-    assert.strictEqual(userBeanItem.insertText, 'userController', 'Expected insertText inside #{...} to be raw beanName without extra #{');
-    console.log('  [PASS] Root beans returned immediately after "{".');
+    assert.strictEqual(userBeanItem.kind, mockVscode.CompletionItemKind.Class, 'Expected Managed Bean to use Class icon');
+    assert.strictEqual(userBeanItem.insertText.value, 'userController$0', 'Expected insertText to be SnippetString positioning cursor $0 before closing brace');
+    assert.ok(userBeanItem.documentation.value.includes('*$(coffee) Jakarta Faces Tools*'), 'Expected signature at the bottom of markdown documentation');
+    console.log('  [PASS] Root beans returned immediately after "{" with Class icon, SnippetString positioning, and signature.');
 
     console.log('==============================================');
     console.log('ALL IMMEDIATE AUTOCOMPLETE TESTS PASSED! ☕');
