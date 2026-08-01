@@ -71,7 +71,7 @@
               "Right"
             ],
             "default": "Left",
-            "order": 3,
+            "order": 5,
             "description": "[Beta Feature] Choose the position ('Left' or 'Right') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled."
           }
         }
