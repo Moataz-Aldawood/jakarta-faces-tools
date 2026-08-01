@@ -215,6 +215,14 @@ class JsfDefinitionProvider {
                 }
             }
         }
+        // Fallback: Check if there is a class matching CapitalizedBeanName.java in workspace (for unannotated beans)
+        const capitalizedName = beanName.charAt(0).toUpperCase() + beanName.slice(1);
+        const fallbackFiles = await vscode.workspace.findFiles(`**/${capitalizedName}.java`, '**/node_modules/**');
+        if (fallbackFiles.length > 0) {
+            const content = await this.readFile(fallbackFiles[0]);
+            const classRegex = new RegExp(`class\\s+${capitalizedName}`);
+            return this.createLocation(fallbackFiles[0], content, classRegex) || new vscode.Location(fallbackFiles[0], new vscode.Position(0, 0));
+        }
         return null;
     }
     async findPropertyDefinitionInFile(uri, propertyName, isMethodCall = false) {
@@ -253,15 +261,25 @@ class JsfDefinitionProvider {
         return rawType.replace(/\[\]/g, '').trim();
     }
     findPropertyTypeInContent(content, propertyName) {
-        const capitalizedProp = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
-        // Check getter
-        const getterRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+(?:get|is)${capitalizedProp}\\s*\\(`);
-        let match = getterRegex.exec(content);
+        let prop = propertyName.trim();
+        if (prop.endsWith('()')) {
+            prop = prop.substring(0, prop.length - 2).trim();
+        }
+        // 1. Check exact method name (e.g. getUsers)
+        const methodRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${prop}\\s*\\(`);
+        let match = methodRegex.exec(content);
         if (match) {
             return this.extractBaseType(match[1]);
         }
-        // Check field
-        const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${propertyName}\\s*[;=]`);
+        const capitalizedProp = prop.charAt(0).toUpperCase() + prop.slice(1);
+        // 2. Check getter
+        const getterRegex = new RegExp(`(?:public|protected|private)?\\s+([\\w<>\\[\\]\\?,]+)\\s+(?:get|is)${capitalizedProp}\\s*\\(`);
+        match = getterRegex.exec(content);
+        if (match) {
+            return this.extractBaseType(match[1]);
+        }
+        // 3. Check field
+        const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,]+)\\s+${prop}\\s*[;=]`);
         match = fieldRegex.exec(content);
         if (match) {
             return this.extractBaseType(match[1]);

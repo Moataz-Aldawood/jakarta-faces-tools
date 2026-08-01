@@ -42,9 +42,9 @@
         "properties": {
           "jakartaFacesTools.enableELAutocomplete": {
             "type": "boolean",
-            "default": false,
+            "default": true,
             "order": 1,
-            "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions. Disabled by default for early releases."
+            "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions."
           },
           "jakartaFacesTools.showRebuildCacheButton": {
             "type": "boolean",

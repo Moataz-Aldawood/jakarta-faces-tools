@@ -154,17 +154,23 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         await this.ensureBeansCached();
         const chain = collectionEl.split('.');
         const rootBeanName = chain[0];
+        let currentUri: vscode.Uri | null = null;
         const meta = beanMap.get(rootBeanName);
-        if (!meta) {
+        if (meta) {
+            currentUri = meta.uri;
+        } else {
+            const capitalizedName = rootBeanName.charAt(0).toUpperCase() + rootBeanName.slice(1);
+            currentUri = await this.findJavaClassUri(capitalizedName);
+        }
+
+        if (!currentUri) {
             return null;
         }
 
-        let currentUri: vscode.Uri = meta.uri;
-
         for (let i = 1; i < chain.length; i++) {
-            let propName = chain[i];
+            let propName = chain[i].trim();
             if (propName.endsWith('()')) {
-                propName = propName.substring(0, propName.length - 2);
+                propName = propName.substring(0, propName.length - 2).trim();
             }
 
             const content = await this.readFile(currentUri);
@@ -283,17 +289,28 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
     }
 
     private findPropertyTypeInContent(content: string, propertyName: string): string | null {
-        const capitalized = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
+        let prop = propertyName.trim();
+        if (prop.endsWith('()')) {
+            prop = prop.substring(0, prop.length - 2).trim();
+        }
 
-        // Try getter first: public ReturnType getPropertyName()
+        // 1. Check for exact method name match: public ReturnType methodName(
+        const methodRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*\\(`);
+        const methodMatch = methodRegex.exec(content);
+        if (methodMatch && methodMatch[1]) {
+            return this.extractBaseType(methodMatch[1].trim());
+        }
+
+        // 2. Try getter: public ReturnType getPropertyName() or isPropertyName()
+        const capitalized = prop.charAt(0).toUpperCase() + prop.slice(1);
         const getterRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+(get|is)${capitalized}\\s*\\(`);
         const getterMatch = getterRegex.exec(content);
         if (getterMatch && getterMatch[1]) {
             return this.extractBaseType(getterMatch[1].trim());
         }
 
-        // Try field: private FieldType propertyName;
-        const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${propertyName}\\s*[;=]`);
+        // 3. Try field: private FieldType propertyName;
+        const fieldRegex = new RegExp(`(?:private|protected|public)?\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*[;=]`);
         const fieldMatch = fieldRegex.exec(content);
         if (fieldMatch && fieldMatch[1]) {
             return this.extractBaseType(fieldMatch[1].trim());
