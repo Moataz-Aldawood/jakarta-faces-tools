@@ -6,6 +6,7 @@ import { refreshDiagnostics, subscribeToDocumentChanges } from './providers/JsfD
 import { JsfELHighlighter } from './providers/JsfELHighlighter';
 import { JsfElCompletionProvider, rebuildJsfCache, startJavaFileWatcher, updateJavaBeanInCache } from './providers/JsfElCompletionProvider';
 import { JsfIdHighlightProvider } from './providers/JsfIdHighlightProvider';
+import { JsfInlayHintsProvider } from './providers/JsfInlayHintsProvider';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "jakarta-ee-tools" is now active!');
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
     const jsfHoverProvider = new JsfHoverProvider();
     const jsfElCompletionProvider = new JsfElCompletionProvider();
     const jsfIdHighlightProvider = new JsfIdHighlightProvider();
+    const jsfInlayHintsProvider = new JsfInlayHintsProvider();
     const elHighlighter = new JsfELHighlighter();
     
     const documentSelector: vscode.DocumentSelector = [
@@ -77,6 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{', '#'),
         vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider),
         vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider),
+        vscode.languages.registerInlayHintsProvider(documentSelector, jsfInlayHintsProvider),
         elHighlighter,
         rebuildCacheCommand
     );

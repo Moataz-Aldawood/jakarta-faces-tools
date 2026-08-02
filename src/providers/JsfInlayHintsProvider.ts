@@ -1,0 +1,72 @@
+import * as vscode from 'vscode';
+import { getSharedBeanMap, getScopeBadge, getScopeLifecycleDescription } from './JsfElCompletionProvider';
+
+export class JsfInlayHintsProvider implements vscode.InlayHintsProvider {
+    public provideInlayHints(
+        document: vscode.TextDocument,
+        range: vscode.Range,
+        token: vscode.CancellationToken
+    ): vscode.ProviderResult<vscode.InlayHint[]> {
+        const config = vscode.workspace.getConfiguration('jakartaFacesTools');
+        if (!config.get<boolean>('showInlineBeanScopes', true)) {
+            return [];
+        }
+
+        const hints: vscode.InlayHint[] = [];
+        const beanMap = getSharedBeanMap();
+        if (beanMap.size === 0) {
+            return [];
+        }
+
+        const startLine = range.start.line;
+        const endLine = range.end.line;
+
+        for (let lineIdx = startLine; lineIdx <= endLine; lineIdx++) {
+            if (token && token.isCancellationRequested) {
+                break;
+            }
+            const lineText = document.lineAt(lineIdx).text;
+            // Find all EL expressions #{...} or ${...} on this line
+            const elRegex = /([#$])\{([^}]+)\}/g;
+            let elMatch;
+            while ((elMatch = elRegex.exec(lineText)) !== null) {
+                const exprContent = elMatch[2];
+                const exprStartOffset = elMatch.index + 2; // after #{ or ${
+                
+                // Find all identifiers in the expression
+                const identRegex = /[a-zA-Z_][a-zA-Z0-9_]*/g;
+                let identMatch;
+                while ((identMatch = identRegex.exec(exprContent)) !== null) {
+                    const word = identMatch[0];
+                    const beanMeta = beanMap.get(word);
+                    if (beanMeta) {
+                        const endChar = exprStartOffset + identMatch.index + word.length;
+                        const position = new vscode.Position(lineIdx, endChar);
+                        const scopeDisplay = beanMeta.scope || '@RequestScoped';
+
+                        const hint = new vscode.InlayHint(
+                            position,
+                            `: ${scopeDisplay}`,
+                            vscode.InlayHintKind.Type
+                        );
+                        hint.paddingLeft = true;
+                        hint.paddingRight = true;
+
+                        const tooltip = new vscode.MarkdownString();
+                        tooltip.supportThemeIcons = true;
+                        tooltip.appendMarkdown(`**$(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`**\n\n`);
+                        tooltip.appendMarkdown(`- **Class:** \`${beanMeta.className}\`\n`);
+                        tooltip.appendMarkdown(`- **Scope:** \`${getScopeBadge(scopeDisplay)}\` ${beanMeta.scopePackage ? `(\`${beanMeta.scopePackage}\`)` : ''}\n`);
+                        tooltip.appendMarkdown(`- **Lifecycle:** ${getScopeLifecycleDescription(scopeDisplay)}\n\n`);
+                        tooltip.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                        hint.tooltip = tooltip;
+
+                        hints.push(hint);
+                    }
+                }
+            }
+        }
+
+        return hints;
+    }
+}

@@ -10,6 +10,7 @@ Version 3.0.0 represents a massive, transformative release for **Jakarta Faces T
 #### 🌟 Managed Bean Scope Awareness & Lifecycle Intelligence
 - **Automatic CDI / Faces Scope Recognition**: Scans and extracts scope annotations (`@ViewScoped`, `@RequestScoped`, `@SessionScoped`, `@ApplicationScoped`, `@ConversationScoped`, `@FlowScoped`, `@Dependent`) from Java Managed Beans.
 - **Color-Coded Scope Badges in EL Autocomplete**: Displays color-coded scope badges (`🟢 @ViewScoped`, `🟡 @RequestScoped`, `🔵 @SessionScoped`, `🟣 @ApplicationScoped`) directly in EL autocomplete items and detail strings.
+- **In-Code Badges via VS Code Inlay Hints**: Renders subtle inline editor badges (`: @ViewScoped`) right next to Java Managed Bean names in `.xhtml` / `.jsf` Expression Language blocks (`#{userController : @ViewScoped . username}`). Includes interactive Markdown hover tooltips and can be toggled via `jakartaFacesTools.showInlineBeanScopes`.
 - **Lifecycle Summary & Documentation Cards**: Autocomplete and hover cards surface concise lifecycle summaries (e.g., *"Survives across AJAX postbacks within the same view"*) along with class name, scope package import, and clickable file link.
 - **Scope-Aware Best-Practice Diagnostics**: Emits intelligent enterprise information recommendations when binding `@RequestScoped` beans to stateful data components (`<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<ui:repeat>`), preventing pagination, sorting, and state loss on postbacks.
 

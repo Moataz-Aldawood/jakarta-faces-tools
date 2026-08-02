@@ -10,6 +10,7 @@ const JsfDiagnostics_1 = require("./providers/JsfDiagnostics");
 const JsfELHighlighter_1 = require("./providers/JsfELHighlighter");
 const JsfElCompletionProvider_1 = require("./providers/JsfElCompletionProvider");
 const JsfIdHighlightProvider_1 = require("./providers/JsfIdHighlightProvider");
+const JsfInlayHintsProvider_1 = require("./providers/JsfInlayHintsProvider");
 function activate(context) {
     console.log('Congratulations, your extension "jakarta-ee-tools" is now active!');
     const jsfDefinitionProvider = new JsfDefinitionProvider_1.JsfDefinitionProvider();
@@ -17,6 +18,7 @@ function activate(context) {
     const jsfHoverProvider = new JsfHoverProvider_1.JsfHoverProvider();
     const jsfElCompletionProvider = new JsfElCompletionProvider_1.JsfElCompletionProvider();
     const jsfIdHighlightProvider = new JsfIdHighlightProvider_1.JsfIdHighlightProvider();
+    const jsfInlayHintsProvider = new JsfInlayHintsProvider_1.JsfInlayHintsProvider();
     const elHighlighter = new JsfELHighlighter_1.JsfELHighlighter();
     const documentSelector = [
         { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
@@ -63,7 +65,7 @@ function activate(context) {
         onCacheUpdated();
         vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     });
-    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':', '"', "'"), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{', '#'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider), elHighlighter, rebuildCacheCommand);
+    context.subscriptions.push(vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider), vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':', '"', "'"), vscode.languages.registerCompletionItemProvider(documentSelector, jsfElCompletionProvider, '.', '{', '#'), vscode.languages.registerHoverProvider(documentSelector, jsfHoverProvider), vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider), vscode.languages.registerInlayHintsProvider(documentSelector, jsfInlayHintsProvider), elHighlighter, rebuildCacheCommand);
     // Dynamic configuration listener for status bar visibility & cache cleanup
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('jakartaFacesTools')) {

@@ -120,6 +120,12 @@
             "default": true,
             "order": 20,
             "description": "Enable rich documentation hover cards when hovering over JSF tags, attributes, namespaces, and component IDs."
+          },
+          "jakartaFacesTools.showInlineBeanScopes": {
+            "type": "boolean",
+            "default": true,
+            "order": 21,
+            "description": "Enable inline editor badges (Inlay Hints) next to Java Managed Beans in Expression Language (#{...} / ${...}) expressions showing their CDI / Faces scope (e.g. ': @ViewScoped')."
           }
         }
       }

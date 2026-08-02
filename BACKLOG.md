@@ -32,6 +32,7 @@
   - **Scope Recognition**: Parse Java/CDI scope annotations (`@RequestScoped`, `@ViewScoped`, `@SessionScoped`, `@ApplicationScoped`, `@ConversationScoped`, `@FlowScoped`, `@Dependent`) during bean scanning.
   - **Autocomplete Scope Badges**: Display scope in autocomplete completion row descriptions (` : UserController  (@ViewScoped)`) and Markdown fly-out documentation cards.
   - **Interactive Scope Hover Cards**: Hovering over `#{userController}` displays a dedicated table row showing the bean scope, import package (`jakarta.faces.view.ViewScoped`), and lifecycle summary.
+  - **In-Code Scope Badges (Inlay Hints)**: Render inline editor badges (`: @ViewScoped`) next to Java Managed Beans in EL expressions (`#{userController : @ViewScoped . username}`), toggleable via `jakartaFacesTools.showInlineBeanScopes`.
   - **Scope-Aware Best-Practice Diagnostics**: Warn developers when binding stateful components (`<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<ui:repeat>`) to `@RequestScoped` backing beans.
 
 ## 🚀 Next Up (Version 3.0 Pro & Enterprise Features / Roadmap)

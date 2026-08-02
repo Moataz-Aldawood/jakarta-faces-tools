@@ -37,6 +37,14 @@ class MockDiagnostic {
     }
 }
 
+class MockInlayHint {
+    constructor(position, label, kind) {
+        this.position = position;
+        this.label = label;
+        this.kind = kind;
+    }
+}
+
 const mockVscode = {
     CompletionItem: MockCompletionItem,
     CompletionItemKind: {
@@ -85,6 +93,11 @@ const mockVscode = {
         Warning: 1,
         Information: 2,
         Hint: 3
+    },
+    InlayHint: MockInlayHint,
+    InlayHintKind: {
+        Type: 1,
+        Parameter: 2
     },
     workspace: {
         getConfiguration: () => ({ get: (k, d) => d }),
@@ -196,6 +209,20 @@ async function testBestPracticeDiagnostic() {
     assert.ok(bestPracticeDiag.message.includes('@RequestScoped'), 'Diagnostic message should mention @RequestScoped');
     assert.ok(bestPracticeDiag.message.includes('reqBean'), 'Diagnostic message should mention bean name');
     console.log('  [PASS] Correctly emitted Scope-Aware Best-Practice warning for stateful component binding.');
+
+    // Test 5: In-Code Scope Badges via VS Code Inlay Hints
+    console.log('Testing In-Code Scope Badges via VS Code Inlay Hints...');
+    const inlayModule = require('./out/providers/JsfInlayHintsProvider');
+    const inlayProvider = new inlayModule.JsfInlayHintsProvider();
+    const mockDocInlay = {
+        lineAt: (line) => ({ text: '  <h:outputText value="#{reqBean.username}" />' })
+    };
+    const mockRange = new mockVscode.Range(0, 0, 0, 46);
+    const hints = inlayProvider.provideInlayHints(mockDocInlay, mockRange, null);
+    assert.strictEqual(hints.length, 1, 'Expected 1 Inlay Hint for reqBean');
+    assert.strictEqual(hints[0].label, ': @RequestScoped', 'Inlay Hint label should show : @RequestScoped');
+    assert.strictEqual(hints[0].position.character, 32, 'Inlay Hint position should be right after reqBean');
+    console.log('  [PASS] Correctly generated inline editor scope badge (Inlay Hint) for Managed Bean.');
 }
 
 testBestPracticeDiagnostic().then(() => {
