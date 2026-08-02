@@ -57,14 +57,16 @@ export class JsfInlayHintsProvider implements vscode.InlayHintsProvider {
                         hint.paddingLeft = false;
                         hint.paddingRight = false;
 
-                        const tooltip = new vscode.MarkdownString();
-                        tooltip.supportThemeIcons = true;
-                        tooltip.appendMarkdown(`**$(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`**\n\n`);
-                        tooltip.appendMarkdown(`- **Class:** \`${beanMeta.className}\`\n`);
-                        tooltip.appendMarkdown(`- **Scope:** \`${getScopeBadge(scopeDisplay)}\` ${beanMeta.scopePackage ? `(\`${beanMeta.scopePackage}\`)` : ''}\n`);
-                        tooltip.appendMarkdown(`- **Lifecycle:** ${getScopeLifecycleDescription(scopeDisplay)}\n\n`);
-                        tooltip.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
-                        hint.tooltip = tooltip;
+                        if (config.get<boolean>('enableHoverCards', true)) {
+                            const tooltip = new vscode.MarkdownString();
+                            tooltip.supportThemeIcons = true;
+                            tooltip.appendMarkdown(`**$(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`**\n\n`);
+                            tooltip.appendMarkdown(`- **Class:** \`${beanMeta.className}\`\n`);
+                            tooltip.appendMarkdown(`- **Scope:** \`${getScopeBadge(scopeDisplay)}\` ${beanMeta.scopePackage ? `(\`${beanMeta.scopePackage}\`)` : ''}\n`);
+                            tooltip.appendMarkdown(`- **Lifecycle:** ${getScopeLifecycleDescription(scopeDisplay)}\n\n`);
+                            tooltip.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                            hint.tooltip = tooltip;
+                        }
 
                         hints.push(hint);
                         break; // Display scope annotation badge cleanly before #{ for the primary Managed Bean

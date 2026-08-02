@@ -46,14 +46,16 @@ class JsfInlayHintsProvider {
                         const hint = new vscode.InlayHint(position, `${scopeDisplay} : `, vscode.InlayHintKind.Type);
                         hint.paddingLeft = false;
                         hint.paddingRight = false;
-                        const tooltip = new vscode.MarkdownString();
-                        tooltip.supportThemeIcons = true;
-                        tooltip.appendMarkdown(`**$(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`**\n\n`);
-                        tooltip.appendMarkdown(`- **Class:** \`${beanMeta.className}\`\n`);
-                        tooltip.appendMarkdown(`- **Scope:** \`${(0, JsfElCompletionProvider_1.getScopeBadge)(scopeDisplay)}\` ${beanMeta.scopePackage ? `(\`${beanMeta.scopePackage}\`)` : ''}\n`);
-                        tooltip.appendMarkdown(`- **Lifecycle:** ${(0, JsfElCompletionProvider_1.getScopeLifecycleDescription)(scopeDisplay)}\n\n`);
-                        tooltip.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
-                        hint.tooltip = tooltip;
+                        if (config.get('enableHoverCards', true)) {
+                            const tooltip = new vscode.MarkdownString();
+                            tooltip.supportThemeIcons = true;
+                            tooltip.appendMarkdown(`**$(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`**\n\n`);
+                            tooltip.appendMarkdown(`- **Class:** \`${beanMeta.className}\`\n`);
+                            tooltip.appendMarkdown(`- **Scope:** \`${(0, JsfElCompletionProvider_1.getScopeBadge)(scopeDisplay)}\` ${beanMeta.scopePackage ? `(\`${beanMeta.scopePackage}\`)` : ''}\n`);
+                            tooltip.appendMarkdown(`- **Lifecycle:** ${(0, JsfElCompletionProvider_1.getScopeLifecycleDescription)(scopeDisplay)}\n\n`);
+                            tooltip.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                            hint.tooltip = tooltip;
+                        }
                         hints.push(hint);
                         break; // Display scope annotation badge cleanly before #{ for the primary Managed Bean
                     }

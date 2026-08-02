@@ -40,13 +40,13 @@
   "contributes": {
     "configuration": [
       {
-        "title": "Jakarta Faces Tools: EL Autocomplete [Beta Feature]",
+        "title": "Jakarta Faces Tools: EL Autocomplete",
         "properties": {
           "jakartaFacesTools.enableELAutocomplete": {
             "type": "boolean",
             "default": true,
             "order": 1,
-            "description": "[Beta Feature] Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions."
+            "description": "Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions."
           },
           "jakartaFacesTools.enableELDiagnostics": {
             "type": "boolean",
@@ -64,7 +64,7 @@
             "type": "boolean",
             "default": true,
             "order": 4,
-            "description": "[Beta Feature] Show the 'Rebuild JSF Cache' button in the VS Code Status Bar. Expression Language (EL) Autocomplete caches your Java Managed Beans in memory for fast performance; use this button to force a fresh scan of your project if beans change outside of normal edits."
+            "description": "Show the 'Rebuild JSF Cache' button in the VS Code Status Bar. Expression Language (EL) Autocomplete caches your Java Managed Beans in memory for fast performance; use this button to force a fresh scan of your project if beans change outside of normal edits."
           },
           "jakartaFacesTools.rebuildCacheButtonPosition": {
             "type": "string",
@@ -74,7 +74,7 @@
             ],
             "default": "Right",
             "order": 5,
-            "description": "[Beta Feature] Choose the position ('Right' or 'Left') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled."
+            "description": "Choose the position ('Right' or 'Left') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled."
           }
         }
       },
@@ -110,6 +110,12 @@
             "default": "3px",
             "order": 14,
             "description": "Border radius for Expression Language (EL) #{...} expressions."
+          },
+          "jakartaFacesTools.showInlineBeanScopes": {
+            "type": "boolean",
+            "default": true,
+            "order": 15,
+            "description": "Enable inline editor badges (Inlay Hints) before Expression Language (#{...} / ${...}) blocks showing the Java Managed Bean's CDI / Faces scope (e.g. '@ViewScoped : ')."
           }
         }
       },
@@ -121,12 +127,6 @@
             "default": true,
             "order": 20,
             "description": "Enable rich documentation hover cards when hovering over JSF tags, attributes, namespaces, and component IDs."
-          },
-          "jakartaFacesTools.showInlineBeanScopes": {
-            "type": "boolean",
-            "default": true,
-            "order": 21,
-            "description": "Enable inline editor badges (Inlay Hints) next to Java Managed Beans in Expression Language (#{...} / ${...}) expressions showing their CDI / Faces scope (e.g. ': @ViewScoped')."
           }
         }
       }
@@ -134,7 +134,7 @@
     "commands": [
       {
         "command": "jakartaFacesTools.rebuildJsfCache",
-        "title": "Rebuild JSF Cache (EL Autocomplete Beta Feature)",
+        "title": "Rebuild JSF Cache",
         "category": "Jakarta Faces Tools"
       }
     ],

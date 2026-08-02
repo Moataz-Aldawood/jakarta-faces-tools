@@ -1,0 +1,77 @@
+================================================================================
+JAKARTA FACES TOOLS — EXTENSION SETTINGS REVIEW (v3.0.0)
+================================================================================
+
+--------------------------------------------------------------------------------
+CATEGORY 1: Jakarta Faces Tools: EL Autocomplete
+--------------------------------------------------------------------------------
+
+[Order: 1] jakartaFacesTools.enableELAutocomplete
+- Type: boolean
+- Default: true
+- Description: Enable intelligent auto-complete for Java Managed Beans and properties inside Expression Language (EL) #{...} expressions.
+
+[Order: 2] jakartaFacesTools.enableELDiagnostics
+- Type: boolean
+- Default: true
+- Description: Enable real-time semantic diagnostics (warnings) for unknown Java Managed Beans and mistyped property names inside #{...} EL expressions.
+
+[Order: 3] jakartaFacesTools.enableIncrementalCache
+- Type: boolean
+- Default: true
+- Description: Enable real-time Java file watching (**/*.java) and incremental cache updates when Managed Bean files are saved. Disable this in very large repositories or network drives if file watching causes performance issues.
+
+[Order: 4] jakartaFacesTools.showRebuildCacheButton
+- Type: boolean
+- Default: true
+- Description: Show the 'Rebuild JSF Cache' button in the VS Code Status Bar. Expression Language (EL) Autocomplete caches your Java Managed Beans in memory for fast performance; use this button to force a fresh scan of your project if beans change outside of normal edits.
+
+[Order: 5] jakartaFacesTools.rebuildCacheButtonPosition
+- Type: string (Enum: "Right", "Left")
+- Default: "Right"
+- Description: Choose the position ('Right' or 'Left') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled.
+
+--------------------------------------------------------------------------------
+CATEGORY 2: Jakarta Faces Tools: EL Highlighting
+--------------------------------------------------------------------------------
+
+[Order: 10] jakartaFacesTools.ELHighlighting.enable
+- Type: boolean
+- Default: true
+- Description: Enable highlighting for Expression Language (EL) #{...} expressions.
+
+[Order: 11] jakartaFacesTools.ELHighlighting.backgroundColor
+- Type: string
+- Default: "rgba(100, 150, 255, 0.15)"
+- Description: Background color for Expression Language (EL) #{...} expressions. Supports CSS colors (e.g. rgba, hex).
+
+[Order: 12] jakartaFacesTools.ELHighlighting.color
+- Type: string
+- Default: "" (empty string - theme default)
+- Description: Text color for Expression Language (EL) #{...} expressions (leave empty to use theme default).
+
+[Order: 13] jakartaFacesTools.ELHighlighting.border
+- Type: string
+- Default: "1px solid rgba(100, 150, 255, 0.3)"
+- Description: Border for Expression Language (EL) #{...} expressions.
+
+[Order: 14] jakartaFacesTools.ELHighlighting.borderRadius
+- Type: string
+- Default: "3px"
+- Description: Border radius for Expression Language (EL) #{...} expressions.
+
+[Order: 15] jakartaFacesTools.showInlineBeanScopes
+- Type: boolean
+- Default: true
+- Description: Enable inline editor badges (Inlay Hints) before Expression Language (#{...} / ${...}) blocks showing the Java Managed Bean's CDI / Faces scope (e.g. '@ViewScoped : ').
+
+--------------------------------------------------------------------------------
+CATEGORY 3: Jakarta Faces Tools: Documentation & Hover Cards
+--------------------------------------------------------------------------------
+
+[Order: 20] jakartaFacesTools.enableHoverCards
+- Type: boolean
+- Default: true
+- Description: Enable rich documentation hover cards when hovering over JSF tags, attributes, namespaces, and component IDs.
+
+================================================================================
