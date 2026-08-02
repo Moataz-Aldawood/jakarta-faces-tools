@@ -220,8 +220,8 @@ async function testBestPracticeDiagnostic() {
     const mockRange = new mockVscode.Range(0, 0, 0, 46);
     const hints = await inlayProvider.provideInlayHints(mockDocInlay, mockRange, null);
     assert.strictEqual(hints.length, 1, 'Expected 1 Inlay Hint for reqBean');
-    assert.strictEqual(hints[0].label, ': @RequestScoped', 'Inlay Hint label should show : @RequestScoped');
-    assert.strictEqual(hints[0].position.character, 32, 'Inlay Hint position should be right after reqBean');
+    assert.strictEqual(hints[0].label, '@RequestScoped : ', 'Inlay Hint label should show @RequestScoped : ');
+    assert.strictEqual(hints[0].position.character, 23, 'Inlay Hint position should be before #{');
     console.log('  [PASS] Correctly generated inline editor scope badge (Inlay Hint) for Managed Bean.');
 }
 

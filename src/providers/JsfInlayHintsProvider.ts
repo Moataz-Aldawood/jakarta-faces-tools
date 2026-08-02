@@ -46,17 +46,16 @@ export class JsfInlayHintsProvider implements vscode.InlayHintsProvider {
                     const word = identMatch[0];
                     const beanMeta = beanMap.get(word);
                     if (beanMeta) {
-                        const endChar = exprStartOffset + identMatch.index + word.length;
-                        const position = new vscode.Position(lineIdx, endChar);
+                        const position = new vscode.Position(lineIdx, elMatch.index);
                         const scopeDisplay = beanMeta.scope || '@RequestScoped';
 
                         const hint = new vscode.InlayHint(
                             position,
-                            `: ${scopeDisplay}`,
+                            `${scopeDisplay} : `,
                             vscode.InlayHintKind.Type
                         );
-                        hint.paddingLeft = true;
-                        hint.paddingRight = true;
+                        hint.paddingLeft = false;
+                        hint.paddingRight = false;
 
                         const tooltip = new vscode.MarkdownString();
                         tooltip.supportThemeIcons = true;
@@ -68,6 +67,7 @@ export class JsfInlayHintsProvider implements vscode.InlayHintsProvider {
                         hint.tooltip = tooltip;
 
                         hints.push(hint);
+                        break; // Display scope annotation badge cleanly before #{ for the primary Managed Bean
                     }
                 }
             }
