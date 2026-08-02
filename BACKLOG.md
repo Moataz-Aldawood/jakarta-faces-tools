@@ -27,7 +27,14 @@
 - [x] **Official Class Icon (`C`) & Signature Branding**: Managed Beans display VS Code's official Class badge icon (`CompletionItemKind.Class`). All Markdown hover and completion documentation cards standardize on our `$(coffee) Jakarta Faces Tools` signature.
 - [x] **Dedicated Hover Cards UI Setting**: Added `"Jakarta Faces Tools: Documentation & Hover Cards"` settings category with `jakartaFacesTools.enableHoverCards` (default `true`) to toggle hover cards from the Settings UI.
 
-## 🚀 Next Up (v2.7.0 / Future Releases)
+## 🚀 Next Up (v2.7.0 / Version 3.0 Pro & Enterprise Features)
+- [ ] **External JAR & Multi-Module Enterprise Library Support (3-Tier Architecture)**:
+  - **Tier 1 (Multi-Root Workspace - Already Supported)**: Full cross-project EL autocomplete and diagnostics across multi-root `.code-workspace` folders when entities, controllers, and composite components reside in separate source repositories.
+  - **Tier 2 (Configurable External JAR Scanning)**: Add setting `jakartaFacesTools.externalJarPaths` to scan external library JARs (`.jar` and `-sources.jar`) using a lightweight zero-dependency ZIP parser.
+  - **Tier 3 (Automated Library Inspection)**:
+    - *Composite Components in JAR*: Extract custom composite component `.xhtml` files from `META-INF/resources/<namespace>/<component>.xhtml` inside JARs, making external UI library tags and `<cc:attribute>` attributes available in IntelliSense.
+    - *XML Configuration in JAR*: Read `META-INF/faces-config.xml` in external JARs for explicit bean and navigation rule declarations.
+    - *Backing Beans & JPA Entities in JAR*: Extract properties and getters from `-sources.jar` archives or directly from `.class` bytecode constant pools without requiring a heavy Java JVM.
 - [ ] **Spring Boot / CDI Annotation Support (`@Component`, `@Service`, `@Controller`, `@Model`, `@Inject`)**: Extend Java Bean scanning to recognize Spring Boot and Jakarta CDI component annotations for EL-accessible beans (crucial for JoinFaces & modern Spring Boot + JSF apps).
 - [ ] **i18n Resource Bundle EL Support (`#{msg['...']}`)**: Parse `.properties` message bundles and `<f:loadBundle>` / `faces-config.xml` resource bundles to provide auto-complete and hover translation previews for internationalization keys.
 - [ ] **EL Quick Fixes & Code Actions (`Ctrl+.`)**: Provide VS Code Lightbulb Quick Fixes for EL semantic warnings (e.g., suggesting "Did you mean `username`?" for mistyped properties or generating missing Java getter methods).
