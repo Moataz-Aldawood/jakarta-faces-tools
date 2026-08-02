@@ -148,7 +148,8 @@
     "test:cache": "node testIncrementalCache.js",
     "test:lombok": "node testLombokSupport.js",
     "test:autocomplete": "node testImmediateAutocomplete.js",
-    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js && node testLombokSupport.js && node testImmediateAutocomplete.js"
+    "test:scope": "node testBeanScopeAwareness.js",
+    "test": "npm run compile && node testElDiagnostics.js && node testIncrementalCache.js && node testLombokSupport.js && node testImmediateAutocomplete.js && node testBeanScopeAwareness.js"
   },
   "devDependencies": {
     "@types/node": "18.x",

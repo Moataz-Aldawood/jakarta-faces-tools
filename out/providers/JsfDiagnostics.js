@@ -9,6 +9,10 @@ const namespaceParser_1 = require("./namespaceParser");
 const ThirdPartyCatalogs_1 = require("./ThirdPartyCatalogs");
 const JsfElCompletionProvider_1 = require("./JsfElCompletionProvider");
 const iterationParser_1 = require("./iterationParser");
+const tagParser_1 = require("./tagParser");
+const STATEFUL_DATA_TAGS = new Set([
+    'h:dataTable', 'p:dataTable', 'p:dataList', 'p:dataGrid', 'p:carousel', 'ui:repeat'
+]);
 const EL_IMPLICIT_OBJECTS = new Set([
     'param', 'paramValues', 'header', 'headerValues', 'cookie', 'initParam',
     'request', 'response', 'session', 'application', 'facesContext',
@@ -56,9 +60,20 @@ async function computeElDiagnostics(document, beanMap, elProvider) {
                 diagnostics.push(diagnostic);
                 continue;
             }
-            // If rootName IS a known Managed Bean, recursively validate all segments in the property chain
+            // If rootName IS a known Managed Bean, check for dangerous scope bindings and validate property chain
             if (parts.length >= 2) {
                 const bean = beanMap.get(rootName);
+                // Scope-Aware Best-Practice Check: Warn if binding a stateful data tag to @RequestScoped bean
+                if (bean.scope === '@RequestScoped') {
+                    const enclosingTag = (0, tagParser_1.getEnclosingTag)(document, startPos);
+                    if (enclosingTag && STATEFUL_DATA_TAGS.has(enclosingTag.tagName)) {
+                        const endPos = document.positionAt(chainOffset + rootName.length);
+                        const range = new vscode.Range(startPos, endPos);
+                        const diagnostic = new vscode.Diagnostic(range, `Jakarta Faces Best Practice: '<${enclosingTag.tagName}>' is bound to '@RequestScoped' bean '${rootName}'. Pagination, sorting, and state selection may fail on postback. Consider changing '${rootName}' to '@ViewScoped'.`, vscode.DiagnosticSeverity.Information);
+                        diagnostic.source = 'Jakarta Faces Tools';
+                        diagnostics.push(diagnostic);
+                    }
+                }
                 let currentUri = bean.uri;
                 let currentClassName = bean.className;
                 let currentOffset = chainOffset + rootName.length + 1; // +1 for '.'

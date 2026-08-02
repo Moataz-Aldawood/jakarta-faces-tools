@@ -6,6 +6,8 @@ const jsfCatalog_1 = require("./jsfCatalog");
 const ThirdPartyCatalogs_1 = require("./ThirdPartyCatalogs");
 const tagParser_1 = require("./tagParser");
 const JsfIdHighlightProvider_1 = require("./JsfIdHighlightProvider");
+const JsfElCompletionProvider_1 = require("./JsfElCompletionProvider");
+const iterationParser_1 = require("./iterationParser");
 class JsfHoverProvider {
     provideHover(document, position, token) {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
@@ -50,6 +52,43 @@ class JsfHoverProvider {
             return null;
         }
         const word = document.getText(wordRange);
+        // Check if hovering over a Managed Bean or Iteration Variable inside an EL expression (#{...} or ${...})
+        const lineText = document.lineAt(position.line).text;
+        const beforeCursor = lineText.substring(0, position.character);
+        const afterCursor = lineText.substring(position.character);
+        const lastOpen = Math.max(beforeCursor.lastIndexOf('#{'), beforeCursor.lastIndexOf('${'));
+        if (lastOpen !== -1 && afterCursor.includes('}')) {
+            const beanMeta = (0, JsfElCompletionProvider_1.getSharedBeanMap)().get(word);
+            if (beanMeta) {
+                const scopeDisplay = beanMeta.scope || '@RequestScoped';
+                const scopeBadge = (0, JsfElCompletionProvider_1.getScopeBadge)(scopeDisplay);
+                const scopeDesc = (0, JsfElCompletionProvider_1.getScopeLifecycleDescription)(scopeDisplay);
+                const relativePath = vscode.workspace.asRelativePath(beanMeta.uri);
+                const markdown = new vscode.MarkdownString();
+                markdown.supportThemeIcons = true;
+                markdown.appendMarkdown(`### $(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`\n\n`);
+                markdown.appendMarkdown(`| Property | Value |\n`);
+                markdown.appendMarkdown(`| :--- | :--- |\n`);
+                markdown.appendMarkdown(`| **Class** | \`${beanMeta.className}\` |\n`);
+                markdown.appendMarkdown(`| **Scope** | **\`${scopeDisplay}\`** ${beanMeta.scopePackage ? `*(import \`${beanMeta.scopePackage}\`)*` : ''} |\n`);
+                markdown.appendMarkdown(`| **Lifecycle** | ${scopeDesc} |\n`);
+                markdown.appendMarkdown(`| **File** | [${relativePath}](file:///${beanMeta.uri.fsPath.replace(/\\/g, '/')}) |\n\n`);
+                markdown.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                return new vscode.Hover(markdown, wordRange);
+            }
+            const iterVar = (0, iterationParser_1.findIterationVariableByName)(document, position, word);
+            if (iterVar) {
+                const markdown = new vscode.MarkdownString();
+                markdown.supportThemeIcons = true;
+                markdown.appendMarkdown(`### $(coffee) Iteration Variable: \`${iterVar.varName}\`\n\n`);
+                markdown.appendMarkdown(`| Property | Value |\n`);
+                markdown.appendMarkdown(`| :--- | :--- |\n`);
+                markdown.appendMarkdown(`| **Collection** | \`#{${iterVar.collectionEl}}\` |\n`);
+                markdown.appendMarkdown(`| **Declared at** | **Line ${iterVar.tagRange.start.line + 1}** |\n\n`);
+                markdown.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                return new vscode.Hover(markdown, wordRange);
+            }
+        }
         // Check if the hovered word is a JSF tag
         const docText = document.getText();
         const activeCatalogs = { ...jsfCatalog_1.JSF_CATALOG, ...(0, ThirdPartyCatalogs_1.getActiveThirdPartyCatalogs)(docText) };
@@ -118,8 +157,6 @@ class JsfHoverProvider {
                     else {
                         docUrl = `https://jakarta.ee/specifications/faces/4.1/vdldoc/${prefix}/${componentName}.html`;
                     }
-                    // Primefaces doesn't support anchors for attributes on their new page, but standard JSF/Omnifaces do.
-                    // We will just point to the page, and if the anchor exists the browser will scroll to it.
                     markdown.supportThemeIcons = true;
                     markdown.appendMarkdown(`[🌐 Read full documentation online](${docUrl}#${attr.name})\n\n`);
                     markdown.appendMarkdown(`\n\n---\n*$(coffee) Jakarta Faces Tools*`);

@@ -5,6 +5,8 @@ import { findEnclosingIterationVariables, findIterationVariableByName } from './
 export interface ElBeanMetadata {
     beanName: string;
     className: string;
+    scope?: string;
+    scopePackage?: string;
     uri: vscode.Uri;
     properties: ElPropertyMetadata[];
 }
@@ -14,6 +16,81 @@ export interface ElPropertyMetadata {
     type: string;
     isMethod: boolean;
     description: string;
+}
+
+export function extractBeanScope(content: string): { scope: string; scopePackage?: string } | undefined {
+    if (/@ViewScoped\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.faces\.view\.ViewScoped|javax\.faces\.view\.ViewScoped|omni\.view\.ViewScoped|javax\.faces\.bean\.ViewScoped)/.exec(content)?.[1] || 'jakarta.faces.view.ViewScoped';
+        return { scope: '@ViewScoped', scopePackage: pkg };
+    }
+    if (/@RequestScoped\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.enterprise\.context\.RequestScoped|javax\.enterprise\.context\.RequestScoped|javax\.faces\.bean\.RequestScoped)/.exec(content)?.[1] || 'jakarta.enterprise.context.RequestScoped';
+        return { scope: '@RequestScoped', scopePackage: pkg };
+    }
+    if (/@SessionScoped\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.enterprise\.context\.SessionScoped|javax\.enterprise\.context\.SessionScoped|javax\.faces\.bean\.SessionScoped)/.exec(content)?.[1] || 'jakarta.enterprise.context.SessionScoped';
+        return { scope: '@SessionScoped', scopePackage: pkg };
+    }
+    if (/@ApplicationScoped\b|@Singleton\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.enterprise\.context\.ApplicationScoped|javax\.enterprise\.context\.ApplicationScoped|jakarta\.inject\.Singleton|javax\.inject\.Singleton|javax\.faces\.bean\.ApplicationScoped)/.exec(content)?.[1] || 'jakarta.enterprise.context.ApplicationScoped';
+        return { scope: '@ApplicationScoped', scopePackage: pkg };
+    }
+    if (/@ConversationScoped\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.enterprise\.context\.ConversationScoped|javax\.enterprise\.context\.ConversationScoped)/.exec(content)?.[1] || 'jakarta.enterprise.context.ConversationScoped';
+        return { scope: '@ConversationScoped', scopePackage: pkg };
+    }
+    if (/@FlowScoped\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.faces\.flow\.FlowScoped|javax\.faces\.flow\.FlowScoped)/.exec(content)?.[1] || 'jakarta.faces.flow.FlowScoped';
+        return { scope: '@FlowScoped', scopePackage: pkg };
+    }
+    if (/@Dependent\b/.test(content)) {
+        const pkg = /import\s+(jakarta\.enterprise\.context\.Dependent|javax\.enterprise\.context\.Dependent)/.exec(content)?.[1] || 'jakarta.enterprise.context.Dependent';
+        return { scope: '@Dependent', scopePackage: pkg };
+    }
+    return undefined;
+}
+
+export function getScopeLifecycleDescription(scope?: string): string {
+    switch (scope) {
+        case '@ViewScoped':
+            return 'Survives across AJAX postbacks within the same view';
+        case '@RequestScoped':
+            return 'Created and destroyed per HTTP request';
+        case '@SessionScoped':
+            return 'Persists across the entire user HTTP session';
+        case '@ApplicationScoped':
+        case '@Singleton':
+            return 'Shared globally across all users and threads';
+        case '@ConversationScoped':
+            return 'Survives across a defined conversation or wizard flow';
+        case '@FlowScoped':
+            return 'Survives across a defined Faces Flow';
+        case '@Dependent':
+            return 'New instance created for each injection point (CDI default)';
+        default:
+            return 'Created and destroyed per HTTP request (Default)';
+    }
+}
+
+export function getScopeBadge(scope?: string): string {
+    switch (scope) {
+        case '@ViewScoped':
+            return '🟢 @ViewScoped';
+        case '@RequestScoped':
+            return '🟡 @RequestScoped';
+        case '@SessionScoped':
+            return '🔵 @SessionScoped';
+        case '@ApplicationScoped':
+        case '@Singleton':
+            return '🟣 @ApplicationScoped';
+        case '@ConversationScoped':
+        case '@FlowScoped':
+            return '🟠 ' + scope;
+        case '@Dependent':
+            return '⚪ @Dependent';
+        default:
+            return '🟡 @RequestScoped';
+    }
 }
 
 // In-memory cache for Managed Beans
@@ -83,6 +160,8 @@ export async function updateJavaBeanInCache(uri: vscode.Uri, readFileFn?: (uri: 
         const provider = new JsfElCompletionProvider();
         const content = provider.stripJavaComments(rawContent);
 
+        const scopeInfo = extractBeanScope(content);
+
         const explicitRegex = /@(Named|ManagedBean|Controller|Component)\s*\(\s*(?:value\s*=\s*|name\s*=\s*)?"([a-zA-Z0-9_-]+)"\s*\)/g;
         let match;
         while ((match = explicitRegex.exec(content)) !== null) {
@@ -91,6 +170,8 @@ export async function updateJavaBeanInCache(uri: vscode.Uri, readFileFn?: (uri: 
             beanMap.set(beanName, {
                 beanName,
                 className,
+                scope: scopeInfo?.scope,
+                scopePackage: scopeInfo?.scopePackage,
                 uri: uri,
                 properties: []
             });
@@ -104,6 +185,8 @@ export async function updateJavaBeanInCache(uri: vscode.Uri, readFileFn?: (uri: 
                 beanMap.set(beanName, {
                     beanName,
                     className,
+                    scope: scopeInfo?.scope,
+                    scopePackage: scopeInfo?.scopePackage,
                     uri: uri,
                     properties: []
                 });
@@ -186,16 +269,22 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         if (parts.length === 1) {
             const completions: vscode.CompletionItem[] = [];
             for (const [beanName, meta] of beanMap.entries()) {
+                const scopeDisplay = meta.scope || '@RequestScoped';
+                const scopeBadge = getScopeBadge(scopeDisplay);
+                const scopeDesc = getScopeLifecycleDescription(scopeDisplay);
+
                 const item = new vscode.CompletionItem({
                     label: beanName,
-                    description: ` : ${meta.className}`
+                    description: ` : ${meta.className}  (${scopeDisplay})`
                 }, vscode.CompletionItemKind.Class);
                 item.insertText = new vscode.SnippetString(`${beanName}$0`);
-                item.detail = `Managed Bean: ${meta.className}`;
+                item.detail = `Managed Bean: ${meta.className}  •  ${scopeDisplay}`;
                 const md = new vscode.MarkdownString(
                     `**Jakarta Managed Bean: \`${beanName}\`**\n\n` +
-                    `- Class: \`${meta.className}\`\n` +
-                    `- File: \`${vscode.workspace.asRelativePath(meta.uri)}\`\n\n` +
+                    `- **Class:** \`${meta.className}\`\n` +
+                    `- **Scope:** \`${scopeBadge}\` ${meta.scopePackage ? `(\`${meta.scopePackage}\`)` : ''}\n` +
+                    `- **Lifecycle:** ${scopeDesc}\n` +
+                    `- **File:** \`${vscode.workspace.asRelativePath(meta.uri)}\`\n\n` +
                     `---\n*$(coffee) Jakarta Faces Tools*`
                 );
                 md.supportThemeIcons = true;
@@ -345,6 +434,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             const rawContent = await this.readFile(file);
             const content = this.stripJavaComments(rawContent);
 
+            const scopeInfo = extractBeanScope(content);
+
             // Check for explicit @Named("foo") or @ManagedBean(name="foo")
             const explicitRegex = /@(Named|ManagedBean|Controller|Component)\s*\(\s*(?:value\s*=\s*|name\s*=\s*)?"([a-zA-Z0-9_-]+)"\s*\)/g;
             let match;
@@ -354,6 +445,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 beanMap.set(beanName, {
                     beanName,
                     className,
+                    scope: scopeInfo?.scope,
+                    scopePackage: scopeInfo?.scopePackage,
                     uri: file,
                     properties: []
                 });
@@ -368,6 +461,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                     beanMap.set(beanName, {
                         beanName,
                         className,
+                        scope: scopeInfo?.scope,
+                        scopePackage: scopeInfo?.scopePackage,
                         uri: file,
                         properties: []
                     });

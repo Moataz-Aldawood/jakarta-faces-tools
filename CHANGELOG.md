@@ -7,6 +7,12 @@ All notable changes to the "jakarta-faces-tools" extension will be documented in
 Version 3.0.0 represents a massive, transformative release for **Jakarta Faces Tools**, combining all development milestones from v2.2.0 through v2.6.0 into a single, enterprise-ready release. This release brings Eclipse- and NetBeans-grade form wiring, real-time Java bean caching, Lombok annotation support, instant quote autocomplete, and deep EL semantic validation to VS Code.
 
 ### Highlights & Features
+#### 🌟 Managed Bean Scope Awareness & Lifecycle Intelligence
+- **Automatic CDI / Faces Scope Recognition**: Scans and extracts scope annotations (`@ViewScoped`, `@RequestScoped`, `@SessionScoped`, `@ApplicationScoped`, `@ConversationScoped`, `@FlowScoped`, `@Dependent`) from Java Managed Beans.
+- **Color-Coded Scope Badges in EL Autocomplete**: Displays color-coded scope badges (`🟢 @ViewScoped`, `🟡 @RequestScoped`, `🔵 @SessionScoped`, `🟣 @ApplicationScoped`) directly in EL autocomplete items and detail strings.
+- **Lifecycle Summary & Documentation Cards**: Autocomplete and hover cards surface concise lifecycle summaries (e.g., *"Survives across AJAX postbacks within the same view"*) along with class name, scope package import, and clickable file link.
+- **Scope-Aware Best-Practice Diagnostics**: Emits intelligent enterprise information recommendations when binding `@RequestScoped` beans to stateful data components (`<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<ui:repeat>`), preventing pagination, sorting, and state loss on postbacks.
+
 #### ⚡ Immediate Quote Autocomplete & Smart EL Snippets
 - **Immediate Component ID Autocomplete (`for="..."` / `target="..."`)**: Autocomplete triggers immediately after typing a quote (`"` or `'`) inside `for="..."` and `target="..."` attributes, displaying all available component IDs in the active file without requiring typing the first character of the ID.
 - **Immediate Root Bean Completion (`#{...}`)**: Typing `{` inside Expression Language `#{|}` and `${|}` blocks immediately displays all available Managed Beans and iteration variables without requiring typing the first character.

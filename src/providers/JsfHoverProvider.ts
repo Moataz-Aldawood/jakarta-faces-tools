@@ -4,6 +4,8 @@ import { getCompositeNamespaces, resolveCompositeComponent, getCompositeAttribut
 import { getActiveThirdPartyCatalogs } from './ThirdPartyCatalogs';
 import { getEnclosingTag } from './tagParser';
 import { getIdOrForAtPosition, findComponentIds, findComponentReferences } from './JsfIdHighlightProvider';
+import { getSharedBeanMap, getScopeBadge, getScopeLifecycleDescription } from './JsfElCompletionProvider';
+import { findIterationVariableByName } from './iterationParser';
 
 export class JsfHoverProvider implements vscode.HoverProvider {
     public provideHover(
@@ -53,6 +55,46 @@ export class JsfHoverProvider implements vscode.HoverProvider {
         }
 
         const word = document.getText(wordRange);
+
+        // Check if hovering over a Managed Bean or Iteration Variable inside an EL expression (#{...} or ${...})
+        const lineText = document.lineAt(position.line).text;
+        const beforeCursor = lineText.substring(0, position.character);
+        const afterCursor = lineText.substring(position.character);
+        const lastOpen = Math.max(beforeCursor.lastIndexOf('#{'), beforeCursor.lastIndexOf('${'));
+        if (lastOpen !== -1 && afterCursor.includes('}')) {
+            const beanMeta = getSharedBeanMap().get(word);
+            if (beanMeta) {
+                const scopeDisplay = beanMeta.scope || '@RequestScoped';
+                const scopeBadge = getScopeBadge(scopeDisplay);
+                const scopeDesc = getScopeLifecycleDescription(scopeDisplay);
+                const relativePath = vscode.workspace.asRelativePath(beanMeta.uri);
+
+                const markdown = new vscode.MarkdownString();
+                markdown.supportThemeIcons = true;
+                markdown.appendMarkdown(`### $(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`\n\n`);
+                markdown.appendMarkdown(`| Property | Value |\n`);
+                markdown.appendMarkdown(`| :--- | :--- |\n`);
+                markdown.appendMarkdown(`| **Class** | \`${beanMeta.className}\` |\n`);
+                markdown.appendMarkdown(`| **Scope** | **\`${scopeDisplay}\`** ${beanMeta.scopePackage ? `*(import \`${beanMeta.scopePackage}\`)*` : ''} |\n`);
+                markdown.appendMarkdown(`| **Lifecycle** | ${scopeDesc} |\n`);
+                markdown.appendMarkdown(`| **File** | [${relativePath}](file:///${beanMeta.uri.fsPath.replace(/\\/g, '/')}) |\n\n`);
+                markdown.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                return new vscode.Hover(markdown, wordRange);
+            }
+
+            const iterVar = findIterationVariableByName(document, position, word);
+            if (iterVar) {
+                const markdown = new vscode.MarkdownString();
+                markdown.supportThemeIcons = true;
+                markdown.appendMarkdown(`### $(coffee) Iteration Variable: \`${iterVar.varName}\`\n\n`);
+                markdown.appendMarkdown(`| Property | Value |\n`);
+                markdown.appendMarkdown(`| :--- | :--- |\n`);
+                markdown.appendMarkdown(`| **Collection** | \`#{${iterVar.collectionEl}}\` |\n`);
+                markdown.appendMarkdown(`| **Declared at** | **Line ${iterVar.tagRange.start.line + 1}** |\n\n`);
+                markdown.appendMarkdown(`---\n*$(coffee) Jakarta Faces Tools*`);
+                return new vscode.Hover(markdown, wordRange);
+            }
+        }
 
         // Check if the hovered word is a JSF tag
         const docText = document.getText();
@@ -123,8 +165,6 @@ export class JsfHoverProvider implements vscode.HoverProvider {
                         docUrl = `https://jakarta.ee/specifications/faces/4.1/vdldoc/${prefix}/${componentName}.html`;
                     }
 
-                    // Primefaces doesn't support anchors for attributes on their new page, but standard JSF/Omnifaces do.
-                    // We will just point to the page, and if the anchor exists the browser will scroll to it.
                     markdown.supportThemeIcons = true;
                     markdown.appendMarkdown(`[🌐 Read full documentation online](${docUrl}#${attr.name})\n\n`);
 
