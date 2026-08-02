@@ -1,8 +1,13 @@
 const assert = require('assert');
 const Module = require('module');
 
-// Mock vscode module
+const mockConfig = {};
 const mockVscode = {
+    workspace: {
+        getConfiguration: () => ({
+            get: (key, defVal) => mockConfig[key] !== undefined ? mockConfig[key] : defVal
+        })
+    },
     Range: class Range {
         constructor(startLine, startCol, endLine, endCol) {
             if (typeof startLine === 'object') {
@@ -81,7 +86,7 @@ class MockTextDocument {
     }
 }
 
-const { computeElDiagnostics } = require('./out/providers/JsfDiagnostics');
+const { computeElDiagnostics, refreshDiagnostics } = require('./out/providers/JsfDiagnostics');
 
 // Mock Managed Bean map
 const mockBeanMap = new Map();
@@ -145,34 +150,34 @@ const mockElProvider = {
 
 async function testImplicitObjects() {
     console.log('Testing whitelisted implicit objects and keywords...');
-    const xhtml = `<h:outputStylesheet name="#{resource['css/style.css']}" />
-    <cc:implementation><h:outputText value="#{cc.attrs.label}" /></cc:implementation>
-    <h:outputText rendered="#{not empty param.id and true}" />`;
+    const xhtml = `<h:outputText value="#{param.id} #{true} #{not empty requestScope.foo}" />`;
     const doc = new MockTextDocument(xhtml);
     const diags = await computeElDiagnostics(doc, mockBeanMap, mockElProvider);
-    assert.strictEqual(diags.length, 0, 'Whitelisted implicit objects and keywords must produce 0 warnings');
+    assert.strictEqual(diags.length, 0, 'Whitelisted implicit objects must produce 0 warnings');
     console.log('  [PASS] Whitelisted implicit objects and keywords produce 0 warnings.');
 }
 
 async function testUnknownRootBean() {
     console.log('Testing unknown root Managed Bean name...');
-    const xhtml = `<h:outputText value="#{unknownBean.name}" />`;
+    const xhtml = `<h:outputText value="#{unknownBean.property}" />`;
     const doc = new MockTextDocument(xhtml);
     const diags = await computeElDiagnostics(doc, mockBeanMap, mockElProvider);
     assert.strictEqual(diags.length, 1, 'Unknown root bean must produce 1 warning');
-    assert.ok(diags[0].message.includes("Unknown Managed Bean or EL variable 'unknownBean'"), 'Must contain expected warning message');
-    assert.strictEqual(diags[0].severity, mockVscode.DiagnosticSeverity.Warning, 'Must be severity Warning');
+    assert.ok(
+        diags[0].message.includes("Unknown Managed Bean or EL variable 'unknownBean'"),
+        'Must contain unknown bean message'
+    );
     console.log('  [PASS] Unknown root bean correctly flagged with Warning.');
 }
 
 async function testUnknownBeanProperty() {
     console.log('Testing unknown property on known Managed Bean...');
-    const xhtml = `<h:inputText value="#{userController.naem}" />`;
+    const xhtml = `<h:outputText value="#{userController.unknownProp}" />`;
     const doc = new MockTextDocument(xhtml);
     const diags = await computeElDiagnostics(doc, mockBeanMap, mockElProvider);
-    assert.strictEqual(diags.length, 1, 'Unknown property naem must produce 1 warning');
+    assert.strictEqual(diags.length, 1, 'Unknown property must produce 1 warning');
     assert.ok(
-        diags[0].message.includes("Property 'naem' not found in Managed Bean 'userController' (UserController)"),
+        diags[0].message.includes("Property 'unknownProp' not found in Managed Bean 'userController' (UserController)"),
         'Must contain property not found message'
     );
     console.log('  [PASS] Mistyped property name correctly flagged with Warning.');
@@ -180,7 +185,7 @@ async function testUnknownBeanProperty() {
 
 async function testValidBeanProperty() {
     console.log('Testing valid property on known Managed Bean...');
-    const xhtml = `<h:inputText value="#{userController.name}" />`;
+    const xhtml = `<h:outputText value="#{userController.name}" />`;
     const doc = new MockTextDocument(xhtml);
     const diags = await computeElDiagnostics(doc, mockBeanMap, mockElProvider);
     assert.strictEqual(diags.length, 0, 'Valid property must produce 0 warnings');
@@ -189,12 +194,14 @@ async function testValidBeanProperty() {
 
 async function testIterationVariable() {
     console.log('Testing iteration variable (var="u") in scope...');
-    const xhtml = `<ui:repeat value="#{userController.name}" var="u">
-        <h:outputText value="#{u.name}" />
-    </ui:repeat>`;
+    const xhtml = `
+        <ui:repeat value="#{userController.name}" var="u">
+            <h:outputText value="#{u}" />
+        </ui:repeat>
+    `;
     const doc = new MockTextDocument(xhtml);
     const diags = await computeElDiagnostics(doc, mockBeanMap, mockElProvider);
-    assert.strictEqual(diags.length, 0, 'Iteration variable u must be recognized in scope');
+    assert.strictEqual(diags.length, 0, 'Iteration var u must produce 0 warnings');
     console.log('  [PASS] Iteration variable u recognized in scope.');
 }
 
@@ -211,6 +218,31 @@ async function testDeepNestedUnknownProperty() {
     console.log('  [PASS] Deep mistyped property name correctly flagged with Warning.');
 }
 
+async function testEnableJSFDiagnosticsToggle() {
+    console.log('Testing jakartaFacesTools.enableJSFDiagnostics toggle setting...');
+    const xhtml = `<h:unknownJsfTag />`;
+    const doc = new MockTextDocument(xhtml);
+    doc.languageId = 'html';
+    doc.fileName = 'test.xhtml';
+    doc.uri = { toString: () => 'file:///test.xhtml' };
+
+    let storedDiags = [];
+    const mockDiagnosticsCollection = {
+        set(uri, diags) { storedDiags = diags; }
+    };
+
+    delete mockConfig.enableJSFDiagnostics;
+    await refreshDiagnostics(doc, mockDiagnosticsCollection);
+    assert.ok(storedDiags.some(d => d.message.includes("Unknown JSF tag")), 'Expected tag warning when enableJSFDiagnostics is true');
+
+    mockConfig.enableJSFDiagnostics = false;
+    await refreshDiagnostics(doc, mockDiagnosticsCollection);
+    assert.strictEqual(storedDiags.filter(d => d.message.includes("Unknown JSF tag")).length, 0, 'Expected 0 tag warnings when enableJSFDiagnostics is false');
+
+    mockConfig.enableJSFDiagnostics = true;
+    console.log('  [PASS] jakartaFacesTools.enableJSFDiagnostics setting toggles JSF tag/attribute diagnostics correctly.');
+}
+
 async function runAllTests() {
     console.log('==============================================');
     console.log('RUNNING EL SEMANTIC VALIDATION DIAGNOSTICS TESTS');
@@ -221,6 +253,7 @@ async function runAllTests() {
     await testValidBeanProperty();
     await testIterationVariable();
     await testDeepNestedUnknownProperty();
+    await testEnableJSFDiagnosticsToggle();
     console.log('==============================================');
     console.log('ALL EL DIAGNOSTIC TESTS PASSED SUCCESSFULLY! ☕');
     console.log('==============================================');

@@ -207,11 +207,16 @@ async function testBestPracticeDiagnostic() {
         findJavaClassUri: async () => null
     };
 
-    // Test 4: Scope-Aware Best-Practice Diagnostic (Experimental feature, disabled by default)
-    mockConfig.enableScopeWarnings = false;
+    // Test 4: Scope-Aware Best-Practice Diagnostic (Experimental feature, enabled by default)
+    delete mockConfig.enableScopeWarnings; // Test default true
     let diagnostics = await diagModule.computeElDiagnostics(mockDoc, beanMap, mockElProvider);
     let bestPracticeDiag = diagnostics.find(d => d.message && d.message.includes('Jakarta Faces Best Practice'));
-    assert.strictEqual(bestPracticeDiag, undefined, 'Expected no Best Practice diagnostic when enableScopeWarnings is false (default)');
+    assert.ok(bestPracticeDiag, 'Expected Best Practice diagnostic warning by default when enableScopeWarnings is true');
+
+    mockConfig.enableScopeWarnings = false; // Test disabling
+    diagnostics = await diagModule.computeElDiagnostics(mockDoc, beanMap, mockElProvider);
+    bestPracticeDiag = diagnostics.find(d => d.message && d.message.includes('Jakarta Faces Best Practice'));
+    assert.strictEqual(bestPracticeDiag, undefined, 'Expected no Best Practice diagnostic when enableScopeWarnings is false');
 
     mockConfig.enableScopeWarnings = true;
     diagnostics = await diagModule.computeElDiagnostics(mockDoc, beanMap, mockElProvider);
