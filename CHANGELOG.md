@@ -2,56 +2,49 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
-## [2.6.0] - 2026-08-01
-### Added
-- **Immediate Quote Autocomplete for Component IDs (`for="..."` / `target="..."`)**: Autocomplete now triggers immediately after typing a quote (`"` or `'`) inside `for="..."` and `target="..."` attributes, displaying all available component IDs in the file without requiring typing the first character of the ID.
-- **Immediate Root Bean Completion (`#{...}`)**: Autocomplete inside Expression Language `#{|}` and `${|}` blocks now triggers immediately after typing `{`, displaying all available Managed Beans and iteration variables without requiring typing the first character of the bean name.
-- **Clean EL Triggering & No Quote Interference**: EL autocomplete triggers exclusively inside `#{...}` and `${...}` expressions—never on attribute quotes (`"`)—preventing unwanted popups when typing simple string attribute values.
-- **Smart Cursor Positioning Before Closing Brace**: Selecting a Managed Bean or iteration variable inside `#{|}` inserts the bean name and positions the cursor (`$0`) before the closing brace (`}`), allowing developers to immediately type `.` without manually navigating past closing braces or duplicating symbols (`#{{...}}`).
-- **Official Class Icon (`C`) for Managed Beans**: Root Java Managed Beans now render with VS Code's official Class badge icon (`CompletionItemKind.Class`), visually distinguishing Java backend classes from iteration variables and properties.
-- **Automatic IntelliSense Re-triggering on Attribute Insertion**: Selecting any tag attribute from autocomplete (e.g., `for`, `target`, `value`, `rendered`, etc.) inserts `attr=""`, positions the cursor inside the quotes, and automatically executes `editor.action.triggerSuggest`. This ensures immediate Component ID autocomplete when choosing `for` or `target` without needing to manually press `Ctrl+Space`.
-- **Dedicated UI Settings Section for Documentation Hover Cards**: Added a new settings part titled `"Jakarta Faces Tools: Documentation & Hover Cards"` with `jakartaFacesTools.enableHoverCards` (default `true`) allowing developers to toggle rich hover documentation cards on or off from the VS Code Settings UI.
-- **Comprehensive Autocomplete & Hover Test Suite**: Added automated test suite `testImmediateAutocomplete.js` (`npm run test:autocomplete`) verifying instant ID completion, automatic `triggerSuggest` execution, Class icon rendering, cursor positioning, clean trigger behavior, and hover card enable/disable setting toggling.
+### [3.0.0] - 2026-08-07 [Major Marketplace Release]
+### Overview
+Version 3.0.0 represents a massive, transformative release for **Jakarta Faces Tools**, combining all development milestones from v2.2.0 through v2.6.0 into a single, enterprise-ready release. This release brings Eclipse- and NetBeans-grade form wiring, real-time Java bean caching, Lombok annotation support, instant quote autocomplete, and deep EL semantic validation to VS Code.
 
-## [2.5.0] - 2026-08-01
-### Added
-- **Incremental Bean Caching (File Watchers)**: Real-time file system watchers (`**/*.java`) that detect `.java` file creations, modifications, and deletions without rebuilding the entire project cache.
-- **Configurable Incremental Caching Toggle**: Added setting `jakartaFacesTools.enableIncrementalCache` (enabled by default) to allow developers to toggle real-time `.java` file watching and save synchronization in very large repositories or network drives.
-- **Lombok Annotation Support**: Complete recognition for Lombok annotations (`@Data`, `@Getter`, `@Value`, `@Builder`) in JavaBeans property resolution.
-- **Selective Field-Level `@Getter` Support**: Correctly maps fields individually annotated with `@Getter` or `@lombok.Getter` to EL property getters when class-level annotations are absent.
-- **Primitive vs Boxed Boolean Compatibility**: Automatically generates `is...()` getters for primitive `boolean` fields and `get...()` getters for boxed `Boolean` fields per JavaBeans standard.
-- **Safe Generic Declaration Parsing**: Accurately parses comma-separated declarations and generics (e.g., `private Map<String, Object> metadata;`) without splitting generic type parameters.
+### Highlights & Features
+#### ⚡ Immediate Quote Autocomplete & Smart EL Snippets
+- **Immediate Component ID Autocomplete (`for="..."` / `target="..."`)**: Autocomplete triggers immediately after typing a quote (`"` or `'`) inside `for="..."` and `target="..."` attributes, displaying all available component IDs in the active file without requiring typing the first character of the ID.
+- **Immediate Root Bean Completion (`#{...}`)**: Typing `{` inside Expression Language `#{|}` and `${|}` blocks immediately displays all available Managed Beans and iteration variables without requiring typing the first character.
+- **Smart Cursor Positioning (`$0`)**: Selecting a Managed Bean or iteration variable inside `#{|}` inserts the bean name and positions the cursor (`$0`) before the closing brace (`}`), allowing immediate `.` typing without duplicate braces (`#{{...}}`).
+- **Clean EL Triggering**: EL autocomplete triggers exclusively inside `#{...}` and `${...}` expressions—never on attribute quotes (`"`)—preventing unwanted popups when typing simple string attribute values.
+- **Official Class Icon (`C`) for Managed Beans**: Root Java Managed Beans render with VS Code's official Class badge icon (`CompletionItemKind.Class`), visually distinguishing backend Java classes from iteration variables and properties.
+- **Automatic Attribute TriggerSuggest**: Selecting any tag attribute from autocomplete inserts `attr=""`, positions the cursor inside the quotes, and automatically executes `editor.action.triggerSuggest` for immediate Component ID completion.
 
-## [2.4.0] - 2026-08-01
-### Added
-- **EL Semantic Validation (Real-time Diagnostics)**: Real-time semantic diagnostics to flag mistyped Java Managed Bean names and property names inside `#{...}` Expression Language blocks.
+#### 🛡️ EL Semantic Diagnostics & Real-Time Property Validation
+- **EL Semantic Validation (Diagnostics)**: Real-time semantic diagnostics flag mistyped Java Managed Bean names and property names inside `#{...}` Expression Language blocks.
 - **Unknown Root Bean Warnings**: Automatically flags expressions referencing non-existent bean names with a yellow warning squiggly (`Jakarta Faces: Unknown Managed Bean or EL variable 'foo'.`).
 - **Unknown Property Warnings**: Verifies whether `.propertyName` exists on the target Managed Bean Java class and warns if mistyped (`Jakarta Faces: Property 'naem' not found in Managed Bean 'userController' (UserController).`).
-- **Deep Nested Property Chain Validation**: Recursively inspects arbitrary depths of dotted property chains (e.g., `#{a.b.c.d}`), resolving return types across multiple Java classes and warning on mistyped segments.
-- **Stable Debounced Diagnostics**: Built-in 250ms debouncing and document version checking to prevent squiggly lines from flashing, shifting left, or jumping while editing.
+- **Deep Nested Property Chain Validation**: Recursively inspects arbitrary depths of dotted property chains (`#{a.b.c.d}`), resolving return types across multiple Java classes and warning on mistyped segments.
 - **Whitelisted Implicit Objects & Keywords**: Built-in protection against false positives by whitelisting all standard JSF/EL implicit objects (`resource`, `cc`, `param`, `session`, `request`, etc.), operators, literals, and iteration variables (`<ui:repeat var="u">`).
-- **Configurable Toggle**: Added setting `jakartaFacesTools.enableELDiagnostics` (enabled by default) to customize or toggle semantic EL warnings in VS Code Settings.
 
-## [2.3.0] - 2026-08-01
-### Added
-- **Component Linking & Navigation (`for="..."` ↔ `id="..."`)**: Full NetBeans and Eclipse-grade form wiring for Jakarta Faces, PrimeFaces, OmniFaces, and BootsFaces `.xhtml` and `.jsf` files.
-- **Component ID Autocomplete**: Typing inside `for="..."` or `target="..."` lists all available component `id="..."` declarations in the active file with clean right-aligned tag name descriptions (` : h:inputText`).
+#### 🔗 Component ID Linking & Form Wiring (`for="..."` ↔ `id="..."`)
+- **NetBeans- & Eclipse-Grade Form Wiring**: Complete wiring for Jakarta Faces, PrimeFaces, OmniFaces, and BootsFaces `.xhtml` and `.jsf` files.
 - **Jump-to-Definition (`Ctrl+Click` / F12)**: Clicking on `for="myInput"` or `target="myDialog"` instantly jumps the cursor directly to `<h:inputText id="myInput">` or `<p:dialog id="myDialog">`.
 - **Simultaneous Document Highlighting**: Placing the cursor on any `id="foo"` or `for="foo"` value automatically illuminates both the ID declaration (`Write` highlight) and all linked references (`Read` highlight) across the entire editor.
 - **Interactive Hover Summary Cards**: Hovering over `id="foo"` displays a styled Markdown card summarizing all linked components and line numbers; hovering over `for="foo"` displays the target tag declaration and line number.
-- **Standardized Visual Branding**: Standardized all documentation popups, hover cards, and status bar items to use the monochrome VS Code Codicon coffee cup (`*$(coffee) Jakarta Faces Tools*`) with automatic theme adaptation.
 
-## [2.2.0] - 2026-08-01
-### Added
-- **EL Autocomplete Enabled by Default**: Enabled `jakartaFacesTools.enableELAutocomplete` by default (`true`).
-- **Iteration Variable Support (`var="..."`)**: Full intelligence for iteration variables in `.xhtml` and `.jsf` files (`<ui:repeat>`, `<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<p:carousel>`, `<c:forEach>`).
+#### 🔄 Real-Time Incremental Bean Caching & File Watchers
+- **Incremental Bean Caching (File Watchers)**: Real-time file system watchers (`**/*.java`) detect `.java` file creations, modifications, and deletions without rebuilding the entire project cache.
+- **Configurable Incremental Caching Toggle**: Added setting `jakartaFacesTools.enableIncrementalCache` (enabled by default) to allow developers to toggle real-time `.java` file watching in very large repositories or network drives.
+
+#### 🚀 Complete Lombok Annotation Support
+- **Lombok Annotation Recognition**: Full recognition for Lombok annotations (`@Data`, `@Getter`, `@Value`, `@Builder`) in JavaBeans property resolution.
+- **Selective Field-Level `@Getter` Support**: Correctly maps fields individually annotated with `@Getter` or `@lombok.Getter` to EL property getters when class-level annotations are absent.
+- **Primitive vs Boxed Boolean Compatibility**: Automatically generates `is...()` getters for primitive `boolean` fields and `get...()` getters for boxed `Boolean` fields per JavaBeans standard.
+
+#### 🔁 Iteration Variable Support (`var="..."`)
+- **Full Iteration Variable Intelligence**: Deep resolution for iteration variables in `.xhtml` and `.jsf` files (`<ui:repeat>`, `<h:dataTable>`, `<p:dataTable>`, `<p:dataList>`, `<p:carousel>`, `<c:forEach>`).
 - **Iteration Variable EL Autocomplete**: Typing inside `#{u.|}` resolves `u` to its collection element type (stripping generic wrappers like `List<User>` → `User`) and suggests methods and properties of `User.java`.
 - **Iteration Variable Jump-to-Definition**: `Ctrl+Click` on variable names jumps directly to `var="..."` in the `.xhtml` file; clicking properties jumps directly to Java property definitions in `User.java`.
-- **Standards-Compliant Method Snippets**: Automatically inserts method call snippets (`method($0)`) when selecting methods in EL completion lists, and supports direct method resolution (`#{user.getName}`).
-- **Rich Inline Data Types**: All completion items (properties, methods, managed beans, iteration variables, and tag attributes) now display their data types with a clean colon prefix (` : String`, ` : ArrayList<User>`, ` : int`).
-- **Interactive Documentation Fly-out Cards**: Tag attribute completions now feature styled Markdown documentation cards with prominent headers, type badges (`**Type:** String`), and cleaned description text when browsing via `Ctrl+Space`.
-- **Comment-Stripped Safe Resolution**: Smart regex scanning ignores commented-out Java methods and properties (`//` and `/* ... */`) while preserving 100% accurate line numbers and columns for `Ctrl+Click` definition jumps.
-- **Unannotated Bean Fallback**: Automatic class name fallback resolution for unannotated managed beans.
+
+#### ⚙️ UI Settings & Codicon Monochrome Branding
+- **Dedicated Hover Cards UI Setting**: Added `"Jakarta Faces Tools: Documentation & Hover Cards"` settings section with `jakartaFacesTools.enableHoverCards` (default `true`) allowing developers to toggle hover documentation cards from the Settings UI.
+- **Standardized Codicon Branding**: Standardized all documentation popups, hover cards, and status bar items to use VS Code's monochrome Codicon coffee cup (`$(coffee) Jakarta Faces Tools`) with automatic theme adaptation.
 
 ## [2.1.0] - 2026-07-31
 ### Added
