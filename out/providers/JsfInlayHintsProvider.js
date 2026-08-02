@@ -4,15 +4,22 @@ exports.JsfInlayHintsProvider = void 0;
 const vscode = require("vscode");
 const JsfElCompletionProvider_1 = require("./JsfElCompletionProvider");
 class JsfInlayHintsProvider {
-    provideInlayHints(document, range, token) {
+    elProvider;
+    constructor(elProvider) {
+        this.elProvider = elProvider;
+    }
+    async provideInlayHints(document, range, token) {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
         if (!config.get('showInlineBeanScopes', true)) {
-            return [];
+            return undefined;
+        }
+        if (this.elProvider) {
+            await this.elProvider.ensureBeansCached();
         }
         const hints = [];
         const beanMap = (0, JsfElCompletionProvider_1.getSharedBeanMap)();
         if (beanMap.size === 0) {
-            return [];
+            return undefined;
         }
         const startLine = range.start.line;
         const endLine = range.end.line;

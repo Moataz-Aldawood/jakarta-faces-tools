@@ -18,10 +18,15 @@ function activate(context) {
     const jsfHoverProvider = new JsfHoverProvider_1.JsfHoverProvider();
     const jsfElCompletionProvider = new JsfElCompletionProvider_1.JsfElCompletionProvider();
     const jsfIdHighlightProvider = new JsfIdHighlightProvider_1.JsfIdHighlightProvider();
-    const jsfInlayHintsProvider = new JsfInlayHintsProvider_1.JsfInlayHintsProvider();
+    const jsfInlayHintsProvider = new JsfInlayHintsProvider_1.JsfInlayHintsProvider(jsfElCompletionProvider);
     const elHighlighter = new JsfELHighlighter_1.JsfELHighlighter();
     const documentSelector = [
-        { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
+        { language: 'jsf' },
+        { language: 'html' },
+        { language: 'xml' },
+        { language: 'xhtml' },
+        { pattern: '**/*.xhtml' },
+        { pattern: '**/*.jsf' }
     ];
     const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
     context.subscriptions.push(jsfDiagnostics);
@@ -88,6 +93,10 @@ function activate(context) {
             onCacheUpdated();
         }
     }));
+    // Eagerly initialize Java Managed Beans cache on startup so Inlay Hints, Hovers, and Diagnostics work immediately
+    jsfElCompletionProvider.ensureBeansCached().then(() => {
+        onCacheUpdated();
+    });
 }
 function deactivate() {
     (0, JsfElCompletionProvider_1.rebuildJsfCache)(false);

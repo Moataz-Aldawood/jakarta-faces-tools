@@ -2,20 +2,26 @@ import * as vscode from 'vscode';
 import { getSharedBeanMap, getScopeBadge, getScopeLifecycleDescription } from './JsfElCompletionProvider';
 
 export class JsfInlayHintsProvider implements vscode.InlayHintsProvider {
-    public provideInlayHints(
+    constructor(private readonly elProvider?: { ensureBeansCached(): Promise<void> }) {}
+
+    public async provideInlayHints(
         document: vscode.TextDocument,
         range: vscode.Range,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.InlayHint[]> {
+    ): Promise<vscode.InlayHint[] | undefined> {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
         if (!config.get<boolean>('showInlineBeanScopes', true)) {
-            return [];
+            return undefined;
+        }
+
+        if (this.elProvider) {
+            await this.elProvider.ensureBeansCached();
         }
 
         const hints: vscode.InlayHint[] = [];
         const beanMap = getSharedBeanMap();
         if (beanMap.size === 0) {
-            return [];
+            return undefined;
         }
 
         const startLine = range.start.line;

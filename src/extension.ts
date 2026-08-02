@@ -16,11 +16,16 @@ export function activate(context: vscode.ExtensionContext) {
     const jsfHoverProvider = new JsfHoverProvider();
     const jsfElCompletionProvider = new JsfElCompletionProvider();
     const jsfIdHighlightProvider = new JsfIdHighlightProvider();
-    const jsfInlayHintsProvider = new JsfInlayHintsProvider();
+    const jsfInlayHintsProvider = new JsfInlayHintsProvider(jsfElCompletionProvider);
     const elHighlighter = new JsfELHighlighter();
     
     const documentSelector: vscode.DocumentSelector = [
-        { language: 'jsf' }, { language: 'html' }, { language: 'xml' }
+        { language: 'jsf' },
+        { language: 'html' },
+        { language: 'xml' },
+        { language: 'xhtml' },
+        { pattern: '**/*.xhtml' },
+        { pattern: '**/*.jsf' }
     ];
 
     const jsfDiagnostics = vscode.languages.createDiagnosticCollection('jsf');
@@ -112,6 +117,11 @@ export function activate(context: vscode.ExtensionContext) {
             }
         })
     );
+
+    // Eagerly initialize Java Managed Beans cache on startup so Inlay Hints, Hovers, and Diagnostics work immediately
+    jsfElCompletionProvider.ensureBeansCached().then(() => {
+        onCacheUpdated();
+    });
 }
 
 export function deactivate() {

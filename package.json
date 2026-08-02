@@ -32,11 +32,24 @@
   ],
   "activationEvents": [
     "onLanguage:jsf",
+    "onLanguage:xhtml",
     "onLanguage:html",
     "onLanguage:xml",
     "onStartupFinished"
   ],
   "contributes": {
+    "languages": [
+      {
+        "id": "jsf",
+        "aliases": ["Jakarta Faces", "JSF"],
+        "extensions": [".xhtml", ".jsf"]
+      },
+      {
+        "id": "xhtml",
+        "aliases": ["XHTML"],
+        "extensions": [".xhtml"]
+      }
+    ],
     "configuration": [
       {
         "title": "Jakarta Faces Tools: EL Autocomplete [Beta Feature]",
