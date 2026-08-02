@@ -28,6 +28,12 @@
 - [x] **Dedicated Hover Cards UI Setting**: Added `"Jakarta Faces Tools: Documentation & Hover Cards"` settings category with `jakartaFacesTools.enableHoverCards` (default `true`) to toggle hover cards from the Settings UI.
 
 ## 🚀 Next Up (v2.7.0 / Version 3.0 Pro & Enterprise Features)
+- [ ] **Managed Bean Scope Awareness & Lifecycle Intelligence**:
+  - **Scope Recognition**: Parse Java/CDI scope annotations (`@RequestScoped`, `@ViewScoped`, `@SessionScoped`, `@ApplicationScoped`, `@ConversationScoped`, `@Dependent`) during bean scanning.
+  - **Autocomplete Scope Badges**: Display scope in autocomplete completion row descriptions (` : UserController (@ViewScoped)`) and Markdown fly-out documentation cards.
+  - **Interactive Scope Hover Cards**: Hovering over `#{userController.prop}` displays a dedicated table row showing the bean scope, import package (`jakarta.faces.view.ViewScoped`), and lifecycle summary.
+  - **In-Code Scope Hints (Inlay Hints)**: Optional setting (`jakartaFacesTools.showInlineBeanScopes`) to render subtle in-line editor badges next to Managed Bean names in `.xhtml` pages (`#{userController : @ViewScoped . username}`).
+  - **Scope-Aware Best-Practice Diagnostics**: Warn developers when binding stateful components (like `<p:dataTable>` or AJAX forms) to `@RequestScoped` backing beans.
 - [ ] **External JAR & Multi-Module Enterprise Library Support (3-Tier Architecture)**:
   - **Tier 1 (Multi-Root Workspace - Already Supported)**: Full cross-project EL autocomplete and diagnostics across multi-root `.code-workspace` folders when entities, controllers, and composite components reside in separate source repositories.
   - **Tier 2 (Configurable External JAR Scanning)**: Add setting `jakartaFacesTools.externalJarPaths` to scan external library JARs (`.jar` and `-sources.jar`) using a lightweight zero-dependency ZIP parser.
