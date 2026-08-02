@@ -23,6 +23,8 @@ const EL_IMPLICIT_OBJECTS = new Set([
 ]);
 const OBJECT_METHODS = new Set(['class', 'classLoader', 'classReference', 'equals', 'hashCode', 'toString']);
 async function computeElDiagnostics(document, beanMap, elProvider) {
+    const config = vscode.workspace && vscode.workspace.getConfiguration ? vscode.workspace.getConfiguration('jakartaFacesTools') : null;
+    const scopeWarningsEnabled = config ? config.get('enableScopeWarnings', false) : false;
     const docVersion = document.version;
     const diagnostics = [];
     const text = document.getText();
@@ -63,8 +65,8 @@ async function computeElDiagnostics(document, beanMap, elProvider) {
             // If rootName IS a known Managed Bean, check for dangerous scope bindings and validate property chain
             if (parts.length >= 2) {
                 const bean = beanMap.get(rootName);
-                // Scope-Aware Best-Practice Check: Warn if binding a stateful data tag to @RequestScoped bean
-                if (bean.scope === '@RequestScoped') {
+                // Scope-Aware Best-Practice Check: Warn if binding a stateful data tag to @RequestScoped bean (experimental feature, disabled by default)
+                if (scopeWarningsEnabled && bean.scope === '@RequestScoped') {
                     const enclosingTag = (0, tagParser_1.getEnclosingTag)(document, startPos);
                     if (enclosingTag && STATEFUL_DATA_TAGS.has(enclosingTag.tagName)) {
                         const endPos = document.positionAt(chainOffset + rootName.length);

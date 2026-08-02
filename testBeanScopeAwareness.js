@@ -45,6 +45,8 @@ class MockInlayHint {
     }
 }
 
+const mockConfig = {};
+
 const mockVscode = {
     CompletionItem: MockCompletionItem,
     CompletionItemKind: {
@@ -100,7 +102,9 @@ const mockVscode = {
         Parameter: 2
     },
     workspace: {
-        getConfiguration: () => ({ get: (k, d) => d }),
+        getConfiguration: () => ({
+            get: (k, d) => mockConfig[k] !== undefined ? mockConfig[k] : d
+        }),
         findFiles: async () => [],
         asRelativePath: (uri) => uri.fsPath || uri.toString(),
         createFileSystemWatcher: () => ({
@@ -203,26 +207,43 @@ async function testBestPracticeDiagnostic() {
         findJavaClassUri: async () => null
     };
 
-    const diagnostics = await diagModule.computeElDiagnostics(mockDoc, beanMap, mockElProvider);
-    const bestPracticeDiag = diagnostics.find(d => d.message && d.message.includes('Jakarta Faces Best Practice'));
+    // Test 4: Scope-Aware Best-Practice Diagnostic (Experimental feature, disabled by default)
+    mockConfig.enableScopeWarnings = false;
+    let diagnostics = await diagModule.computeElDiagnostics(mockDoc, beanMap, mockElProvider);
+    let bestPracticeDiag = diagnostics.find(d => d.message && d.message.includes('Jakarta Faces Best Practice'));
+    assert.strictEqual(bestPracticeDiag, undefined, 'Expected no Best Practice diagnostic when enableScopeWarnings is false (default)');
+
+    mockConfig.enableScopeWarnings = true;
+    diagnostics = await diagModule.computeElDiagnostics(mockDoc, beanMap, mockElProvider);
+    bestPracticeDiag = diagnostics.find(d => d.message && d.message.includes('Jakarta Faces Best Practice'));
     assert.ok(bestPracticeDiag, 'Expected Best Practice diagnostic warning for @RequestScoped bean bound to <p:dataTable>');
     assert.ok(bestPracticeDiag.message.includes('@RequestScoped'), 'Diagnostic message should mention @RequestScoped');
     assert.ok(bestPracticeDiag.message.includes('reqBean'), 'Diagnostic message should mention bean name');
-    console.log('  [PASS] Correctly emitted Scope-Aware Best-Practice warning for stateful component binding.');
+    console.log('  [PASS] Correctly emitted Scope-Aware Best-Practice warning for stateful component binding when enabled.');
 
-    // Test 5: In-Code Scope Badges via VS Code Inlay Hints
-    console.log('Testing In-Code Scope Badges via VS Code Inlay Hints...');
+    // Test 5: In-Code Scope Badges via VS Code Inlay Hints (Pre-EL vs Post-EL)
+    console.log('Testing In-Code Scope Badges via VS Code Inlay Hints (Pre-EL vs Post-EL)...');
     const inlayModule = require('./out/providers/JsfInlayHintsProvider');
     const inlayProvider = new inlayModule.JsfInlayHintsProvider();
     const mockDocInlay = {
         lineAt: (line) => ({ text: '  <h:outputText value="#{reqBean.username}" />' })
     };
     const mockRange = new mockVscode.Range(0, 0, 0, 46);
-    const hints = await inlayProvider.provideInlayHints(mockDocInlay, mockRange, null);
+
+    // Pre-EL positioning (Default)
+    mockConfig.inlineBeanScopesPosition = 'Pre-EL';
+    let hints = await inlayProvider.provideInlayHints(mockDocInlay, mockRange, null);
     assert.strictEqual(hints.length, 1, 'Expected 1 Inlay Hint for reqBean');
-    assert.strictEqual(hints[0].label, '@RequestScoped : ', 'Inlay Hint label should show @RequestScoped : ');
-    assert.strictEqual(hints[0].position.character, 23, 'Inlay Hint position should be before #{');
-    console.log('  [PASS] Correctly generated inline editor scope badge (Inlay Hint) for Managed Bean.');
+    assert.strictEqual(hints[0].label, '@RequestScoped : ', 'Inlay Hint label should show @RequestScoped : for Pre-EL');
+    assert.strictEqual(hints[0].position.character, 23, 'Inlay Hint position should be before #{ for Pre-EL');
+
+    // Post-EL positioning
+    mockConfig.inlineBeanScopesPosition = 'Post-EL';
+    hints = await inlayProvider.provideInlayHints(mockDocInlay, mockRange, null);
+    assert.strictEqual(hints.length, 1, 'Expected 1 Inlay Hint for reqBean in Post-EL');
+    assert.strictEqual(hints[0].label, ' : @RequestScoped', 'Inlay Hint label should show : @RequestScoped for Post-EL');
+    assert.strictEqual(hints[0].position.character, 42, 'Inlay Hint position should be right after } for Post-EL');
+    console.log('  [PASS] Correctly generated inline editor scope badge (Inlay Hint) for Pre-EL and Post-EL positions.');
 }
 
 testBestPracticeDiagnostic().then(() => {

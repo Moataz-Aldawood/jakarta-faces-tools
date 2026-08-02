@@ -32,6 +32,8 @@ export async function computeElDiagnostics(
     beanMap: Map<string, ElBeanMetadata>,
     elProvider: IElProvider
 ): Promise<vscode.Diagnostic[]> {
+    const config = vscode.workspace && vscode.workspace.getConfiguration ? vscode.workspace.getConfiguration('jakartaFacesTools') : null;
+    const scopeWarningsEnabled = config ? config.get<boolean>('enableScopeWarnings', false) : false;
     const docVersion = document.version;
     const diagnostics: vscode.Diagnostic[] = [];
     const text = document.getText();
@@ -84,8 +86,8 @@ export async function computeElDiagnostics(
             if (parts.length >= 2) {
                 const bean = beanMap.get(rootName)!;
 
-                // Scope-Aware Best-Practice Check: Warn if binding a stateful data tag to @RequestScoped bean
-                if (bean.scope === '@RequestScoped') {
+                // Scope-Aware Best-Practice Check: Warn if binding a stateful data tag to @RequestScoped bean (experimental feature, disabled by default)
+                if (scopeWarningsEnabled && bean.scope === '@RequestScoped') {
                     const enclosingTag = getEnclosingTag(document, startPos);
                     if (enclosingTag && STATEFUL_DATA_TAGS.has(enclosingTag.tagName)) {
                         const endPos = document.positionAt(chainOffset + rootName.length);

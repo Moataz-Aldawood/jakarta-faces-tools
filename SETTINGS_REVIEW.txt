@@ -16,17 +16,22 @@ CATEGORY 1: Jakarta Faces Tools: EL Autocomplete
 - Default: true
 - Description: Enable real-time semantic diagnostics (warnings) for unknown Java Managed Beans and mistyped property names inside #{...} EL expressions.
 
-[Order: 3] jakartaFacesTools.enableIncrementalCache
+[Order: 3] jakartaFacesTools.enableScopeWarnings
+- Type: boolean
+- Default: false
+- Description: [Experimental Feature] Enable best-practice semantic warnings when a @RequestScoped Managed Bean is bound to a stateful UI component (e.g., <p:dataTable>, <h:dataTable>, <ui:repeat>), preventing pagination and sorting state loss across postbacks.
+
+[Order: 4] jakartaFacesTools.enableIncrementalCache
 - Type: boolean
 - Default: true
 - Description: Enable real-time Java file watching (**/*.java) and incremental cache updates when Managed Bean files are saved. Disable this in very large repositories or network drives if file watching causes performance issues.
 
-[Order: 4] jakartaFacesTools.showRebuildCacheButton
+[Order: 5] jakartaFacesTools.showRebuildCacheButton
 - Type: boolean
 - Default: true
 - Description: Show the 'Rebuild JSF Cache' button in the VS Code Status Bar. Expression Language (EL) Autocomplete caches your Java Managed Beans in memory for fast performance; use this button to force a fresh scan of your project if beans change outside of normal edits.
 
-[Order: 5] jakartaFacesTools.rebuildCacheButtonPosition
+[Order: 6] jakartaFacesTools.rebuildCacheButtonPosition
 - Type: string (Enum: "Right", "Left")
 - Default: "Right"
 - Description: Choose the position ('Right' or 'Left') of the 'Rebuild JSF Cache' button in the VS Code Status Bar when Expression Language (EL) Autocomplete is enabled.
@@ -63,7 +68,12 @@ CATEGORY 2: Jakarta Faces Tools: EL Highlighting
 [Order: 15] jakartaFacesTools.showInlineBeanScopes
 - Type: boolean
 - Default: true
-- Description: Enable inline editor badges (Inlay Hints) before Expression Language (#{...} / ${...}) blocks showing the Java Managed Bean's CDI / Faces scope (e.g. '@ViewScoped : ').
+- Description: Enable inline editor badges (Inlay Hints) around Expression Language (#{...} / ${...}) blocks showing the Java Managed Bean's CDI / Faces scope (e.g. '@ViewScoped : ' or ' : @ViewScoped').
+
+[Order: 16] jakartaFacesTools.inlineBeanScopesPosition
+- Type: string (Enum: "Pre-EL", "Post-EL")
+- Default: "Pre-EL"
+- Description: Choose where inline editor scope badges appear relative to Expression Language blocks: 'Pre-EL' displays before the expression ('@ViewScoped : #{bean.property}') and 'Post-EL' displays after the expression ('#{bean.property} : @ViewScoped').
 
 --------------------------------------------------------------------------------
 CATEGORY 3: Jakarta Faces Tools: Documentation & Hover Cards

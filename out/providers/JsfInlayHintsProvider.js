@@ -9,8 +9,8 @@ class JsfInlayHintsProvider {
         this.elProvider = elProvider;
     }
     async provideInlayHints(document, range, token) {
-        const config = vscode.workspace.getConfiguration('jakartaFacesTools');
-        if (!config.get('showInlineBeanScopes', true)) {
+        const config = vscode.workspace && vscode.workspace.getConfiguration ? vscode.workspace.getConfiguration('jakartaFacesTools') : null;
+        if (config && !config.get('showInlineBeanScopes', true)) {
             return undefined;
         }
         if (this.elProvider) {
@@ -41,12 +41,23 @@ class JsfInlayHintsProvider {
                     const word = identMatch[0];
                     const beanMeta = beanMap.get(word);
                     if (beanMeta) {
-                        const position = new vscode.Position(lineIdx, elMatch.index);
+                        const positionPref = config ? config.get('inlineBeanScopesPosition', 'Pre-EL') : 'Pre-EL';
                         const scopeDisplay = beanMeta.scope || '@RequestScoped';
-                        const hint = new vscode.InlayHint(position, `${scopeDisplay} : `, vscode.InlayHintKind.Type);
+                        let position;
+                        let label;
+                        if (positionPref === 'Post-EL') {
+                            const endChar = elMatch.index + elMatch[0].length;
+                            position = new vscode.Position(lineIdx, endChar);
+                            label = ` : ${scopeDisplay}`;
+                        }
+                        else {
+                            position = new vscode.Position(lineIdx, elMatch.index);
+                            label = `${scopeDisplay} : `;
+                        }
+                        const hint = new vscode.InlayHint(position, label, vscode.InlayHintKind.Type);
                         hint.paddingLeft = false;
                         hint.paddingRight = false;
-                        if (config.get('enableHoverCards', true)) {
+                        if (!config || config.get('enableHoverCards', true)) {
                             const tooltip = new vscode.MarkdownString();
                             tooltip.supportThemeIcons = true;
                             tooltip.appendMarkdown(`**$(coffee) Jakarta Managed Bean: \`${beanMeta.beanName}\`**\n\n`);
