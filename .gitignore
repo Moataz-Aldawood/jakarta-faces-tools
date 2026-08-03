@@ -2,3 +2,6 @@
 *.jar
 *.taglib.xml
 .agents/
+node_modules/
+out/
+packages/
