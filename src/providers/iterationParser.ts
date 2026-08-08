@@ -35,9 +35,6 @@ export function findEnclosingIterationVariables(
         }
 
         const isSelfClosing = match[3] === '/';
-        if (isSelfClosing) {
-            continue;
-        }
 
         const tagName = match[1];
         const attributesText = match[2];
@@ -63,7 +60,13 @@ export function findEnclosingIterationVariables(
         }
 
         // Verify if this tag is still open at cursorOffset
-        if (!isTagOpenAtOffset(text, tagName, tagEndOffset, cursorOffset)) {
+        if (cursorOffset <= tagEndOffset) {
+            // Cursor is inside the tag declaration itself, so the var is in scope!
+        } else if (isSelfClosing) {
+            // Cursor is after the self-closing tag, so it's out of scope
+            continue;
+        } else if (!isTagOpenAtOffset(text, tagName, tagEndOffset, cursorOffset)) {
+            // Cursor is after the opening tag, but the tag is already closed
             continue;
         }
 

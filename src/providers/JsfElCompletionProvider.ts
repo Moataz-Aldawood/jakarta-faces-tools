@@ -547,6 +547,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         const firstBrace = classMatchIdx !== -1 ? cleanContent.indexOf('{', classMatchIdx) : cleanContent.indexOf('{');
         const classHeader = firstBrace !== -1 ? cleanContent.substring(0, firstBrace) : cleanContent;
         const hasClassLombokGetter = /@(?:lombok\.)?(Data|Getter|Value|Builder)\b/.test(classHeader);
+        const hasClassLombokSetter = /@(?:lombok\.)?(Data|Setter)\b/.test(classHeader);
         const fields = this.extractFieldsFromContent(content);
         for (const field of fields) {
             if (hasClassLombokGetter || field.hasGetterAnnotation) {
@@ -568,6 +569,20 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                         type: this.cleanType(field.type),
                         isMethod: false,
                         description: `getter: ${getterPrefix}${capitalized}() (Lombok)`
+                    });
+                }
+            }
+
+            if (hasClassLombokSetter || field.hasSetterAnnotation) {
+                const capitalized = field.name.charAt(0).toUpperCase() + field.name.slice(1);
+                const setterName = `set${capitalized}`;
+                if (!seenNames.has(setterName)) {
+                    seenNames.add(setterName);
+                    results.push({
+                        name: setterName,
+                        type: 'void',
+                        isMethod: true,
+                        description: `method: ${setterName}(${this.cleanType(field.type)}) (Lombok)`
                     });
                 }
             }
@@ -601,7 +616,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return result;
     }
 
-    public extractFieldsFromContent(content: string): Array<{ name: string; type: string; hasGetterAnnotation: boolean }> {
+    public extractFieldsFromContent(content: string): Array<{ name: string; type: string; hasGetterAnnotation: boolean; hasSetterAnnotation: boolean }> {
         const cleanContent = this.stripJavaComments(content);
         const classMatchIdx = cleanContent.search(/\b(class|record|enum|interface)\b/);
         const firstBrace = classMatchIdx !== -1 ? cleanContent.indexOf('{', classMatchIdx) : cleanContent.indexOf('{');
@@ -609,7 +624,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         const body = (firstBrace !== -1 && lastBrace !== -1) ? cleanContent.substring(firstBrace + 1, lastBrace) : cleanContent;
 
         const statements = body.split(';');
-        const fields: Array<{ name: string; type: string; hasGetterAnnotation: boolean }> = [];
+        const fields: Array<{ name: string; type: string; hasGetterAnnotation: boolean; hasSetterAnnotation: boolean }> = [];
 
         for (const stmt of statements) {
             if (/\bstatic\b/.test(stmt) || /\bclass\b/.test(stmt) || /\breturn\b/.test(stmt) || /{/.test(stmt) || /}/.test(stmt)) {
@@ -624,6 +639,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             }
 
             const hasGetterAnnotation = /@(?:lombok\.)?Getter\b/.test(trimmed);
+            const hasSetterAnnotation = /@(?:lombok\.)?Setter\b/.test(trimmed);
 
             let cleanLeft = trimmed.replace(/@[A-Za-z0-9_.]+(?:\([^)]*\))?/g, '').trim();
             cleanLeft = cleanLeft.replace(/\b(public|protected|private|final|transient|volatile)\b/g, '').trim();
@@ -643,12 +659,12 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
                 const typeName = parts[0].trim().substring(0, parts[0].trim().lastIndexOf(firstVarName)).trim();
 
                 if (typeName && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(firstVarName)) {
-                    fields.push({ name: firstVarName, type: typeName, hasGetterAnnotation });
+                    fields.push({ name: firstVarName, type: typeName, hasGetterAnnotation, hasSetterAnnotation });
 
                     for (let i = 1; i < parts.length; i++) {
                         const nextVarName = parts[i].trim();
                         if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(nextVarName)) {
-                            fields.push({ name: nextVarName, type: typeName, hasGetterAnnotation });
+                            fields.push({ name: nextVarName, type: typeName, hasGetterAnnotation, hasSetterAnnotation });
                         }
                     }
                 }
