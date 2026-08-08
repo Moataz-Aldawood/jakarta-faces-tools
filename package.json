@@ -128,7 +128,7 @@
               "Pre-EL",
               "Post-EL"
             ],
-            "default": "Pre-EL",
+            "default": "Post-EL",
             "order": 26,
             "description": "Choose where inline editor scope badges appear relative to Expression Language blocks: 'Pre-EL' displays before the expression ('@ViewScoped : #{bean.property}') and 'Post-EL' displays after the expression ('#{bean.property} : @ViewScoped')."
           }
