@@ -2,6 +2,10 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+### [3.0.1] - 2026-08-08
+- **Lombok `@Setter` Support**: Added support for parsing class-level and field-level `@Setter` annotations, emitting standalone `setXxx()` methods in EL autocomplete.
+- **Improved Iteration Scoping**: Enhanced `iterationParser` to correctly support scoped `var` attributes on self-closing tags like `<f:selectItems>`, eliminating false-positive "Unknown Managed Bean" warnings on attributes like `itemValue="#{...}"`.
+- **Inlay Hints Default Position**: Changed the default value of `jakartaFacesTools.inlineBeanScopesPosition` from `Pre-EL` to `Post-EL` (`#{bean} : @ViewScoped`).
 ### [3.0.0] - 2026-08-07 [Major Marketplace Release]
 ### Overview
 Version 3.0.0 represents a massive, transformative release for **Jakarta Faces Tools**, combining all development milestones from v2.2.0 through v2.6.0 into a single, enterprise-ready release. This release brings Eclipse- and NetBeans-grade form wiring, real-time Java bean caching, Lombok annotation support, instant quote autocomplete, and deep EL semantic validation to VS Code.
