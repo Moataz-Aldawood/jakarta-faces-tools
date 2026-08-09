@@ -38,12 +38,12 @@ export async function resolveCompositeComponent(folder: string, component: strin
 /**
  * Parses a composite component file and extracts its defined cc:attributes.
  */
-export async function getCompositeAttributes(uri: vscode.Uri): Promise<{name: string, description: string, type: string}[]> {
+export async function getCompositeAttributes(uri: vscode.Uri): Promise<{name: string, description: string, type: string, required: boolean}[]> {
     try {
         const contentBytes = await vscode.workspace.fs.readFile(uri);
         const content = Buffer.from(contentBytes).toString('utf8');
         
-        const attrs: {name: string, description: string, type: string}[] = [];
+        const attrs: {name: string, description: string, type: string, required: boolean}[] = [];
         const attrRegex = /<[a-zA-Z0-9_-]+:attribute\s+([^>]+)>/g;
         let match;
         while ((match = attrRegex.exec(content)) !== null) {
@@ -52,12 +52,14 @@ export async function getCompositeAttributes(uri: vscode.Uri): Promise<{name: st
             const nameMatch = /name=["']([^"']+)["']/.exec(attrBody);
             const typeMatch = /type=["']([^"']+)["']/.exec(attrBody);
             const descMatch = /shortDescription=["']([^"']+)["']/.exec(attrBody);
+            const requiredMatch = /required=["']([^"']+)["']/.exec(attrBody);
             
             if (nameMatch) {
                 attrs.push({
                     name: nameMatch[1],
                     type: typeMatch ? typeMatch[1] : 'java.lang.Object',
-                    description: descMatch ? descMatch[1] : `Custom attribute: ${nameMatch[1]}`
+                    description: descMatch ? descMatch[1] : `Custom attribute: ${nameMatch[1]}`,
+                    required: requiredMatch ? requiredMatch[1].toLowerCase() === 'true' : false
                 });
             }
         }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { JSF_CATALOG } from './jsfCatalog';
-import { getCompositeNamespaces } from './namespaceParser';
+import { getCompositeNamespaces, resolveCompositeComponent, getCompositeAttributes } from './namespaceParser';
 import { getActiveThirdPartyCatalogs } from './ThirdPartyCatalogs';
 import { JsfElCompletionProvider, getSharedBeanMap, ElBeanMetadata } from './JsfElCompletionProvider';
 import { findIterationVariableByName } from './iterationParser';
@@ -202,6 +202,7 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
         // 2. Check for unknown standard and 3rd-party tags
         const activeCatalogs = { ...JSF_CATALOG, ...getActiveThirdPartyCatalogs(text) };
         const compositeNamespaces = getCompositeNamespaces(text);
+        const compositeCache = new Map<string, any>();
         
         // We look for any namespaced tag <prefix:basename
         const tagRegex = /<([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)/g;
@@ -235,13 +236,38 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
             }
         }
 
-        // 3. Check for unknown attributes in known tags
+        // 3. Check for unknown attributes and missing required attributes
         const tagBodyRegex = /<([a-zA-Z0-9_-]+:[a-zA-Z0-9_-]+)([\s\S]*?)>/g;
         let bodyMatch;
         while ((bodyMatch = tagBodyRegex.exec(text)) !== null) {
             const fullTagName = bodyMatch[1];
             const tagBody = bodyMatch[2];
-            const tag = activeCatalogs[fullTagName];
+            let tag = activeCatalogs[fullTagName];
+            
+            if (!tag) {
+                const parts = fullTagName.split(':');
+                if (parts.length === 2) {
+                    const prefix = parts[0];
+                    const baseName = parts[1];
+                    const folder = compositeNamespaces[prefix];
+                    if (folder) {
+                        if (compositeCache.has(fullTagName)) {
+                            tag = compositeCache.get(fullTagName);
+                        } else {
+                            const uri = await resolveCompositeComponent(folder, baseName);
+                            if (uri) {
+                                const attrs = await getCompositeAttributes(uri);
+                                tag = {
+                                    name: fullTagName,
+                                    description: `Composite Component: ${baseName}`,
+                                    attributes: attrs
+                                } as any;
+                                compositeCache.set(fullTagName, tag);
+                            }
+                        }
+                    }
+                }
+            }
             
             if (tag) {
                 // Find attributes: space followed by name="value" or name='value'
@@ -249,6 +275,8 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
                 let attrMatch;
                 
                 const validAttrs = new Set(tag.attributes.map(a => a.name));
+                const providedAttrs = new Set<string>();
+                
                 // Global standard attributes
                 validAttrs.add('id');
                 validAttrs.add('rendered');
@@ -256,6 +284,7 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
                 
                 while ((attrMatch = attrRegex.exec(tagBody)) !== null) {
                     const attrName = attrMatch[1];
+                    providedAttrs.add(attrName);
                     
                     // Ignore namespaces (xmlns:*) and pass-through attributes (pt:*) which contain colons
                     if (attrName.includes(':') || attrName === 'xmlns') {
@@ -274,6 +303,24 @@ export async function refreshDiagnostics(document: vscode.TextDocument, jsfDiagn
                         const diagnostic = new vscode.Diagnostic(
                             range, 
                             `Unknown attribute '${attrName}' for tag '${fullTagName}'.`, 
+                            vscode.DiagnosticSeverity.Warning
+                        );
+                        diagnostic.source = 'Jakarta Faces Tools';
+                        diagnostics.push(diagnostic);
+                    }
+                }
+
+                // Check for missing required attributes
+                const requiredAttrs = tag.attributes.filter(a => a.required);
+                for (const reqAttr of requiredAttrs) {
+                    if (!providedAttrs.has(reqAttr.name)) {
+                        const startPos = document.positionAt(bodyMatch.index + 1); // +1 to skip <
+                        const endPos = document.positionAt(bodyMatch.index + 1 + fullTagName.length);
+                        const range = new vscode.Range(startPos, endPos);
+                        
+                        const diagnostic = new vscode.Diagnostic(
+                            range,
+                            `The required attribute '${reqAttr.name}' is missing.`,
                             vscode.DiagnosticSeverity.Warning
                         );
                         diagnostic.source = 'Jakarta Faces Tools';

@@ -4,6 +4,7 @@ All notable changes to the "jakarta-faces-tools" extension will be documented in
 
 ### [3.0.1] - 2026-08-08
 - **Lombok `@Setter` Support**: Added support for parsing class-level and field-level `@Setter` annotations, emitting standalone `setXxx()` methods in EL autocomplete.
+- **Missing Required Attribute Validation**: Structural validation engine now dynamically parses `.xhtml` files to detect `<cc:attribute required="true">` in Composite Components and emits warnings when required attributes are missing.
 - **Improved Iteration Scoping**: Enhanced `iterationParser` to correctly support scoped `var` attributes on self-closing tags like `<f:selectItems>`, eliminating false-positive "Unknown Managed Bean" warnings on attributes like `itemValue="#{...}"`.
 - **Inlay Hints Default Position**: Changed the default value of `jakartaFacesTools.inlineBeanScopesPosition` from `Pre-EL` to `Post-EL` (`#{bean} : @ViewScoped`).
 ### [3.0.0] - 2026-08-07 [Major Marketplace Release]

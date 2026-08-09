@@ -171,8 +171,8 @@ export class JsfCompletionProvider implements vscode.CompletionItemProvider {
                         const customAttrs = await getCompositeAttributes(componentUri);
                         
                         // Add base component attributes that apply to all custom components
-                        customAttrs.push({ name: 'id', type: 'String', description: 'Component identifier' });
-                        customAttrs.push({ name: 'rendered', type: 'boolean', description: 'Flag indicating whether or not this component should be rendered' });
+                        customAttrs.push({ name: 'id', type: 'String', description: 'Component identifier', required: false });
+                        customAttrs.push({ name: 'rendered', type: 'boolean', description: 'Flag indicating whether or not this component should be rendered', required: false });
 
                         for (const attr of customAttrs) {
                             const item = new vscode.CompletionItem({

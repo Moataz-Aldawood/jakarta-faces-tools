@@ -2,6 +2,7 @@ export interface JsfAttribute {
     name: string;
     description: string;
     type?: string;
+    required?: boolean;
 }
 
 export interface JsfTag {
