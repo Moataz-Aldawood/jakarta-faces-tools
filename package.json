@@ -4,7 +4,7 @@
   "publisher": "moataz-aldawood",
   "displayName": "Jakarta Faces Tools",
   "description": "Advanced Jakarta Faces (JSF) tools: immediate quote auto-complete & smart EL snippets, Lombok annotation support (@Data, @Getter), incremental bean caching, EL semantic validation, component linking (for <-> id), deep nested Java EL resolution, custom composite component intelligence, and hover documentation. GitHub: https://github.com/Moataz-Aldawood/jakarta-faces-tools",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "icon": "logo.png",
   "license": "GPL-3.0",
   "repository": {
@@ -157,6 +157,20 @@
             "default": true,
             "order": 32,
             "description": "[Experimental Feature] Enable best-practice semantic warnings when a @RequestScoped Managed Bean is bound to a stateful UI component (e.g., <p:dataTable>, <h:dataTable>, <ui:repeat>), preventing pagination and sorting state loss across postbacks."
+          },
+          "jakartaFacesTools.validateEntireWorkspace": {
+            "title": "Validate Entire Workspace on Startup",
+            "type": "boolean",
+            "default": false,
+            "order": 33,
+            "description": "If enabled, scans and validates all *.xhtml and *.jsf files in the entire workspace on VS Code startup, showing all warnings in the Problems panel even for closed files. Warning: May cause performance issues on large projects."
+          },
+          "jakartaFacesTools.showScanWorkspaceButton": {
+            "title": "Show Scan Workspace Button",
+            "type": "boolean",
+            "default": true,
+            "order": 34,
+            "description": "Show a button in the Status Bar to manually trigger a full workspace diagnostic scan for JSF files."
           }
         }
       },
@@ -178,12 +192,20 @@
         "command": "jakartaFacesTools.rebuildJsfCache",
         "title": "Rebuild JSF Cache",
         "category": "Jakarta Faces Tools"
+      },
+      {
+        "command": "jakartaFacesTools.scanWorkspace",
+        "title": "Scan Workspace for Diagnostics",
+        "category": "Jakarta Faces Tools"
       }
     ],
     "menus": {
       "commandPalette": [
         {
           "command": "jakartaFacesTools.rebuildJsfCache"
+        },
+        {
+          "command": "jakartaFacesTools.scanWorkspace"
         }
       ]
     }

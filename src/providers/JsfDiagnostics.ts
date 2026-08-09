@@ -396,7 +396,43 @@ export function subscribeToDocumentChanges(context: vscode.ExtensionContext, jsf
                 clearTimeout(existing);
                 debounceTimers.delete(key);
             }
-            jsfDiagnostics.delete(doc.uri);
+            const config = vscode.workspace.getConfiguration('jakartaFacesTools');
+            const validateAll = config.get<boolean>('validateEntireWorkspace', false);
+            if (!validateAll) {
+                jsfDiagnostics.delete(doc.uri);
+            }
         })
     );
+}
+
+export async function scanEntireWorkspace(jsfDiagnostics: vscode.DiagnosticCollection): Promise<void> {
+    const files = await vscode.workspace.findFiles('**/*.{xhtml,jsf}', '**/node_modules/**');
+    if (files.length === 0) {
+        vscode.window.showInformationMessage('No JSF files found in workspace.');
+        return;
+    }
+    
+    await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: "Scanning JSF Workspace",
+        cancellable: true
+    }, async (progress, token) => {
+        let count = 0;
+        for (const uri of files) {
+            if (token.isCancellationRequested) {
+                break;
+            }
+            try {
+                const doc = await vscode.workspace.openTextDocument(uri);
+                refreshDiagnostics(doc, jsfDiagnostics);
+            } catch (e) {
+                console.error(`Failed to scan ${uri.fsPath}`, e);
+            }
+            count++;
+            progress.report({ 
+                increment: 100 / files.length, 
+                message: `Parsed ${count}/${files.length} files` 
+            });
+        }
+    });
 }

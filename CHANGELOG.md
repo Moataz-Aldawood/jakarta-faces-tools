@@ -2,6 +2,12 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+### [3.1.0] - 2026-08-08
+- **Full Workspace Diagnostics**: Added a new "Scan JSF Workspace" feature that validates all `.xhtml` and `.jsf` files across the entire project (not just opened files), populating the Problems panel with missing required attributes and EL errors.
+- **New Settings**: 
+  - `jakartaFacesTools.validateEntireWorkspace`: (Default: `false`) Optionally perform a full workspace scan on VS Code startup.
+  - `jakartaFacesTools.showScanWorkspaceButton`: (Default: `true`) Toggle the visibility of the new "Scan JSF Workspace" Status Bar button.
+
 ### [3.0.2] - 2026-08-08
 - **Standard Tag Required Validation**: Expanded the new required attribute validation engine to cover standard tags. The extension now parses official `.taglib.xml` schemas (JSF, PrimeFaces, OmniFaces, BootsFaces) to extract the `required` flag, strictly warning developers if they omit required standard attributes (e.g. `<f:param name="">`).
 - **Future-Proofed Offline Catalogs**: Extension tag catalogs are now fully regenerated and include library versions, default values (`<default-value>`), and Java EL method signatures (`<method-signature>`) in preparation for future semantic tooltips and method parameter validation.

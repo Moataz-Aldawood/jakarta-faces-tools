@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { JsfDefinitionProvider } from './providers/JsfDefinitionProvider';
 import { JsfCompletionProvider } from './providers/JsfCompletionProvider';
 import { JsfHoverProvider } from './providers/JsfHoverProvider';
-import { refreshDiagnostics, subscribeToDocumentChanges } from './providers/JsfDiagnostics';
+import { refreshDiagnostics, subscribeToDocumentChanges, scanEntireWorkspace } from './providers/JsfDiagnostics';
 import { JsfELHighlighter } from './providers/JsfELHighlighter';
 import { JsfElCompletionProvider, rebuildJsfCache, startJavaFileWatcher, updateJavaBeanInCache } from './providers/JsfElCompletionProvider';
 import { JsfIdHighlightProvider } from './providers/JsfIdHighlightProvider';
@@ -40,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Status Bar Item UI for rebuilding JSF Cache (Beta Feature)
     let elStatusBarItem: vscode.StatusBarItem | undefined;
+    let scanStatusBarItem: vscode.StatusBarItem | undefined;
 
     const updateStatusBarVisibility = () => {
         const config = vscode.workspace.getConfiguration('jakartaFacesTools');
@@ -53,6 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
             elStatusBarItem.dispose();
             elStatusBarItem = undefined;
         }
+        if (scanStatusBarItem && scanStatusBarItem.alignment !== alignment) {
+            scanStatusBarItem.dispose();
+            scanStatusBarItem = undefined;
+        }
 
         if (!elStatusBarItem) {
             elStatusBarItem = vscode.window.createStatusBarItem(alignment, 100);
@@ -62,10 +67,25 @@ export function activate(context: vscode.ExtensionContext) {
             context.subscriptions.push(elStatusBarItem);
         }
 
+        if (!scanStatusBarItem) {
+            scanStatusBarItem = vscode.window.createStatusBarItem(alignment, 99);
+            scanStatusBarItem.text = '$(search-view-icon) Scan JSF Workspace';
+            scanStatusBarItem.tooltip = 'Jakarta Faces Tools: Click to scan all JSF files in the workspace and populate the Problems panel.';
+            scanStatusBarItem.command = 'jakartaFacesTools.scanWorkspace';
+            context.subscriptions.push(scanStatusBarItem);
+        }
+
         if (enabled && showButton) {
             elStatusBarItem.show();
         } else {
             elStatusBarItem.hide();
+        }
+        
+        const showScanButton = config.get<boolean>('showScanWorkspaceButton', true);
+        if (showScanButton) {
+            scanStatusBarItem.show();
+        } else {
+            scanStatusBarItem.hide();
         }
     };
 
@@ -78,6 +98,11 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('Jakarta Faces Tools: JSF Cache rebuilt successfully!');
     });
 
+    const scanWorkspaceCommand = vscode.commands.registerCommand('jakartaFacesTools.scanWorkspace', async () => {
+        await scanEntireWorkspace(jsfDiagnostics);
+        vscode.window.showInformationMessage('Jakarta Faces Tools: Workspace scan completed!');
+    });
+
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider(documentSelector, jsfDefinitionProvider),
         vscode.languages.registerCompletionItemProvider(documentSelector, jsfCompletionProvider, '<', ' ', ':', '"', "'"),
@@ -86,7 +111,8 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentHighlightProvider(documentSelector, jsfIdHighlightProvider),
         vscode.languages.registerInlayHintsProvider(documentSelector, jsfInlayHintsProvider),
         elHighlighter,
-        rebuildCacheCommand
+        rebuildCacheCommand,
+        scanWorkspaceCommand
     );
 
     // Dynamic configuration listener for status bar visibility & cache cleanup
@@ -121,6 +147,10 @@ export function activate(context: vscode.ExtensionContext) {
     // Eagerly initialize Java Managed Beans cache on startup so Inlay Hints, Hovers, and Diagnostics work immediately
     jsfElCompletionProvider.ensureBeansCached().then(() => {
         onCacheUpdated();
+        
+        if (vscode.workspace.getConfiguration('jakartaFacesTools').get<boolean>('validateEntireWorkspace', false)) {
+            scanEntireWorkspace(jsfDiagnostics);
+        }
     });
 }
 
