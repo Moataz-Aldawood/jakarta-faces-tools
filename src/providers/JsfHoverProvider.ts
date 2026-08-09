@@ -148,6 +148,12 @@ export class JsfHoverProvider implements vscode.HoverProvider {
                     if (attr.type) {
                         markdown.appendMarkdown(`*Type:* \`${attr.type}\`\n\n`);
                     }
+                    if (attr.defaultValue) {
+                        markdown.appendMarkdown(`*Default Value:* \`${attr.defaultValue}\`\n\n`);
+                    }
+                    if (attr.methodSignature) {
+                        markdown.appendMarkdown(`*Method Signature:* \`${attr.methodSignature}\`\n\n`);
+                    }
 
                     const parts = tagName.split(':');
                     const prefix = parts.length > 1 ? parts[0] : '';

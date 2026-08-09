@@ -21,9 +21,16 @@ const EL_IMPLICIT_OBJECTS = new Set([
 
 const OBJECT_METHODS = new Set(['class', 'classLoader', 'classReference', 'equals', 'hashCode', 'toString']);
 
+export interface ElPropertyMetadata {
+    name: string;
+    type: string;
+    isMethod: boolean;
+    description: string;
+}
+
 export interface IElProvider {
     readFile(uri: vscode.Uri): Promise<string>;
-    findPropertyTypeInContent(content: string, propertyName: string): string | null;
+    findPropertyMetadataInContent(content: string, propertyName: string): ElPropertyMetadata | null;
     findJavaClassUri?(className: string): Promise<vscode.Uri | null>;
 }
 
@@ -121,8 +128,8 @@ export async function computeElDiagnostics(
                     if (document.version !== undefined && document.version !== docVersion) {
                         return diagnostics;
                     }
-                    const returnType = elProvider.findPropertyTypeInContent(beanContent, propName);
-                    if (!returnType) {
+                    const propMeta = elProvider.findPropertyMetadataInContent(beanContent, propName);
+                    if (!propMeta) {
                         const propStartPos = document.positionAt(currentOffset);
                         const propEndPos = document.positionAt(currentOffset + propName.length);
                         const range = new vscode.Range(propStartPos, propEndPos);
@@ -137,9 +144,42 @@ export async function computeElDiagnostics(
                     }
 
                     // Move to the return type class for the next property segment in the chain
-                    currentClassName = returnType;
+                    currentClassName = propMeta.type;
+
+                    // If this is the last property in the EL chain, validate method signatures
+                    if (i === parts.length - 1) {
+                        const elStartOffset = elMatch.index;
+                        const enclosingTag = getEnclosingTag(document, document.positionAt(elStartOffset));
+                        if (enclosingTag) {
+                            const activeCatalogs = { ...JSF_CATALOG, ...getActiveThirdPartyCatalogs(document.getText()) };
+                            const tagDef = activeCatalogs[enclosingTag.tagName];
+                            if (tagDef && tagDef.attributes) {
+                                const textBeforeEl = document.getText(new vscode.Range(new vscode.Position(0,0), document.positionAt(elStartOffset)));
+                                const attrMatch = textBeforeEl.match(/([a-zA-Z0-9_:-]+)\s*=\s*['"][^'"]*$/);
+                                if (attrMatch) {
+                                    const attrName = attrMatch[1];
+                                    const attrDef = tagDef.attributes.find((a: any) => a.name === attrName);
+                                    if (attrDef && attrDef.methodSignature) {
+                                        if (!propMeta.isMethod) {
+                                            const propStartPos = document.positionAt(currentOffset);
+                                            const propEndPos = document.positionAt(currentOffset + propName.length);
+                                            const range = new vscode.Range(propStartPos, propEndPos);
+                                            const diagnostic = new vscode.Diagnostic(
+                                                range,
+                                                `Jakarta Faces: The attribute '${attrName}' expects a method with signature '${attrDef.methodSignature}', but '${propName}' is a property/field.`,
+                                                vscode.DiagnosticSeverity.Warning
+                                            );
+                                            diagnostic.source = 'Jakarta Faces Tools';
+                                            diagnostics.push(diagnostic);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     if (elProvider.findJavaClassUri) {
-                        currentUri = await elProvider.findJavaClassUri(returnType);
+                        currentUri = await elProvider.findJavaClassUri(propMeta.type);
                     } else {
                         currentUri = null;
                     }

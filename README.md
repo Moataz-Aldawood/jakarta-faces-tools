@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" width="128" height="128" alt="Jakarta Faces Tools Logo">
+</p>
+
 # Jakarta Faces Tools:
 Advanced Jakarta Faces (JSF) extension bringing full IDE-grade intelligence to VS Code. Features intelligent EL autocomplete with Lombok support, real-time semantic diagnostics, deep Java jump-to-definition, zero-config custom composite components, and first-class support for PrimeFaces, OmniFaces, and BootsFaces.
 
@@ -35,7 +39,8 @@ Enjoy first-class support for standard JSF 4.1 tags (`<h:`, `<f:`, `<ui:`) as we
 - **IntelliSense (Autocomplete) with Inline Types**: Start typing a tag or hit `Ctrl+Space` inside a tag to get auto-complete suggestions for standard and 3rd-party JSF attributes, displaying their data types (` : String`, ` : boolean`) right in the completion list!
 - **Interactive Documentation Fly-out Cards**: Press `Ctrl+Space` while browsing attributes in the autocomplete list to view live, formatted Markdown documentation cards with type badges and clean API descriptions without having to type the attribute.
 - **Rich Tag Documentation Hover**: Hover over any standard or supported 3rd-party JSF tag to see a concise description of what the component does, along with a direct link to the official documentation.
-- **Attribute Hover Documentation**: Hover over any standard or 3rd-party JSF attribute (e.g. `value`, `rendered`) to see a rich markdown popup containing the attribute's description and type!
+- **Attribute Hover Documentation**: Hover over any standard or 3rd-party JSF attribute (e.g. `value`, `rendered`) to see a rich markdown popup containing the attribute's description, type, default value, and expected method signature!
+- **Required Attribute Validation**: The extension strictly enforces standard `<taglib>` validation rules. If you omit a required attribute (like the `name` attribute in `<f:param>`), the extension will instantly highlight the tag with a red error squiggly!
 
 ### + Custom Composite Components Support:
 Built-in intelligence for your workspace's custom JSF Composite Components without any manual configuration!
@@ -48,6 +53,8 @@ Built-in intelligence for your workspace's custom JSF Composite Components witho
 ### + Real-time EL & Syntax Diagnostics:
 Catch JSF and Expression Language mistakes before you ever run the application.
 - **EL Semantic Validation**: Real-time semantic checking inside `#{...}` Expression Language expressions. Warns if you reference an unknown Managed Bean name (`#{unknownBean.foo}`) or a mistyped property (`#{userController.naem}`) that does not exist on your Java class. Supports Lombok `@Data`, `@Getter`, `@Value`, and `@Builder` annotations as well as recursive checking across deeply nested property chains (`#{a.b.c.d}`). Automatically refreshes diagnostics immediately when a Managed Bean `.java` file is saved! Automatically whitelists all standard JSF implicit objects (`resource`, `cc`, `param`, `session`, etc.), EL keywords, and iteration variables (`<ui:repeat var="u">`). Includes intelligent debouncing and document version checking for stable, flicker-free squigglies.
+- **Type-Safe EL Method Validation**: Real-time semantic checking for method expressions! When you type an EL expression inside a component attribute (e.g., `actionListener="#{bean.myProperty}"`), the extension automatically looks up the attribute in its JSF catalogs. If the attribute requires a specific Java `<method-signature>`, the engine strictly enforces that your EL resolves to a real method. If you mistakenly bind it to a field or getter, it throws a semantic warning: *"The attribute 'actionListener' expects a method with signature 'void actionListener(...)', but 'myProperty' is a property/field."*
+- **Full Workspace Diagnostics**: Take advantage of the "Scan JSF Workspace" feature (via Status Bar button or Command Palette) to validate all `.xhtml` and `.jsf` files across your entire project at once, populating the Problems panel with missing required attributes and EL errors even for files you haven't opened yet!
 - **EL Syntax Checking**: The extension runs in the background and will flag unmatched Expression Language brackets (e.g. `#{myBean` missing the closing `}`) with a red error squiggly.
 - **Unknown Tag and Attribute Detection**: Mistyped standard or 3rd-party tags (e.g., `<h:outpottText>`) as well as unrecognized attributes will be flagged with a yellow warning squiggly.
 

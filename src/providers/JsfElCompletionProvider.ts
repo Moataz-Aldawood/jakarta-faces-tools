@@ -342,7 +342,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             }
 
             const content = await this.readFile(currentUri);
-            const returnType = this.findPropertyTypeInContent(content, propName);
+            const propMeta = this.findPropertyMetadataInContent(content, propName);
+            const returnType = propMeta ? propMeta.type : null;
             if (!returnType) {
                 return undefined;
             }
@@ -408,7 +409,8 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
             }
 
             const content = await this.readFile(currentUri);
-            const returnType = this.findPropertyTypeInContent(content, propName);
+            const propMeta = this.findPropertyMetadataInContent(content, propName);
+            const returnType = propMeta ? propMeta.type : null;
             if (!returnType) {
                 return null;
             }
@@ -674,7 +676,7 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         return fields;
     }
 
-    public findPropertyTypeInContent(content: string, propertyName: string): string | null {
+    public findPropertyMetadataInContent(content: string, propertyName: string): ElPropertyMetadata | null {
         const cleanContent = this.stripJavaComments(content);
         let prop = propertyName.trim();
         const parenIdx = prop.indexOf('(');
@@ -686,7 +688,12 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         const methodRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+${prop}\\s*\\(`);
         const methodMatch = methodRegex.exec(cleanContent);
         if (methodMatch && methodMatch[1]) {
-            return this.extractBaseType(methodMatch[1].trim());
+            return {
+                name: prop,
+                type: this.extractBaseType(methodMatch[1].trim()),
+                isMethod: true,
+                description: `method: ${prop}()`
+            };
         }
 
         // 2. Try getter: public ReturnType getPropertyName() or isPropertyName()
@@ -694,17 +701,24 @@ export class JsfElCompletionProvider implements vscode.CompletionItemProvider {
         const getterRegex = new RegExp(`public\\s+([\\w<>\\[\\]\\?,\\s]+?)\\s+(get|is)${capitalized}\\s*\\(`);
         const getterMatch = getterRegex.exec(cleanContent);
         if (getterMatch && getterMatch[1]) {
-            return this.extractBaseType(getterMatch[1].trim());
+            return {
+                name: prop,
+                type: this.extractBaseType(getterMatch[1].trim()),
+                isMethod: false,
+                description: `getter: ${getterMatch[2]}${capitalized}()`
+            };
         }
 
         // 3. Try Lombok / standard fields using robust field extraction
         const fields = this.extractFieldsFromContent(content);
         for (const field of fields) {
-            if (field.name === prop) {
-                return this.extractBaseType(field.type);
-            }
-            if (/^boolean$/.test(field.type) && field.name === 'is' + capitalized) {
-                return this.extractBaseType(field.type);
+            if (field.name === prop || (/^boolean$/.test(field.type) && field.name === 'is' + capitalized)) {
+                return {
+                    name: prop,
+                    type: this.extractBaseType(field.type),
+                    isMethod: false,
+                    description: `field: ${field.name}`
+                };
             }
         }
 

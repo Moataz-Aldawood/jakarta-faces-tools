@@ -2,6 +2,10 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+### [3.2.0] - 2026-08-08
+- **Type-Safe EL Method Validation**: Real-time semantic checking for method expressions! When typing an EL expression inside a component attribute (e.g., `actionListener="#{bean.save}"`), the extension now verifies if the attribute expects a method signature and warns you if you incorrectly bind it to a field or getter.
+- **Rich Attribute Hover Docs**: Hovering over standard or 3rd-party attributes (e.g. `value`, `rendered`) now displays a rich markdown popup containing the attribute's description, type, **default value**, and **expected method signature** (if applicable).
+
 ### [3.1.0] - 2026-08-08
 - **Full Workspace Diagnostics**: Added a new "Scan JSF Workspace" feature that validates all `.xhtml` and `.jsf` files across the entire project (not just opened files), populating the Problems panel with missing required attributes and EL errors.
 - **New Settings**: 
