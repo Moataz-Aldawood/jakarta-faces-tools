@@ -2,6 +2,10 @@
 
 All notable changes to the "jakarta-faces-tools" extension will be documented in this file.
 
+### [3.0.2] - 2026-08-08
+- **Standard Tag Required Validation**: Expanded the new required attribute validation engine to cover standard tags. The extension now parses official `.taglib.xml` schemas (JSF, PrimeFaces, OmniFaces, BootsFaces) to extract the `required` flag, strictly warning developers if they omit required standard attributes (e.g. `<f:param name="">`).
+- **Future-Proofed Offline Catalogs**: Extension tag catalogs are now fully regenerated and include library versions, default values (`<default-value>`), and Java EL method signatures (`<method-signature>`) in preparation for future semantic tooltips and method parameter validation.
+
 ### [3.0.1] - 2026-08-08
 - **Lombok `@Setter` Support**: Added support for parsing class-level and field-level `@Setter` annotations, emitting standalone `setXxx()` methods in EL autocomplete.
 - **Missing Required Attribute Validation**: Structural validation engine now dynamically parses `.xhtml` files to detect `<cc:attribute required="true">` in Composite Components and emits warnings when required attributes are missing.

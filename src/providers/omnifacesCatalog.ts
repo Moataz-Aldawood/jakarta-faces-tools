@@ -1,5 +1,6 @@
 import { JsfTag } from './jsfCatalog';
 
+export const OMNIFACES_VERSION = '5.3.4';
 export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
     "o:cache": {
         "name": "o:cache",
@@ -59,12 +60,14 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "Name under which the value expression will be made available to EL, scoped to the Facelet in which this tag occurs.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "value",
                 "description": "The value expression for which its value will be cached on demand and made available as a new value expression.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -115,7 +118,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The name of the request parameter from which the value for this component is retrieved on an initial request or to override the stored value on a postback.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "renderChildren",
@@ -140,7 +144,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "validator",
                 "description": "MethodExpression representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void validate(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)"
             },
             {
                 "name": "validatorMessage",
@@ -155,7 +160,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "valueChangeListener",
                 "description": "MethodExpression representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void, or to a public method that takes no arguments with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void valueChange(jakarta.faces.event.ValueChangeEvent)"
             }
         ]
     },
@@ -166,7 +172,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "converterIds",
                 "description": "The comma-separated string of converter IDs.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -186,8 +193,9 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "if",
-                "description": "The `if` condition of the conditional comment. This is exactly the value you would use in ``.",
-                "type": "string"
+                "description": "The `if` condition of the conditional comment. This is exactly the value you would use in `<!--[if ...]>`.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "rendered",
@@ -244,7 +252,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The \"resource name\" part of the resource identifier.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "rendered",
@@ -280,7 +289,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The \"resource name\" part of the resource identifier.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "onbegin",
@@ -526,7 +536,7 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "library",
-                "description": "The resource library name of the resource. Works the same way as on ``. This attribute is only used when 'name' attribute is  specified.",
+                "description": "The resource library name of the resource. Works the same way as on `<h:graphicImage>`. This attribute is only used when 'name' attribute is  specified.",
                 "type": "string"
             },
             {
@@ -536,7 +546,7 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "name",
-                "description": "The resource name of the resource. Works the same way as on ``. When this attribute is specified, 'value', 'type' and  'lastModified' attributes are ignored.",
+                "description": "The resource name of the resource. Works the same way as on `<h:graphicImage>`. When this attribute is specified, 'value', 'type' and  'lastModified' attributes are ignored.",
                 "type": "string"
             },
             {
@@ -678,7 +688,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The name of the request parameter from which the value for this component is retrieved on an initial request or to override the stored value on a postback.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "render",
@@ -703,7 +714,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "validator",
                 "description": "MethodExpression representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void validate(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)"
             },
             {
                 "name": "validatorMessage",
@@ -718,7 +730,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "valueChangeListener",
                 "description": "MethodExpression representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void, or to a public method that takes no arguments with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void valueChange(jakarta.faces.event.ValueChangeEvent)"
             }
         ]
     },
@@ -815,7 +828,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "type",
                 "description": "",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -831,7 +845,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "type",
                 "description": "The fully qualified name of the class/interface/enum to import the constant field values for.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "var",
@@ -852,7 +867,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "type",
                 "description": "The fully qualified name of the class to import the public static non-void methods for.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "var",
@@ -1058,7 +1074,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "validator",
                 "description": "MethodExpression representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void validate(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)"
             },
             {
                 "name": "validatorMessage",
@@ -1073,7 +1090,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "valueChangeListener",
                 "description": "MethodExpression representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void, or to a public method that takes no arguments with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void valueChange(jakarta.faces.event.ValueChangeEvent)"
             }
         ]
     },
@@ -1129,7 +1147,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "validator",
                 "description": "MethodExpression representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void validate(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)"
             },
             {
                 "name": "validatorMessage",
@@ -1144,7 +1163,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "valueChangeListener",
                 "description": "MethodExpression representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void, or to a public method that takes no arguments with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void valueChange(jakarta.faces.event.ValueChangeEvent)"
             }
         ]
     },
@@ -1164,7 +1184,7 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "layout",
-                "description": "The layout of the wrapper element. Supported values are `\"block\"` (renders a `<div>`) and `\"inline\"` (renders  a `<span>`).",
+                "description": "The layout of the wrapper element. Supported values are `\"block\"` (renders a ``) and `\"inline\"` (renders  a ``).",
                 "type": "string"
             },
             {
@@ -1397,7 +1417,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "list",
                 "description": "The list of available items.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -1408,7 +1429,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "list",
                 "description": "The list of available items.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -1419,7 +1441,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "basename",
                 "description": "Base name of the resource bundle to be loaded.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "loader",
@@ -1429,7 +1452,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "var",
                 "description": "The name of the request attribute which exposes the loaded resource bundle in the request scope.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -1440,7 +1464,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The name of the attribute to be set on all nested components. This cannot be set to id or binding as those are already evaluated during view build time and they shouldn't be shared among components anyway.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "target",
@@ -1450,7 +1475,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "The value of the attribute to be set on all nested components. This will be evaluated on a per-component basis. In other words, #{component} can be used here to refer the \"current\" component.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -1602,12 +1628,14 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "Name under which the method expression will be made available to EL, scoped to the body of the Facelets tag.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "value",
                 "description": "The method expression to be cached and made available as a new value expression.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -1643,7 +1671,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "for",
                 "description": "ID of the target component for which the component moving will be done.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "id",
@@ -1669,7 +1698,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "channel",
                 "description": "The name of the push channel. It may not be an EL expression and it may only contain alphanumeric characters, hyphens, underscores and periods. All  open connections on the same channel will receive the same push message from the server.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "icon",
@@ -2070,7 +2100,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "for",
                 "description": "ID of the component that will be resolved (looked-up) and if found a reference of it made available to EL.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "id",
@@ -2080,7 +2111,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "Name under which the component will be made available to EL, scoped to the body of the Facelets tag (default) or to the request.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "rendered",
@@ -2111,7 +2143,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "path",
                 "description": "The pathname to the resource. The pathname must begin with a \"/\" and is interpreted as relative to the current context root.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "rendered",
@@ -2213,12 +2246,14 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "script",
                 "description": "The script to be evaluated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "validator",
                 "description": "MethodExpression representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void validate(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)"
             },
             {
                 "name": "validatorMessage",
@@ -2233,7 +2268,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "valueChangeListener",
                 "description": "MethodExpression representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void, or to a public method that takes no arguments with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void valueChange(jakarta.faces.event.ValueChangeEvent)"
             }
         ]
     },
@@ -2269,7 +2305,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "var",
@@ -2356,7 +2393,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "channel",
                 "description": "The name of the push channel. It may not be an EL expression and it may only contain alphanumeric characters, hyphens, underscores and periods. All  open connections on the same channel will receive the same push message from the server.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "connected",
@@ -2381,7 +2419,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "onmessage",
                 "description": "The JavaScript event handler function that is invoked when a push message is received from the server. The function will be invoked with three  arguments: the push message, the channel name and the raw `MessageEvent` itself.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "onopen",
@@ -2422,7 +2461,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "channel",
                 "description": "The name of the push channel. It may not be an EL expression and it may only contain alphanumeric characters, hyphens, underscores and periods. All  open connections on the same channel will receive the same push message from the server.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "id",
@@ -2442,7 +2482,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "onmessage",
                 "description": "The JavaScript event handler function that is invoked when a push message is received from the server. The function will be invoked with three  arguments: the push message, the channel name and the raw `MessageEvent` itself.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "onopen",
@@ -2478,7 +2519,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The declared attribute name.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -2685,7 +2727,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -2731,7 +2774,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -2818,7 +2862,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -2864,7 +2909,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -2920,7 +2966,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -2966,7 +3013,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -3012,7 +3060,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -3058,7 +3107,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -3109,7 +3159,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "components",
                 "description": "The space separated collection of client IDs of UI input components to be validated.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "disabled",
@@ -3197,12 +3248,14 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "action",
                 "description": "MethodExpression representing the application action to invoke when this component is activated. The expression must evaluate to a public method that takes no parameters, and returns an Object (the logical outcome) which is passed to the NavigationHandler for this application.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "java.lang.Object action()"
             },
             {
                 "name": "actionListener",
                 "description": "MethodExpression representing an action listener method that will be notified when this component is activated. The expression must evaluate to a public method that takes an ActionEvent parameter, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void processAction(jakarta.faces.event.ActionEvent)"
             },
             {
                 "name": "binding",
@@ -3283,7 +3336,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The name of the request parameter from which the value for this component is retrieved on an initial request or to override the stored value on a postback.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "rendered",
@@ -3303,7 +3357,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "validator",
                 "description": "MethodExpression representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void validate(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)"
             },
             {
                 "name": "validatorMessage",
@@ -3318,7 +3373,8 @@ export const OMNIFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "valueChangeListener",
                 "description": "MethodExpression representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void, or to a public method that takes no arguments with a return type of void.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "void valueChange(jakarta.faces.event.ValueChangeEvent)"
             }
         ]
     },

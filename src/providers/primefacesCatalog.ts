@@ -1,5 +1,6 @@
 import { JsfTag } from './jsfCatalog';
 
+export const PRIMEFACES_VERSION = '15.0.17';
 export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     "p:validateFile": {
         "name": "p:validateFile",
@@ -34,7 +35,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:autoUpdate": {
         "name": "p:autoUpdate",
-        "description": "AutoUpdate is a TagHandler to mark the parent component to be updated at every AJAX request.\n            AutoUpdate is ignored if the trigger (p:commandButton, p:ajax...) of AJAX request has the attribute ignoreAutoUpdate set to 'true'.",
+        "description": "AutoUpdate is a TagHandler to mark the parent component to be updated at every AJAX request.\n AutoUpdate is ignored if the trigger (p:commandButton, p:ajax...) of AJAX request has the attribute ignoreAutoUpdate set to 'true'.",
         "attributes": [
             {
                 "name": "disabled",
@@ -55,17 +56,20 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "target",
                 "description": "Search expression to resolve one or multiple target components.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "type",
                 "description": "Export type: \"xls\", \"xlsx\", \"xlsxstream\", \"pdf\", \"csv\", \"xml\"",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "fileName",
                 "description": "Filename of the generated export file, defaults to target component id.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "pageOnly",
@@ -136,12 +140,13 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:fileDownload": {
         "name": "p:fileDownload",
-        "description": "Traditionally, dynamic binary data was presented to the client by writing a servlet or filter to stream the data.\n            FileDownload simplifies this process.",
+        "description": "Traditionally, dynamic binary data was presented to the client by writing a servlet or filter to stream the data.\n FileDownload simplifies this process.",
         "attributes": [
             {
                 "name": "value",
                 "description": "A streamed content instance.",
-                "type": "java.lang.Object"
+                "type": "java.lang.Object",
+                "required": true
             },
             {
                 "name": "contentDisposition",
@@ -171,7 +176,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Boolean value that determines the phaseId to execute listener. Default is false meaning \"Invoke Application\" phase, when true\n                phase is \"Apply Request Values\".",
+                "description": "Boolean value that determines the phaseId to execute listener. Default is false meaning \"Invoke Application\" phase, when true\n phase is \"Apply Request Values\".",
                 "type": "java.lang.Boolean"
             },
             {
@@ -216,7 +221,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "delay",
-                "description": "If less than delay milliseconds elapses between calls to request() only the most recent one is sent and all other requests are\n                discarded. The default value of this option is null. If the value of delay is the literal string 'none' without the quotes or the default, no\n                delay is used.",
+                "description": "If less than delay milliseconds elapses between calls to request() only the most recent one is sent and all other requests are\n discarded. The default value of this option is null. If the value of delay is the literal string 'none' without the quotes or the default, no\n delay is used.",
                 "type": "java.lang.String"
             },
             {
@@ -226,22 +231,22 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "event",
-                "description": "Client side event to trigger ajax request.\n                Default value is defined by parent ClientBehaviorHolder component the behavior is attached to.",
+                "description": "Client side event to trigger ajax request.\n Default value is defined by parent ClientBehaviorHolder component the behavior is attached to.",
                 "type": "java.lang.String"
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "resetValues",
-                "description": "If true, indicate that this particular Ajax transaction is a value reset transaction. This will cause resetValue() to be called on any\n                EditableValueHolder instances encountered as a result of this ajax transaction. If not specified, or the value is false, no such indication is\n                made.",
+                "description": "If true, indicate that this particular Ajax transaction is a value reset transaction. This will cause resetValue() to be called on any\n EditableValueHolder instances encountered as a result of this ajax transaction. If not specified, or the value is false, no such indication is\n made.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "ignoreAutoUpdate",
-                "description": "If true, components which use p:autoUpdate will not be updated for this request. If not specified, or the value is false, no such\n                indication is made.",
+                "description": "If true, components which use p:autoUpdate will not be updated for this request. If not specified, or the value is false, no such\n indication is made.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -360,12 +365,13 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:resetInput": {
         "name": "p:resetInput",
-        "description": "Input components keep their local values at state when validation fails.\n            ResetInput is used to clear the cached values from state so that components retrieve their values from the backing bean model instead.",
+        "description": "Input components keep their local values at state when validation fails.\n ResetInput is used to clear the cached values from state so that components retrieve their values from the backing bean model instead.",
         "attributes": [
             {
                 "name": "target",
                 "description": "Comma or white-space separated list of component ids.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "clearModel",
@@ -376,7 +382,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:clientValidator": {
         "name": "p:clientValidator",
-        "description": "ClientValidator is a behavior element used in Client Side Validation to do instant validation in case you do not want to wait for the users\n            to fill in the form and hit commandButton/commandLink.",
+        "description": "ClientValidator is a behavior element used in Client Side Validation to do instant validation in case you do not want to wait for the users\n to fill in the form and hit commandButton/commandLink.",
         "attributes": [
             {
                 "name": "event",
@@ -397,7 +403,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "type",
                 "description": "The constants class.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "var",
@@ -413,7 +420,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "type",
                 "description": "The enum class.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "var",
@@ -757,7 +765,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -1152,7 +1160,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dropdownMode",
-                "description": "Specifies the behavior dropdown button. Default \"blank\" mode\n                sends an empty string and \"current\" mode sends the input value.",
+                "description": "Specifies the behavior dropdown button. Default \"blank\" mode\n sends an empty string and \"current\" mode sends the input value.",
                 "type": "java.lang.String"
             },
             {
@@ -1162,7 +1170,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "highlightSelector",
-                "description": "jQuery selector specifies what content to identify for highlighting in search results. By default, it targets \"&lt;span&gt;\" elements.",
+                "description": "jQuery selector specifies what content to identify for highlighting in search results. By default, it targets \"\" elements.",
                 "type": "java.lang.String"
             },
             {
@@ -1227,12 +1235,12 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Defines if dynamic loading is enabled for the element's panel.\n                If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
+                "description": "Defines if dynamic loading is enabled for the element's panel.\n If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "autoSelection",
-                "description": "Defines if auto selection of items that are equal to the typed input is enabled.\n                If true, an item that is equal to the typed input is selected. Default is true.",
+                "description": "Defines if auto selection of items that are equal to the typed input is enabled.\n If true, an item that is equal to the typed input is selected. Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -1828,7 +1836,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -2268,7 +2276,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "mask",
-                "description": "Defines if a mask should be applied to the input field. Default value is \"false\" and valid values to enable are \"true\" that uses the pattern as the mask or a custom template. Refer to\n                inputMask component for more information about custom templates.",
+                "description": "Defines if a mask should be applied to the input field. Default value is \"false\" and valid values to enable are \"true\" that uses the pattern as the mask or a custom template. Refer to\n inputMask component for more information about custom templates.",
                 "type": "java.lang.String"
             },
             {
@@ -2409,7 +2417,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -2748,7 +2756,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -3145,7 +3153,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -3516,7 +3524,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "nullSortOrder",
-                "description": "Defines where the null values are placed in ascending sort order. Default value is \"1\" meaning null values are placed at the end in ascending mode and\n                at beginning in descending mode. Set to \"-1\" for the opposite behavior.",
+                "description": "Defines where the null values are placed in ascending sort order. Default value is \"1\" meaning null values are placed at the end in ascending mode and\n at beginning in descending mode. Set to \"-1\" for the opposite behavior.",
                 "type": "java.lang.Integer"
             },
             {
@@ -3726,7 +3734,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An EL expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An EL expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "java.lang.Object"
             }
         ]
@@ -3784,7 +3792,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "var",
                 "description": "Name of the iterator variable that references each element in the data set.",
-                "type": "String"
+                "type": "String",
+                "required": true
             },
             {
                 "name": "sortBy",
@@ -3823,7 +3832,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "nullSortOrder",
-                "description": "Defines where the null values are placed in ascending sort order. Default value is \"1\" meaning null values are placed at the end in ascending mode and\n                at beginning in descending mode. Set to \"-1\" for the opposite behavior.",
+                "description": "Defines where the null values are placed in ascending sort order. Default value is \"1\" meaning null values are placed at the end in ascending mode and\n at beginning in descending mode. Set to \"-1\" for the opposite behavior.",
                 "type": "java.lang.Integer"
             },
             {
@@ -4008,7 +4017,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An EL expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An EL expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "java.lang.Object"
             }
         ]
@@ -4040,12 +4049,14 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "trigger",
                 "description": "A search expression resolving to a component to get attached to.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "datasource",
                 "description": "A search expression resolving to a DataTable component whose columns to be toggled.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             }
         ]
     },
@@ -4085,7 +4096,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Boolean value that determines the phaseId of the action event,\n    when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
+                "description": "Boolean value that determines the phaseId of the action event,\n when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
                 "type": "boolean"
             },
             {
@@ -4150,7 +4161,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -4386,7 +4397,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Boolean value that determines the phaseId of the action event,\n    when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
+                "description": "Boolean value that determines the phaseId of the action event,\n when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
                 "type": "boolean"
             },
             {
@@ -4451,7 +4462,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -4633,7 +4644,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:confirmDialog": {
         "name": "p:confirmDialog",
-        "description": "ConfirmDialog is a replacement to the legacy javascript confirmation box.\n        Skinning, customization and avoiding popup blockers are notabled advantages over classic javascript confirmation.",
+        "description": "ConfirmDialog is a replacement to the legacy javascript confirmation box.\n Skinning, customization and avoiding popup blockers are notabled advantages over classic javascript confirmation.",
         "attributes": [
             {
                 "name": "id",
@@ -5027,7 +5038,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:dataList": {
         "name": "p:dataList",
-        "description": "DataList presents a collection of data in list layout with several display types.\n        AJAX Pagination is a built-in feature and paginator UI is fully customizable via various options like paginatorTemplate, rowsPerPageOptions, pageLinks and more.",
+        "description": "DataList presents a collection of data in list layout with several display types.\n AJAX Pagination is a built-in feature and paginator UI is fully customizable via various options like paginatorTemplate, rowsPerPageOptions, pageLinks and more.",
         "attributes": [
             {
                 "name": "id",
@@ -5247,7 +5258,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "buffer",
-                "description": "Percentage height of the buffer between the bottom of the page and the scroll position to initiate\n                the load for the new chunk. Value is defined in integer and default is 10 meaning load would happen after 90% of the viewport is scrolled down.",
+                "description": "Percentage height of the buffer between the bottom of the page and the scroll position to initiate\n the load for the new chunk. Value is defined in integer and default is 10 meaning load would happen after 90% of the viewport is scrolled down.",
                 "type": "java.lang.Integer"
             },
             {
@@ -5543,7 +5554,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "selectionRowMode",
-                "description": "Indicates how rows of a DataTable may be selected, when clicking on the row itself (not the checkbox / radiobutton from p:column). \n\t\t    The value `new` always unselects other rows, `add` preserves the currently selected rows, and `none` disables row selection.",
+                "description": "Indicates how rows of a DataTable may be selected, when clicking on the row itself (not the checkbox / radiobutton from p:column).\n The value `new` always unselects other rows, `add` preserves the currently selected rows, and `none` disables row selection.",
                 "type": "java.lang.String"
             },
             {
@@ -5603,7 +5614,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "liveScrollBuffer",
-                "description": "Percentage height of the buffer between the bottom of the page and the scroll position to initiate\n                the load for the new chunk. Value is defined in integer and default is 0.",
+                "description": "Percentage height of the buffer between the bottom of the page and the scroll position to initiate\n the load for the new chunk. Value is defined in integer and default is 0.",
                 "type": "java.lang.Integer"
             },
             {
@@ -5983,7 +5994,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "target",
                 "description": "Identifier of the default command component.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "scope",
@@ -6033,7 +6045,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -6194,7 +6206,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Dynamic mode allows dialog to fetch it's contents before it's shown rather than on page load\n                which is useful to reduce initial page load times. Default is false.",
+                "description": "Dynamic mode allows dialog to fetch it's contents before it's shown rather than on page load\n which is useful to reduce initial page load times. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -6224,7 +6236,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "fitViewport",
-                "description": "Dialog size might exceed viewport if content is bigger than viewport in terms of height. fitViewport option automatically\n                adjusts height to fit dialog within the viewport.",
+                "description": "Dialog size might exceed viewport if content is bigger than viewport in terms of height. fitViewport option automatically\n adjusts height to fit dialog within the viewport.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -6554,12 +6566,14 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "event",
                 "description": "Dom event to attach the event that executes the animation. Required.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "type",
                 "description": "Specifies the name of the animation. Required.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "for",
@@ -6605,12 +6619,14 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "URL of the feed.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "var",
                 "description": "Name of the iterator variable that references each element in the data set.",
-                "type": "String"
+                "type": "String",
+                "required": true
             },
             {
                 "name": "size",
@@ -6695,14 +6711,14 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Defines if dynamic loading is enabled for the element's panel.\n                If the value is \"true\", the fieldset is not rendered on page load to improve performance. Default is false.",
+                "description": "Defines if dynamic loading is enabled for the element's panel.\n If the value is \"true\", the fieldset is not rendered on page load to improve performance. Default is false.",
                 "type": "java.lang.Boolean"
             }
         ]
     },
     "p:fileUpload": {
         "name": "p:fileUpload",
-        "description": "FileUpload goes beyond the browser input type=\"file\" functionality and features a javascript solution for uploading files.\n        File filtering, multiple uploads, partial page rendering and progress tracking are the significant features compared to legacy fileUploads.",
+        "description": "FileUpload goes beyond the browser input type=\"file\" functionality and features a javascript solution for uploading files.\n File filtering, multiple uploads, partial page rendering and progress tracking are the significant features compared to legacy fileUploads.",
         "attributes": [
             {
                 "name": "id",
@@ -6726,7 +6742,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -7251,17 +7267,20 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "type",
                 "description": "There are four types of maps available: roadmap, satellite, hybrid, and terrain. Required.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "center",
                 "description": "Center point of the map. Required.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "zoom",
                 "description": "Defines the initial zoom level. Default is 8.",
-                "type": "java.lang.Integer"
+                "type": "java.lang.Integer",
+                "required": true
             },
             {
                 "name": "streetView",
@@ -7338,7 +7357,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:graphicImage": {
         "name": "p:graphicImage",
-        "description": "GraphicImage extends standard Faces graphic image component with the ability of displaying binary data like an inputstream.\n        Main use cases of GraphicImage is to make displaying images stored in database or on-the-fly images easier.\n        Legacy way to do this is to come up with a Servlet that does the streaming, GraphicImage does all the hard work without the need of a Servlet.",
+        "description": "GraphicImage extends standard Faces graphic image component with the ability of displaying binary data like an inputstream.\n Main use cases of GraphicImage is to make displaying images stored in database or on-the-fly images easier.\n Legacy way to do this is to come up with a Servlet that does the streaming, GraphicImage does all the hard work without the need of a Servlet.",
         "attributes": [
             {
                 "name": "id",
@@ -7676,7 +7695,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "bind",
                 "description": "The key binding. Required.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "bindMac",
@@ -7740,7 +7760,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -7898,7 +7918,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -7944,7 +7964,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "image",
                 "description": "Binary data to stream or context relative path",
-                "type": "java.lang.Object"
+                "type": "java.lang.Object",
+                "required": true
             },
             {
                 "name": "alt",
@@ -8055,7 +8076,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "effect",
                 "description": "Name of the effect for transition. Required.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "speed",
@@ -8081,7 +8103,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:inplace": {
         "name": "p:inplace",
-        "description": "Inplace provides easy inplace editing and inline content display.\n        Inplace consists of two members, display element is the inital clickable label and inline element is the hidden content\n        that'll be displayed when display element is toggled.",
+        "description": "Inplace provides easy inplace editing and inline content display.\n Inplace consists of two members, display element is the inital clickable label and inline element is the hidden content\n that'll be displayed when display element is toggled.",
         "attributes": [
             {
                 "name": "id",
@@ -8201,7 +8223,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -8537,7 +8559,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -8872,7 +8894,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "inputmode",
-                "description": "HTML5 inputmode attribute for hinting at the type of data this control has for touch devices to display appropriate virtual keyboard. Default is 'numeric' if decimalPlaces==0, 'decimal' if decimalPlaces&gt;0.",
+                "description": "HTML5 inputmode attribute for hinting at the type of data this control has for touch devices to display appropriate virtual keyboard. Default is 'numeric' if decimalPlaces==0, 'decimal' if decimalPlaces>0.",
                 "type": "java.lang.String"
             },
             {
@@ -8948,7 +8970,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -9274,7 +9296,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -9620,7 +9642,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -10047,7 +10069,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -10174,7 +10196,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:lifecycle": {
         "name": "p:lifecycle",
-        "description": "Lifecycle is a utility component which displays the execution time of each Faces phase. It also\n            synchronizes automatically after each AJAX request.",
+        "description": "Lifecycle is a utility component which displays the execution time of each Faces phase. It also\n synchronizes automatically after each AJAX request.",
         "attributes": [
             {
                 "name": "id",
@@ -10244,7 +10266,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "disableClientWindow",
-                "description": "Disable appending the\n             on the rendering of this element.",
+                "description": "Disable appending the\n on the rendering of this element.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -10440,7 +10462,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "disableClientWindow",
-                "description": "Disable appending the\n             on the rendering of this element.",
+                "description": "Disable appending the\n on the rendering of this element.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -10733,7 +10755,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "autoDisplay",
-                "description": "Defines whether submenus will be displayed on mouseover or not. When\n                set to false, click event is required to display.",
+                "description": "Defines whether submenus will be displayed on mouseover or not. When\n set to false, click event is required to display.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -10804,7 +10826,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "overlay",
-                "description": "Defines positioning, when enabled menu is displayed with absolute positioning relative to the trigger.\n                Default is false, meaning static positioning.",
+                "description": "Defines positioning, when enabled menu is displayed with absolute positioning relative to the trigger.\n Default is false, meaning static positioning.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -10895,7 +10917,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "autoDisplay",
-                "description": "Defines whether the first level of submenus will be displayed on mouseover or not. When\n                set to false, click event is required to display.",
+                "description": "Defines whether the first level of submenus will be displayed on mouseover or not. When\n set to false, click event is required to display.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -11067,7 +11089,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Boolean value that determines the phaseId of the action event,\n    when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
+                "description": "Boolean value that determines the phaseId of the action event,\n when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
                 "type": "boolean"
             },
             {
@@ -11167,7 +11189,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -11202,7 +11224,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "disableClientWindow",
-                "description": "Disable appending the\n             on the rendering of this element.",
+                "description": "Disable appending the\n on the rendering of this element.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -11374,7 +11396,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "for",
-                "description": "Identifier of the component whose messages to display only, takes precendence when used\n                with globalOnly.",
+                "description": "Identifier of the component whose messages to display only, takes precendence when used\n with globalOnly.",
                 "type": "java.lang.String"
             },
             {
@@ -11496,7 +11518,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -11663,7 +11685,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -11846,7 +11868,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:organigramNode": {
         "name": "p:organigramNode",
-        "description": "Organigram requires an instance of OrganigramNode interface as its value to define the root, a\n            default implementation DefaultOrganigramNode is provided. Each node has a type where each\n            node at the backend needs to match the p:organigramNode helper component.",
+        "description": "Organigram requires an instance of OrganigramNode interface as its value to define the root, a\n default implementation DefaultOrganigramNode is provided. Each node has a type where each\n node at the backend needs to match the p:organigramNode helper component.",
         "attributes": [
             {
                 "name": "id",
@@ -12041,7 +12063,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n                In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             }
         ]
@@ -12193,7 +12215,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Dynamic mode allows overlay panel to fetch it's contents before it's shown rather than on page load\n                which is useful to reduce initial page load times. Default is false.",
+                "description": "Dynamic mode allows overlay panel to fetch it's contents before it's shown rather than on page load\n which is useful to reduce initial page load times. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -12472,7 +12494,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -12838,7 +12860,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -12979,7 +13001,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -13285,7 +13307,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -13498,7 +13520,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -13619,7 +13641,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Boolean value that determines the phaseId of the action event,\n    when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
+                "description": "Boolean value that determines the phaseId of the action event,\n when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
                 "type": "boolean"
             },
             {
@@ -13684,7 +13706,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -13721,7 +13743,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:resizable": {
         "name": "p:resizable",
-        "description": "Resizable component that has the ability to make a Faces component resizable.\n        Resizable can be used on various components like resize an input fields, panels, menus, images and more.",
+        "description": "Resizable component that has the ability to make a Faces component resizable.\n Resizable can be used on various components like resize an input fields, panels, menus, images and more.",
         "attributes": [
             {
                 "name": "id",
@@ -13981,7 +14003,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:schedule": {
         "name": "p:schedule",
-        "description": "Schedule provides an Outlook Calendar, iCal like Faces component to manage events.\n        Schedule is highly customizable featuring various views (month, day, week), built-in I18N, drag-drop, resize, customizable event dialog and skinning.",
+        "description": "Schedule provides an Outlook Calendar, iCal like Faces component to manage events.\n Schedule is highly customizable featuring various views (month, day, week), built-in I18N, drag-drop, resize, customizable event dialog and skinning.",
         "attributes": [
             {
                 "name": "id",
@@ -14160,7 +14182,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "displayEventEnd",
-                "description": "Whether or not to display an event's end time text when it is rendered on the calendar. Value can be a boolean to globally configure for\n                all views or a comma separated list such as \"month:false,basicWeek:true\" to configure per view.",
+                "description": "Whether or not to display an event's end time text when it is rendered on the calendar. Value can be a boolean to globally configure for\n all views or a comma separated list such as \"month:false,basicWeek:true\" to configure per view.",
                 "type": "java.lang.String"
             },
             {
@@ -14207,7 +14229,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:scrollPanel": {
         "name": "p:scrollPanel",
-        "description": "ScrollPanel is used to display scrollable content with theme aware scrollbars instead of native\n            browser scrollbars.",
+        "description": "ScrollPanel is used to display scrollable content with theme aware scrollbars instead of native\n browser scrollbars.",
         "attributes": [
             {
                 "name": "id",
@@ -14272,7 +14294,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -14408,7 +14430,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -14544,7 +14566,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -14699,7 +14721,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Defines if dynamic loading is enabled for the element's panel.\n                If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
+                "description": "Defines if dynamic loading is enabled for the element's panel.\n If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -14734,7 +14756,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "collectionType",
-                "description": "Optional\n                attribute that is a literal string that is the fully qualified\n                class name of a concrete class that implements\n                &lt;code&gt;java.util.Collection&lt;/code&gt;, or an EL expression that\n                evaluates to either 1. such a String, or 2. the\n                &lt;code&gt;Class&lt;/code&gt; object itself.",
+                "description": "Optional\n attribute that is a literal string that is the fully qualified\n class name of a concrete class that implements\n `java.util.Collection`, or an EL expression that\n evaluates to either 1. such a String, or 2. the\n `Class` object itself.",
                 "type": "java.lang.String"
             }
         ]
@@ -14765,7 +14787,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -14876,7 +14898,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -14971,7 +14993,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "collectionType",
-                "description": "Optional\n                attribute that is a literal string that is the fully qualified\n                class name of a concrete class that implements\n                &lt;code&gt;java.util.Collection&lt;/code&gt;, or an EL expression that\n                evaluates to either 1. such a String, or 2. the\n                &lt;code&gt;Class&lt;/code&gt; object itself.",
+                "description": "Optional\n attribute that is a literal string that is the fully qualified\n class name of a concrete class that implements\n `java.util.Collection`, or an EL expression that\n evaluates to either 1. such a String, or 2. the\n `Class` object itself.",
                 "type": "java.lang.String"
             }
         ]
@@ -15002,7 +15024,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -15137,7 +15159,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "collectionType",
-                "description": "Optional\n                attribute that is a literal string that is the fully qualified\n                class name of a concrete class that implements\n                &lt;code&gt;java.util.Collection&lt;/code&gt;, or an EL expression that\n                evaluates to either 1. such a String, or 2. the\n                &lt;code&gt;Class&lt;/code&gt; object itself.",
+                "description": "Optional\n attribute that is a literal string that is the fully qualified\n class name of a concrete class that implements\n `java.util.Collection`, or an EL expression that\n evaluates to either 1. such a String, or 2. the\n `Class` object itself.",
                 "type": "java.lang.String"
             }
         ]
@@ -15168,7 +15190,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -15284,7 +15306,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -15440,7 +15462,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -15650,7 +15672,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Defines if dynamic loading is enabled for the element's panel.\n                If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
+                "description": "Defines if dynamic loading is enabled for the element's panel.\n If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -15691,7 +15713,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -15918,7 +15940,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "dynamic",
-                "description": "Defines if dynamic loading is enabled for the element's panel.\n                If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
+                "description": "Defines if dynamic loading is enabled for the element's panel.\n If the value is \"true\", the overlay is not rendered on page load to improve performance. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -15959,7 +15981,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -16155,7 +16177,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "overlay",
-                "description": "Defines positioning, when enabled menu is displayed with absolute positioning relative to the trigger.\n                Default is false, meaning static positioning.",
+                "description": "Defines positioning, when enabled menu is displayed with absolute positioning relative to the trigger.\n Default is false, meaning static positioning.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -16348,7 +16370,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -16744,7 +16766,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Boolean value that determines the phaseId of the action event,\n    when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
+                "description": "Boolean value that determines the phaseId of the action event,\n when true actions are processed at \"Apply Request Values\", when false at \"Invoke Application\" phase.",
                 "type": "boolean"
             },
             {
@@ -16954,7 +16976,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "partialSubmit",
-                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n                instead of whole form.",
+                "description": "When enabled, only values related to partially processed components would be serialized for ajax\n instead of whole form.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -17163,7 +17185,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "severity",
                 "description": "The severity of the message: success, info, error, warn, fatal.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "display",
@@ -17275,7 +17298,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "target",
                 "description": "Identifier of the component(s) to make sticky.",
-                "type": "java.lang.String"
+                "type": "java.lang.String",
+                "required": true
             },
             {
                 "name": "margin",
@@ -17560,7 +17584,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "cache",
-                "description": "When tab contents are lazy loaded by ajax toggleMode,\n                caching only retrieves the tab contents once and subsequent toggles of a cached tab does not communicate with server.\n                If caching is turned off, tab contents are reloaded from server each time tab is clicked. Default is true.",
+                "description": "When tab contents are lazy loaded by ajax toggleMode,\n caching only retrieves the tab contents once and subsequent toggles of a cached tab does not communicate with server.\n If caching is turned off, tab contents are reloaded from server each time tab is clicked. Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -17677,7 +17701,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "model",
                 "description": "",
-                "type": "org.primefaces.model.tagcloud.TagCloudModel"
+                "type": "org.primefaces.model.tagcloud.TagCloudModel",
+                "required": true
             },
             {
                 "name": "style",
@@ -17778,7 +17803,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -17934,7 +17959,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "autoDisplay",
-                "description": "Defines whether the first level of submenus will be displayed on mouseover or not.\n                When set to false, click event is required to display.",
+                "description": "Defines whether the first level of submenus will be displayed on mouseover or not.\n When set to false, click event is required to display.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -17954,7 +17979,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "overlay",
-                "description": "Defines positioning, when enabled menu is displayed with absolute positioning relative to the trigger.\n                Default is false, meaning static positioning.",
+                "description": "Defines positioning, when enabled menu is displayed with absolute positioning relative to the trigger.\n Default is false, meaning static positioning.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -18026,7 +18051,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "An instance of TimelineModel representing the backing model.",
-                "type": "org.primefaces.model.timeline.TimelineModel"
+                "type": "org.primefaces.model.timeline.TimelineModel",
+                "required": true
             },
             {
                 "name": "varGroup",
@@ -18040,17 +18066,17 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "timeZone",
-                "description": "Target time zone to convert start / end dates of TimelineEvent's in server side. The attribute can be either a String or TimeZone object or null.\n                If null, timeZone defaults to the server's time zone the application is running in.",
+                "description": "Target time zone to convert start / end dates of TimelineEvent's in server side. The attribute can be either a String or TimeZone object or null.\n If null, timeZone defaults to the server's time zone the application is running in.",
                 "type": "java.lang.Object"
             },
             {
                 "name": "clientTimeZone",
-                "description": "Time zone the user would like to see dates in UI. The attribute can be either a String or TimeZone object or null.\n                If null, clientTimeZone defaults to browser's time zone.",
+                "description": "Time zone the user would like to see dates in UI. The attribute can be either a String or TimeZone object or null.\n If null, clientTimeZone defaults to browser's time zone.",
                 "type": "java.lang.String"
             },
             {
                 "name": "height",
-                "description": "The height of the timeline in pixels or as a percentage. When height is undefined or null, the height of the timeline is automatically\n                adjusted to fit the contents. It is possible to set a maximum height using option maxHeight to prevent the timeline from getting too high in\n                case of automatically calculated height.",
+                "description": "The height of the timeline in pixels or as a percentage. When height is undefined or null, the height of the timeline is automatically\n adjusted to fit the contents. It is possible to set a maximum height using option maxHeight to prevent the timeline from getting too high in\n case of automatically calculated height.",
                 "type": "java.lang.String"
             },
             {
@@ -18080,17 +18106,17 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "responsive",
-                "description": "Check if the timeline container is resized, and if so, resize the timeline.\n                Useful when the webpage (browser window) or a layout pane / unit containing the timeline component is resized. Default is true.",
+                "description": "Check if the timeline container is resized, and if so, resize the timeline.\n Useful when the webpage (browser window) or a layout pane / unit containing the timeline component is resized. Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "orientationAxis",
-                "description": "Orientation of the timeline axis: 'top', 'bottom' (default), 'both', or 'none'. If orientation is 'bottom', the time axis is drawn\n                at the bottom. When 'top', the axis is drawn on top. When 'both', two axes are drawn, both on top and at the bottom. In case of 'none', no axis\n                is drawn at all.",
+                "description": "Orientation of the timeline axis: 'top', 'bottom' (default), 'both', or 'none'. If orientation is 'bottom', the time axis is drawn\n at the bottom. When 'top', the axis is drawn on top. When 'both', two axes are drawn, both on top and at the bottom. In case of 'none', no axis\n is drawn at all.",
                 "type": "java.lang.String"
             },
             {
                 "name": "orientationItem",
-                "description": "Orientation of the timeline items: 'top' or 'bottom' (default). Determines whether items are aligned to the top or bottom\n                of the Timeline.",
+                "description": "Orientation of the timeline items: 'top' or 'bottom' (default). Determines whether items are aligned to the top or bottom\n of the Timeline.",
                 "type": "java.lang.String"
             },
             {
@@ -18100,17 +18126,17 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "editableAdd",
-                "description": "If true, new items can be created by double tapping an empty space in the Timeline. Takes precedence over editable.\n                Default is false.",
+                "description": "If true, new items can be created by double tapping an empty space in the Timeline. Takes precedence over editable.\n Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "editableRemove",
-                "description": "If true, items can be deleted by first selecting them, and then clicking the delete button on the top right of the item.\n                Takes precedence over editable. Default is false.",
+                "description": "If true, items can be deleted by first selecting them, and then clicking the delete button on the top right of the item.\n Takes precedence over editable. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "editableGroup",
-                "description": "If true, items can be dragged from one group to another. Only applicable when the Timeline has groups.\n                Takes precedence over editable. Default is false.",
+                "description": "If true, items can be dragged from one group to another. Only applicable when the Timeline has groups.\n Takes precedence over editable. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -18200,12 +18226,12 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "eventStyle",
-                "description": "Specifies the default type for the timeline items. Choose from 'box', 'point' and 'range'. If undefined, the Timeline will auto detect\n                the type from the items data: if a start and end date is available, a 'range' will be created, and else, a 'box' is created. Default null.",
+                "description": "Specifies the default type for the timeline items. Choose from 'box', 'point' and 'range'. If undefined, the Timeline will auto detect\n the type from the items data: if a start and end date is available, a 'range' will be created, and else, a 'box' is created. Default null.",
                 "type": "java.lang.String"
             },
             {
                 "name": "groupsOrder",
-                "description": "Allows to customize the way groups are ordered. When true (default), groups will be ordered by content alphabetically\n                (when the list of groups is missing) or by native ordering of TimelineGroup object in the list of groups (when the list of groups is available).\n                When false, groups will not be ordered at all.",
+                "description": "Allows to customize the way groups are ordered. When true (default), groups will be ordered by content alphabetically\n (when the list of groups is missing) or by native ordering of TimelineGroup object in the list of groups (when the list of groups is available).\n When false, groups will not be ordered at all.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -18215,7 +18241,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "snap",
-                "description": "When moving items on the Timeline, they will be snapped to nice dates like full hours or days, depending on the current scale.\n                The snap function can be replaced with a custom javascript function, or can be set to null to disable snapping.\n                The signature of the snap function is:\n\n                function snap(date: Date, scale: string, step: number) : Date or number\n\n                The parameter scale can be can be 'millisecond', 'second', 'minute', 'hour', 'weekday, 'week', 'day, 'month, or 'year'.\n                The parameter step is a number like 1, 2, 4, 5.",
+                "description": "When moving items on the Timeline, they will be snapped to nice dates like full hours or days, depending on the current scale.\n The snap function can be replaced with a custom javascript function, or can be set to null to disable snapping.\n The signature of the snap function is:\n\n function snap(date: Date, scale: string, step: number) : Date or number\n\n The parameter scale can be can be 'millisecond', 'second', 'minute', 'hour', 'weekday, 'week', 'day, 'month, or 'year'.\n The parameter step is a number like 1, 2, 4, 5.",
                 "type": "java.lang.String"
             },
             {
@@ -18230,22 +18256,22 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "showMajorLabels",
-                "description": "By default, the timeline shows both minor and major date labels on the horizontal axis.\n                For example the minor labels show minutes and the major labels show hours. When \"showMajorLabels\" is false, no major labels are shown.\n                Default is true.",
+                "description": "By default, the timeline shows both minor and major date labels on the horizontal axis.\n For example the minor labels show minutes and the major labels show hours. When \"showMajorLabels\" is false, no major labels are shown.\n Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "showMinorLabels",
-                "description": "By default, the timeline shows both minor and major date labels on the horizontal axis.\n                For example the minor labels show minutes and the major labels show hours. When \"showMinorLabels\" is false, no minor labels are shown.\n                When both \"showMajorLabels\" and \"showMinorLabels\" are false, no horizontal axis will be visible. Default is true.",
+                "description": "By default, the timeline shows both minor and major date labels on the horizontal axis.\n For example the minor labels show minutes and the major labels show hours. When \"showMinorLabels\" is false, no minor labels are shown.\n When both \"showMajorLabels\" and \"showMinorLabels\" are false, no horizontal axis will be visible. Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "showNested",
-                "description": "By default, the timeline shows nested groups without collapsed. When \"showNested\" is false, all nested groups shown as collapsed.\n                If \"showNested\" is set different in TimelineGroup model, it will override this. Default is true.",
+                "description": "By default, the timeline shows nested groups without collapsed. When \"showNested\" is false, all nested groups shown as collapsed.\n If \"showNested\" is set different in TimelineGroup model, it will override this. Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "timeChangeable",
-                "description": "Deprecated, use editableTime property instead.\n                If false, items can not be moved or dragged horizontally (neither start time nor end time is changable).\n                This is useful when items should be editable but can only be changed regarding group or content (typical use case: scheduling events).\n                Default is true.",
+                "description": "Deprecated, use editableTime property instead.\n If false, items can not be moved or dragged horizontally (neither start time nor end time is changable).\n This is useful when items should be editable but can only be changed regarding group or content (typical use case: scheduling events).\n Default is true.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -18270,7 +18296,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "clickToUse",
-                "description": "When a Timeline is configured to be clickToUse, it will react to mouse and touch events only when active. When active, a blue shadow\n                border is displayed around the Timeline. The Timeline is set active by clicking on it, and is changed to inactive again by clicking outside\n                the Timeline or by pressing the ESC key. Default is false.",
+                "description": "When a Timeline is configured to be clickToUse, it will react to mouse and touch events only when active. When active, a blue shadow\n border is displayed around the Timeline. The Timeline is set active by clicking on it, and is changed to inactive again by clicking outside\n the Timeline or by pressing the ESC key. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -18285,7 +18311,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "tooltipOverflowMethod",
-                "description": "Set how the tooltip should act if it is about to overflow out of the timeline.\n                    Choose from 'cap', 'flip' and 'none'.\n                    If it is set to 'cap', the tooltip will just cap its position to inside to timeline.\n                    If set to 'flip', the position of the tooltip will flip around the cursor so that a corner is at the cursor, and the rest of it is visible.\n                    If set to 'none', the tooltip will be positioned independently of the timeline, so parts of the tooltip could possibly be hidden or stick\n                    ouf of the timeline, depending how CSS overflow is defined for the timeline (by default it's hidden). Default is 'flip'.",
+                "description": "Set how the tooltip should act if it is about to overflow out of the timeline.\n Choose from 'cap', 'flip' and 'none'.\n If it is set to 'cap', the tooltip will just cap its position to inside to timeline.\n If set to 'flip', the position of the tooltip will flip around the cursor so that a corner is at the cursor, and the rest of it is visible.\n If set to 'none', the tooltip will be positioned independently of the timeline, so parts of the tooltip could possibly be hidden or stick\n ouf of the timeline, depending how CSS overflow is defined for the timeline (by default it's hidden). Default is 'flip'.",
                 "type": "java.lang.String"
             },
             {
@@ -18331,7 +18357,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -18529,7 +18555,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -18938,7 +18964,8 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "",
-                "type": "org.primefaces.model.TreeNode"
+                "type": "org.primefaces.model.TreeNode",
+                "required": true
             },
             {
                 "name": "var",
@@ -19273,7 +19300,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -19501,7 +19528,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
     },
     "p:wizard": {
         "name": "p:wizard",
-        "description": "Wizard provides an enhanced UI to implement a workflow easily in a single page.\n        Wizard consists of several child tab components where each tab represents a step in the process.",
+        "description": "Wizard provides an enhanced UI to implement a workflow easily in a single page.\n Wizard consists of several child tab components where each tab represents a step in the process.",
         "attributes": [
             {
                 "name": "id",
@@ -19687,7 +19714,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -20067,12 +20094,12 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "showOtherMonths",
-                "description": "Whether to display dates in other months (non-selectable) at the start or end of the current month.\n                To make these days selectable use the selectOtherMonths option. Default is false.",
+                "description": "Whether to display dates in other months (non-selectable) at the start or end of the current month.\n To make these days selectable use the selectOtherMonths option. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
                 "name": "selectOtherMonths",
-                "description": "Whether days in other months shown before or after the current month are selectable.\n                This only applies if the showOtherMonths option is set to true. Default is false.",
+                "description": "Whether days in other months shown before or after the current month are selectable.\n This only applies if the showOtherMonths option is set to true. Default is false.",
                 "type": "java.lang.Boolean"
             },
             {
@@ -20307,7 +20334,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "mask",
-                "description": "Defines if a mask should be applied to the input field. Default value is \"false\" and valid values to enable are \"true\" that uses the pattern as the mask or a custom template. Refer to\n                inputMask component for more information about custom templates.",
+                "description": "Defines if a mask should be applied to the input field. Default value is \"false\" and valid values to enable are \"true\" that uses the pattern as the mask or a custom template. Refer to\n inputMask component for more information about custom templates.",
                 "type": "java.lang.String"
             },
             {
@@ -20597,7 +20624,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {
@@ -20985,12 +21012,14 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "Collection of items.",
-                "type": "java.lang.Object"
+                "type": "java.lang.Object",
+                "required": true
             },
             {
                 "name": "var",
                 "description": "Name of the iterator variable that references each element in the data set.",
-                "type": "String"
+                "type": "String",
+                "required": true
             },
             {
                 "name": "align",
@@ -21111,7 +21140,7 @@ export const PRIMEFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "converter",
-                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n    In case it's a static text, it must refer to a converter id.",
+                "description": "An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.\n In case it's a static text, it must refer to a converter id.",
                 "type": "javax.faces.convert.Converter"
             },
             {

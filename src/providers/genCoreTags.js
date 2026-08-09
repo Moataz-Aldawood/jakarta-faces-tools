@@ -120,7 +120,21 @@ async function run() {
                         type = 'boolean';
                     }
                     
-                    attrs.push({ name: attrName, description: desc, type });
+                    const reqMatch = /<required>(.*?)<\/required>/.exec(attrBlock);
+                    const req = reqMatch ? reqMatch[1].trim() === 'true' : false;
+
+                    const defMatch = /<default-value><!\[CDATA\[([\s\S]*?)\]\]><\/default-value>|<default-value>(.*?)<\/default-value>/.exec(attrBlock);
+                    const def = defMatch ? (defMatch[1] || defMatch[2]).trim() : undefined;
+
+                    const methMatch = /<method-signature><!\[CDATA\[([\s\S]*?)\]\]><\/method-signature>|<method-signature>(.*?)<\/method-signature>/.exec(attrBlock);
+                    const meth = methMatch ? (methMatch[1] || methMatch[2]).trim() : undefined;
+
+                    const attrObj = { name: attrName, description: desc, type };
+                    if (req) attrObj.required = true;
+                    if (def) attrObj.defaultValue = def;
+                    if (meth) attrObj.methodSignature = meth;
+                    
+                    attrs.push(attrObj);
                 }
             }
 
@@ -145,6 +159,9 @@ async function run() {
     name: string;
     description: string;
     type?: string;
+    required?: boolean;
+    defaultValue?: string;
+    methodSignature?: string;
 }
 
 export interface JsfTag {
@@ -153,6 +170,7 @@ export interface JsfTag {
     attributes: JsfAttribute[];
 }
 
+export const JSF_VERSION = '4.0.2';
 export const JSF_CATALOG: Record<string, JsfTag> = `;
     outContent += JSON.stringify(catalog, null, 4) + ';\n';
 

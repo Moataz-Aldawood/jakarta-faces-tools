@@ -4,7 +4,7 @@
   "publisher": "moataz-aldawood",
   "displayName": "Jakarta Faces Tools",
   "description": "Advanced Jakarta Faces (JSF) tools: immediate quote auto-complete & smart EL snippets, Lombok annotation support (@Data, @Getter), incremental bean caching, EL semantic validation, component linking (for <-> id), deep nested Java EL resolution, custom composite component intelligence, and hover documentation. GitHub: https://github.com/Moataz-Aldawood/jakarta-faces-tools",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "icon": "logo.png",
   "license": "GPL-3.0",
   "repository": {

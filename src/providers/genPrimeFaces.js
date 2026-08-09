@@ -34,30 +34,30 @@ function cleanHtml(html, firstParagraphOnly = false) {
 }
 
 const url = 'https://repo1.maven.org/maven2/org/primefaces/primefaces/15.0.17/primefaces-15.0.17.jar';
-const zipName = 'primefaces.zip';
+const zipName = path.join(__dirname, 'primefaces.zip');
 const extractDir = 'primefaces_extracted';
 
 console.log('Downloading PrimeFaces 15.0.17 JAR...');
 execSync(`powershell -Command "Invoke-WebRequest -Uri '${url}' -OutFile '${zipName}'"`, { stdio: 'inherit' });
 
 console.log('Extracting JAR...');
-execSync(`powershell -Command "Expand-Archive -Path '${zipName}' -DestinationPath '${extractDir}' -Force"`, { stdio: 'inherit' });
-
-console.log('Looking for taglib XML...');
-const taglibPath = path.join(__dirname, extractDir, 'META-INF', 'primefaces-p.taglib.xml');
+const targetXml1 = 'META-INF/primefaces-p.taglib.xml';
+const targetXml2 = 'META-INF/primefaces.taglib.xml';
 let xmlContent = '';
-if (fs.existsSync(taglibPath)) {
-    xmlContent = fs.readFileSync(taglibPath, 'utf8');
-} else {
-    // Try without -p
-    const altPath = path.join(__dirname, extractDir, 'META-INF', 'primefaces.taglib.xml');
-    if (fs.existsSync(altPath)) {
-        xmlContent = fs.readFileSync(altPath, 'utf8');
-    } else {
+
+try {
+    execSync(`tar -xf ${path.basename(zipName)} ${targetXml1}`, { cwd: __dirname });
+    xmlContent = fs.readFileSync(path.join(__dirname, 'META-INF', 'primefaces-p.taglib.xml'), 'utf8');
+} catch (e1) {
+    try {
+        execSync(`tar -xf ${path.basename(zipName)} ${targetXml2}`, { cwd: __dirname });
+        xmlContent = fs.readFileSync(path.join(__dirname, 'META-INF', 'primefaces.taglib.xml'), 'utf8');
+    } catch (e2) {
         console.error('Could not find PrimeFaces taglib XML!');
         process.exit(1);
     }
 }
+fs.rmSync(path.join(__dirname, 'META-INF'), { recursive: true, force: true });
 
 console.log('Parsing XML...');
 const catalog = {};
@@ -69,6 +69,9 @@ const fallbackDescRegex = /<description>([\s\S]*?)<\/description>/;
 const attrRegex = /<attribute>([\s\S]*?)<\/attribute>/g;
 const attrNameRegex = /<name>(.*?)<\/name>/;
 const attrTypeRegex = /<type>(.*?)<\/type>/;
+const attrRequiredRegex = /<required>(.*?)<\/required>/;
+const attrDefaultValueRegex = /<default-value><!\[CDATA\[([\s\S]*?)\]\]><\/default-value>|<default-value>(.*?)<\/default-value>/;
+const attrMethodSigRegex = /<method-signature><!\[CDATA\[([\s\S]*?)\]\]><\/method-signature>|<method-signature>(.*?)<\/method-signature>/;
 
 let tagMatch;
 let tagCount = 0;
@@ -95,11 +98,25 @@ while ((tagMatch = tagRegex.exec(xmlContent)) !== null) {
         const aTypeM = attrTypeRegex.exec(attrContent);
         const aType = aTypeM ? aTypeM[1].trim() : 'String';
 
-        attributes.push({
+        const aReqM = attrRequiredRegex.exec(attrContent);
+        const aReq = aReqM ? aReqM[1].trim() === 'true' : false;
+
+        const aDefM = attrDefaultValueRegex.exec(attrContent);
+        const aDef = aDefM ? (aDefM[1] || aDefM[2]).trim() : undefined;
+
+        const aMethM = attrMethodSigRegex.exec(attrContent);
+        const aMeth = aMethM ? (aMethM[1] || aMethM[2]).trim() : undefined;
+
+        const attrObj = {
             name: aNameM[1].trim(),
             description: aDesc,
             type: aType
-        });
+        };
+        if (aReq) attrObj.required = true;
+        if (aDef) attrObj.defaultValue = aDef;
+        if (aMeth) attrObj.methodSignature = aMeth;
+
+        attributes.push(attrObj);
     }
 
     catalog[`p:${tagName}`] = {
@@ -112,7 +129,7 @@ while ((tagMatch = tagRegex.exec(xmlContent)) !== null) {
 
 console.log(`Parsed ${tagCount} PrimeFaces tags.`);
 
-let outContent = `import { JsfTag } from './jsfCatalog';\n\nexport const PRIMEFACES_CATALOG: Record<string, JsfTag> = `;
+let outContent = `import { JsfTag } from './jsfCatalog';\n\nexport const PRIMEFACES_VERSION = '15.0.17';\nexport const PRIMEFACES_CATALOG: Record<string, JsfTag> = `;
 outContent += JSON.stringify(catalog, null, 4) + ';\n';
 
 fs.writeFileSync(path.join(__dirname, 'primefacesCatalog.ts'), outContent);
@@ -120,5 +137,4 @@ console.log('primefacesCatalog.ts generated successfully.');
 
 // Cleanup
 fs.unlinkSync(zipName);
-execSync(`powershell -Command "Remove-Item -Recurse -Force '${extractDir}'"`);
 console.log('Cleanup done.');

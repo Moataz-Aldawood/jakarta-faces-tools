@@ -3,6 +3,8 @@ export interface JsfAttribute {
     description: string;
     type?: string;
     required?: boolean;
+    defaultValue?: string;
+    methodSignature?: string;
 }
 
 export interface JsfTag {
@@ -11,10 +13,11 @@ export interface JsfTag {
     attributes: JsfAttribute[];
 }
 
+export const JSF_VERSION = '4.0.2';
 export const JSF_CATALOG: Record<string, JsfTag> = {
     "f:actionListener": {
         "name": "f:actionListener",
-        "description": "Register an ActionListener instance on the  UIComponent associated with the closest parent UIComponent  tag.</p>",
+        "description": "Register an ActionListener instance on the  UIComponent associated with the closest parent UIComponent  tag.",
         "attributes": [
             {
                 "name": "binding",
@@ -23,7 +26,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
@@ -35,129 +38,130 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "f:ajax": {
         "name": "f:ajax",
-        "description": "<p class=\"changed_added_2_0\">Register an  AjaxBehavior instance on one or more UIComponents implementing  the ClientBehaviorHolder interface. This tag may be nested  witin a single component (enabling Ajax for a single component),  or it may be \"wrapped\" around multiple components (enabling Ajax  for many components).</p>",
+        "description": "<p class=\"changed_added_2_0\">Register an  AjaxBehavior instance on one or more UIComponents implementing  the ClientBehaviorHolder interface. This tag may be nested  witin a single component (enabling Ajax for a single component),  or it may be \"wrapped\" around multiple components (enabling Ajax  for many components).",
         "attributes": [
             {
                 "name": "delay",
-                "description": "<p class=\"changed_added_2_2\">If less than  <em>delay</em> milliseconds elapses between calls to  <em>request()</em> only the most recent one is sent and all other  requests are discarded. If this option is not specified, or if the  value of <em>delay</em> is the literal string `'none'`  without the quotes, no delay is used. </p>",
+                "description": "<p class=\"changed_added_2_2\">If less than  <em>delay</em> milliseconds elapses between calls to  <em>request()</em> only the most recent one is sent and all other  requests are discarded. If this option is not specified, or if the  value of <em>delay</em> is the literal string `'none'`  without the quotes, no delay is used.",
                 "type": "string"
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A value of \"true\" indicates  the  AjaxBehavior should not be rendered. A value of \"false\"  indicates  the AjaxBehavior should be rendered. \"false\" is the default.</p>",
+                "description": "<p class=\"changed_added_2_0\">A value of \"true\" indicates  the  AjaxBehavior should not be rendered. A value of \"false\"  indicates  the AjaxBehavior should be rendered. \"false\" is the default.",
                 "type": "boolean"
             },
             {
                 "name": "event",
-                "description": "<p class=\"changed_added_2_0\">A String or  ValueExpression (that evalulates to a String) identifying the type of event  the Ajax action will apply to. If specified, it must be one of the  events supported by the component the Ajax behavior is being applied to.  For HTML components this would be the set of supported DOM events for the  component, plus \"action\" for Faces ActionSource components and \"valueChange\"  for Faces EditableValueHolder components. If not specified, the default  event is determined for the component. The DOM event name is the actual DOM  event name (for example: \"click\") as opposed to (for example: \"onclick\").</p>",
+                "description": "<p class=\"changed_added_2_0\">A String or  ValueExpression (that evalulates to a String) identifying the type of event  the Ajax action will apply to. If specified, it must be one of the  events supported by the component the Ajax behavior is being applied to.  For HTML components this would be the set of supported DOM events for the  component, plus \"action\" for Faces ActionSource components and \"valueChange\"  for Faces EditableValueHolder components. If not specified, the default  event is determined for the component. The DOM event name is the actual DOM  event name (for example: \"click\") as opposed to (for example: \"onclick\").",
                 "type": "string"
             },
             {
                 "name": "execute",
-                "description": "<p class=\"changed_added_2_0\">Evaluates to  Collection<String>. This is a space separated list of  search expressions to  components that will participate in the \"execute\"  portion of the Request Processing Lifecycle. See the javadoc for  `SearchKeywordResolver` for the complete list of  keywords. If a literal is specified the ids must be  space delimited. If  not specified, the default value of \"@this\" is assumed. For  example, `@this clientIdOne clientIdTwo`.</p>",
+                "description": "<p class=\"changed_added_2_0\">Evaluates to  Collection<String>. This is a space separated list of  search expressions to  components that will participate in the \"execute\"  portion of the Request Processing Lifecycle. See the javadoc for  `SearchKeywordResolver` for the complete list of  keywords. If a literal is specified the ids must be  space delimited. If  not specified, the default value of \"@this\" is assumed. For  example, `@this clientIdOne clientIdTwo`.",
                 "type": "string"
             },
             {
                 "name": "immediate",
-                "description": "<p class=\"changed_added_2_0\">If \"true\" behavior events  generated from this behavior  are broadcast during Apply Request Values phase. Otherwise, the  events will be  broadcast during Invoke Aplications phase</p>",
+                "description": "<p class=\"changed_added_2_0\">If \"true\" behavior events  generated from this behavior  are broadcast during Apply Request Values phase. Otherwise, the  events will be  broadcast during Invoke Aplications phase",
                 "type": "boolean"
             },
             {
                 "name": "listener",
-                "description": "<p class=\"changed_added_2_0\">Method expression referencing  a method  that will be called when an AjaxBehaviorEvent has been  broadcast for the listener.</p>",
+                "description": "<p class=\"changed_added_2_0\">Method expression referencing  a method  that will be called when an AjaxBehaviorEvent has been  broadcast for the listener.",
                 "type": "string"
             },
             {
                 "name": "onerror",
-                "description": "<p class=\"changed_added_2_0\">The name of the JavaScript  function that will handle errors.</p>",
+                "description": "<p class=\"changed_added_2_0\">The name of the JavaScript  function that will handle errors.",
                 "type": "string"
             },
             {
                 "name": "onevent",
-                "description": "<p class=\"changed_added_2_0\">The name of the JavaScript  function that will handle UI events.</p>",
+                "description": "<p class=\"changed_added_2_0\">The name of the JavaScript  function that will handle UI events.",
                 "type": "string"
             },
             {
                 "name": "render",
-                "description": "<p class=\"changed_added_2_0\">Evaluates to  Collection<String>. The search expressions to  components that will participate in the \"render\" portion  of the Request Processing Lifecycle. See the javadoc for  `SearchKeywordResolver` for the complete list of  keywords. If a literal is specified the identifiers must  be space delimited. If not specified, the  default value of \"@none\" is assumed. For example, `@this  clientIdOne clientIdTwo`.</p>",
+                "description": "<p class=\"changed_added_2_0\">Evaluates to  Collection<String>. The search expressions to  components that will participate in the \"render\" portion  of the Request Processing Lifecycle. See the javadoc for  `SearchKeywordResolver` for the complete list of  keywords. If a literal is specified the identifiers must  be space delimited. If not specified, the  default value of \"@none\" is assumed. For example, `@this  clientIdOne clientIdTwo`.",
                 "type": "string"
             },
             {
                 "name": "resetValues",
-                "description": "<p class=\"changed_added_2_2\">Reset specific input values.  Interpret the value of the `render` attribute as  a space separated list of client identifiers suitable for  passing directly to `UIViewRoot.resetValues()`.  The implementation must cause an `ActionListener`  to be attached to the `ActionSource` component  in which this tag is nested that calls  `UIViewRoot.resetValues()` passing the value of  the `render` attribute as the argument.</p>",
+                "description": "<p class=\"changed_added_2_2\">Reset specific input values.  Interpret the value of the `render` attribute as  a space separated list of client identifiers suitable for  passing directly to `UIViewRoot.resetValues()`.  The implementation must cause an `ActionListener`  to be attached to the `ActionSource` component  in which this tag is nested that calls  `UIViewRoot.resetValues()` passing the value of  the `render` attribute as the argument.",
                 "type": "boolean"
             }
         ]
     },
     "f:attribute": {
         "name": "f:attribute",
-        "description": "Add an attribute to the UIComponent associated with the closest  parent UIComponent tag.</p>",
+        "description": "Add an attribute to the UIComponent associated with the closest  parent UIComponent tag.",
         "attributes": [
             {
                 "name": "name",
-                "description": "The name of the component attribute to be set.</p>",
+                "description": "The name of the component attribute to be set.",
                 "type": "string"
             },
             {
                 "name": "value",
-                "description": "The value of the component attribute to be set.</p>",
+                "description": "The value of the component attribute to be set.",
                 "type": "string"
             }
         ]
     },
     "f:attributes": {
         "name": "f:attributes",
-        "description": "<p class=\"changed_added_2_2\">  Add attributes to the UIComponent associated with the closest  parent UIComponent tag.  For each `Map.Entry` in the `Map<String, Object>`  referenced by the value attribute of this tag, take the following action.  If `parent.getAttributes().containsKey(entry.getKey())` returns  `true`, take no action for this entry. Otherwise, if  `entry.getValue()` is a `ValueExpression` call  `parent.setValueExpression(entry.getKey(), entry.getValue())`.  Otherwise, call `parent.getAttributes.put(entry.getKey(), entry.getValue()).`  </p>",
+        "description": "<p class=\"changed_added_2_2\">  Add attributes to the UIComponent associated with the closest  parent UIComponent tag.  For each `Map.Entry` in the `Map<String, Object>`  referenced by the value attribute of this tag, take the following action.  If `parent.getAttributes().containsKey(entry.getKey())` returns  `true`, take no action for this entry. Otherwise, if  `entry.getValue()` is a `ValueExpression` call  `parent.setValueExpression(entry.getKey(), entry.getValue())`.  Otherwise, call `parent.getAttributes.put(entry.getKey(), entry.getValue()).`",
         "attributes": [
             {
                 "name": "value",
-                "description": "<p class=\"changed_added_2_2\">An EL `ValueExpression` that evaluates to a `Map<String, Object>`.</p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_2\">An EL `ValueExpression` that evaluates to a `Map<String, Object>`.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:convertDateTime": {
         "name": "f:convertDateTime",
-        "description": "Register a  DateTimeConverter instance on the UIComponent associated  with the closest parent UIComponent tag.</p>",
+        "description": "Register a  DateTimeConverter instance on the UIComponent associated  with the closest parent UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an instance of  jakarta.faces.convert.DateTimeConverter.</p>",
+                "description": "A ValueExpression that evaluates to an instance of  jakarta.faces.convert.DateTimeConverter.",
                 "type": "string"
             },
             {
                 "name": "dateStyle",
-                "description": "Predefined  formatting style which determines how the date component  of a date string is to be formatted and parsed. Applied  only if type is \"date\", \"both\", \"localDate\",  \"localDateTime\", or \"zonedDateTime\". Valid values  are \"default\", \"short\", \"medium\", \"long\", and \"full\".  Default value is \"default\". If a `java.time`  formatter is being used, yet the dateStyle is set to \"default\",  the value \"medium\" is assumed.</p>",
+                "description": "Predefined  formatting style which determines how the date component  of a date string is to be formatted and parsed. Applied  only if type is \"date\", \"both\", \"localDate\",  \"localDateTime\", or \"zonedDateTime\". Valid values  are \"default\", \"short\", \"medium\", \"long\", and \"full\".  Default value is \"default\". If a `java.time`  formatter is being used, yet the dateStyle is set to \"default\",  the value \"medium\" is assumed.",
                 "type": "string"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "locale",
-                "description": "Locale whose predefined styles for dates and times are used  during formatting or parsing. If not specified, the Locale  returned by FacesContext.getViewRoot().getLocale() will be used.  Value must be either a VB expression that evaluates to a  java.util.Locale instance, or a String that is valid to pass as  the first argument to the constructor java.util.Locale(String  language, String country). The empty string is passed as the  second argument.</p>",
+                "description": "Locale whose predefined styles for dates and times are used  during formatting or parsing. If not specified, the Locale  returned by FacesContext.getViewRoot().getLocale() will be used.  Value must be either a VB expression that evaluates to a  java.util.Locale instance, or a String that is valid to pass as  the first argument to the constructor java.util.Locale(String  language, String country). The empty string is passed as the  second argument.",
                 "type": "string"
             },
             {
                 "name": "pattern",
-                "description": "Custom formatting pattern which determines how the  date/time string should be formatted and parsed.</p>",
+                "description": "Custom formatting pattern which determines how the  date/time string should be formatted and parsed.",
                 "type": "string"
             },
             {
                 "name": "timeStyle",
-                "description": "Predefined  formatting style which determines how the time component of a  date string is to be formatted and  parsed. Applied only if type is \"time\", \"both\",  \"localTime\" or  \"offsetTime\".  Valid values are \"default\", \"short\", \"medium\", \"long\",  and \"full\". Default value is \"default\". If a `java.time`  formatter is being used, yet the timeStyle is set to \"default\",  the value \"medium\" is assumed.</p>",
+                "description": "Predefined  formatting style which determines how the time component of a  date string is to be formatted and  parsed. Applied only if type is \"time\", \"both\",  \"localTime\" or  \"offsetTime\".  Valid values are \"default\", \"short\", \"medium\", \"long\",  and \"full\". Default value is \"default\". If a `java.time`  formatter is being used, yet the timeStyle is set to \"default\",  the value \"medium\" is assumed.",
                 "type": "string"
             },
             {
                 "name": "timeZone",
-                "description": "Time zone in which to interpret any time information in the date  String. Value must be either a ValueExpression that evaluates to  a java.util.TimeZone instance, or a String that is a timezone ID  as described in the javadocs for  java.util.TimeZone.getTimeZone().</p>",
+                "description": "Time zone in which to interpret any time information in the date  String. Value must be either a ValueExpression that evaluates to  a java.util.TimeZone instance, or a String that is a timezone ID  as described in the javadocs for  java.util.TimeZone.getTimeZone().",
                 "type": "string"
             },
             {
                 "name": "type",
-                "description": "Specifies what  contents the string value will be formatted to include, or  parsed expecting. Valid values are \"date\", \"time\",  \"both\", \"localDate\",  \"localDateTime\", \"localTime\", \"offsetTime\",  \"offsetDateTime\", and \"zonedDateTime\". The values starting  with \"local\", \"offset\" and \"zoned\" correspond to Java SE 8  Date Time API classes in package `java.time` with  the name derived by upper casing the first letter. For  example, `java.time.LocalDate` for the value  \"localDate\". Default value is \"date\".</p>",
+                "description": "Specifies what  contents the string value will be formatted to include, or  parsed expecting. Valid values are \"date\", \"time\",  \"both\", \"localDate\",  \"localDateTime\", \"localTime\", \"offsetTime\",  \"offsetDateTime\", and \"zonedDateTime\". The values starting  with \"local\", \"offset\" and \"zoned\" correspond to Java SE 8  Date Time API classes in package `java.time` with  the name derived by upper casing the first letter. For  example, `java.time.LocalDate` for the value  \"localDate\". Default value is \"date\".",
                 "type": "string"
             }
         ]
@@ -168,78 +172,78 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an instance of  jakarta.faces.convert.NumberConverter.</p>",
+                "description": "A ValueExpression that evaluates to an instance of  jakarta.faces.convert.NumberConverter.",
                 "type": "string"
             },
             {
                 "name": "currencyCode",
-                "description": "ISO 4217 currency code, applied only when  formatting currencies.</p>",
+                "description": "ISO 4217 currency code, applied only when  formatting currencies.",
                 "type": "string"
             },
             {
                 "name": "currencySymbol",
-                "description": "Currency symbol, applied only when formatting  currencies.</p>",
+                "description": "Currency symbol, applied only when formatting  currencies.",
                 "type": "string"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "groupingUsed",
-                "description": "Flag specifying whether formatted output will  contain grouping separators. Expressions must  evaluate to a boolean. Default value  is true.</p>",
+                "description": "Flag specifying whether formatted output will  contain grouping separators. Expressions must  evaluate to a boolean. Default value  is true.",
                 "type": "boolean"
             },
             {
                 "name": "integerOnly",
-                "description": "Flag specifying whether only the integer part  of the value will be formatted and parsed.  Expressions must evaluate to a boolean.  Default value is false.</p>",
+                "description": "Flag specifying whether only the integer part  of the value will be formatted and parsed.  Expressions must evaluate to a boolean.  Default value is false.",
                 "type": "boolean"
             },
             {
                 "name": "locale",
-                "description": "Locale  whose  predefined styles for numbers are used during formatting  and parsing. If not specified, the Locale returned by  FacesContext.getViewRoot().getLocale() will be used.  Expressions must evaluate to a java.util.Locale or a String that is valid to  pass as the first argument to the constructor  java.util.Locale(String language, String country). The  empty string is passed as the second argument.</p>",
+                "description": "Locale  whose  predefined styles for numbers are used during formatting  and parsing. If not specified, the Locale returned by  FacesContext.getViewRoot().getLocale() will be used.  Expressions must evaluate to a java.util.Locale or a String that is valid to  pass as the first argument to the constructor  java.util.Locale(String language, String country). The  empty string is passed as the second argument.",
                 "type": "string"
             },
             {
                 "name": "maxFractionDigits",
-                "description": "Maximum number of digits that will be formatted  in the fractional portion of the output. Expressions  must evaluate to an int.</p>",
+                "description": "Maximum number of digits that will be formatted  in the fractional portion of the output. Expressions  must evaluate to an int.",
                 "type": "string"
             },
             {
                 "name": "maxIntegerDigits",
-                "description": "Maximum number of digits that will be formatted  in the integer portion of the output. Expressions  must evaluate to an int.</p>",
+                "description": "Maximum number of digits that will be formatted  in the integer portion of the output. Expressions  must evaluate to an int.",
                 "type": "string"
             },
             {
                 "name": "minFractionDigits",
-                "description": "Minimum number of digits that will be formatted  in the fractional portion of the output. Expressions  must evaluate to an int.</p>",
+                "description": "Minimum number of digits that will be formatted  in the fractional portion of the output. Expressions  must evaluate to an int.",
                 "type": "string"
             },
             {
                 "name": "minIntegerDigits",
-                "description": "Minimum number of digits that will be formatted  in the integer portion of the output. Expressions  must evaluate to an int.</p>",
+                "description": "Minimum number of digits that will be formatted  in the integer portion of the output. Expressions  must evaluate to an int.",
                 "type": "string"
             },
             {
                 "name": "pattern",
-                "description": "Custom formatting pattern which determins how the  number string should be formatted and parsed.</p>",
+                "description": "Custom formatting pattern which determins how the  number string should be formatted and parsed.",
                 "type": "string"
             },
             {
                 "name": "type",
-                "description": "Specifies how the number string will be formatted  and parsed. Valid values are \"number\", \"currency\",  and \"percent\". Default value is \"number\".</p>",
+                "description": "Specifies how the number string will be formatted  and parsed. Valid values are \"number\", \"currency\",  and \"percent\". Default value is \"number\".",
                 "type": "string"
             }
         ]
     },
     "f:converter": {
         "name": "f:converter",
-        "description": "Register a named Converter instance on the UIComponent  associated with the closest parent UIComponent tag.</p>",
+        "description": "Register a named Converter instance on the UIComponent  associated with the closest parent UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an object that  implements jakarta.faces.convert.Converter.</p>",
+                "description": "A ValueExpression that evaluates to an object that  implements jakarta.faces.convert.Converter.",
                 "type": "string"
             },
             {
@@ -249,207 +253,215 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             }
         ]
     },
     "f:event": {
         "name": "f:event",
-        "description": "<p class=\"changed_added_2_0\">Allow Jakarta Faces page authors to  install `ComponentSystemEventListener`  instances  on a component in a page.</p>",
+        "description": "<p class=\"changed_added_2_0\">Allow Jakarta Faces page authors to  install `ComponentSystemEventListener`  instances  on a component in a page.",
         "attributes": [
             {
                 "name": "listener",
-                "description": "<p class=\"changed_modified_2_0_rev_a\">The expression must  evaluate to a public method that takes a  `ComponentSystemEvent` parameter, with a return  type of void, or to a public method that takes no  arguments with a return type of void. In the latter case,  the method has no way of easily knowing where the event  came from, but this can be useful in cases where a  notification is needed that \"an event happened\".</p>",
-                "type": "string"
+                "description": "<p class=\"changed_modified_2_0_rev_a\">The expression must  evaluate to a public method that takes a  `ComponentSystemEvent` parameter, with a return  type of void, or to a public method that takes no  arguments with a return type of void. In the latter case,  the method has no way of easily knowing where the event  came from, but this can be useful in cases where a  notification is needed that \"an event happened\".",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "type",
-                "description": "<p class=\"changed_added_2_0\">Name of the event for which  to install a listener. The following table lists the  valid values for this attribute, and the corresponding  event type for which the listener action is  registered.</p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_0\">Name of the event for which  to install a listener. The following table lists the  valid values for this attribute, and the corresponding  event type for which the listener action is  registered.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:facet": {
         "name": "f:facet",
-        "description": "Register a named  facet on the UIComponent associated with the closest parent  UIComponent tag.</p>",
+        "description": "Register a named  facet on the UIComponent associated with the closest parent  UIComponent tag.",
         "attributes": [
             {
                 "name": "name",
-                "description": "Name of the facet to be created.</p>",
-                "type": "string"
+                "description": "Name of the facet to be created.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:importConstants": {
         "name": "f:importConstants",
-        "description": "<p class=\"changed_added_2_3\">  Used inside of the metadata facet of a view, this tag will import a mapping of all constant field values of the given type in the current view.  Constant field values are all `public static final` fields of the given type.  The map key represents the constant field name as `String`.  The map value represents the actual constant field value.  This works for classes, interfaces and enums.  </p>",
+        "description": "<p class=\"changed_added_2_3\">  Used inside of the metadata facet of a view, this tag will import a mapping of all constant field values of the given type in the current view.  Constant field values are all `public static final` fields of the given type.  The map key represents the constant field name as `String`.  The map value represents the actual constant field value.  This works for classes, interfaces and enums.",
         "attributes": [
             {
                 "name": "type",
-                "description": "The fully qualified name of the type to import the constant field values for.  </p>",
-                "type": "string"
+                "description": "The fully qualified name of the type to import the constant field values for.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "var",
-                "description": "Name of request scope attribute under which constants will be exposed as a Map.  Defaults to the simple name of the given type.  </p>",
+                "description": "Name of request scope attribute under which constants will be exposed as a Map.  Defaults to the simple name of the given type.",
                 "type": "string"
             }
         ]
     },
     "f:loadBundle": {
         "name": "f:loadBundle",
-        "description": "Load a resource bundle localized for the Locale of the current  view, and expose it as a java.util.Map in the request attributes  of the current request under the key specified by the value of the  \"var\" attribute of this tag. The Map must behave such that if a  get() call is made for a key that does not exist in the Map, the  literal string ???KEY??? is returned from the Map, where KEY is  the key being looked up in the Map, instead of a  MissingResourceException being thrown. If the ResourceBundle does  not exist, a TagAttributeException must be thrown.</p>",
+        "description": "Load a resource bundle localized for the Locale of the current  view, and expose it as a java.util.Map in the request attributes  of the current request under the key specified by the value of the  \"var\" attribute of this tag. The Map must behave such that if a  get() call is made for a key that does not exist in the Map, the  literal string ???KEY??? is returned from the Map, where KEY is  the key being looked up in the Map, instead of a  MissingResourceException being thrown. If the ResourceBundle does  not exist, a TagAttributeException must be thrown.",
         "attributes": [
             {
                 "name": "basename",
-                "description": "Base name of the resource bundle  to be loaded.</p>",
+                "description": "Base name of the resource bundle  to be loaded.",
                 "type": "string"
             },
             {
                 "name": "var",
-                "description": "Name of a request scope attribute under which  the resource bundle will be exposed as a Map.</p>",
-                "type": "string"
+                "description": "Name of a request scope attribute under which  the resource bundle will be exposed as a Map.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:metadata": {
         "name": "f:metadata",
-        "description": "<p class=\"changed_added_2_0\">Declare the metadata  facet for this view. This must be a child of the  `<f:view>`. This tag  must reside within the top level XHTML file for the given  viewId, or in a  template client, but not in a template. The  implementation must insure that the direct child of the  facet is a `UIPanel`, even if there  is only one child of the facet. The implementation must set  the id of the `UIPanel` to be the  value of the  `UIViewRoot.METADATA_FACET_NAME`  symbolic constant.</p>",
+        "description": "<p class=\"changed_added_2_0\">Declare the metadata  facet for this view. This must be a child of the  `<f:view>`. This tag  must reside within the top level XHTML file for the given  viewId, or in a  template client, but not in a template. The  implementation must insure that the direct child of the  facet is a `UIPanel`, even if there  is only one child of the facet. The implementation must set  the id of the `UIPanel` to be the  value of the  `UIViewRoot.METADATA_FACET_NAME`  symbolic constant.",
         "attributes": []
     },
     "f:param": {
         "name": "f:param",
-        "description": "Add a child UIParameter  component to the UIComponent associated with the closest parent  UIComponent tag.</p>",
+        "description": "Add a child UIParameter  component to the UIComponent associated with the closest parent  UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "ValueExpression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.</p>",
+                "description": "ValueExpression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.",
                 "type": "string"
             },
             {
                 "name": "disable",
-                "description": "Flag enabling or disabling the inclusion of the  parameter. This flag is  consulted by renderers that consider the  `UIParameter` component associated with this  `<f:param>` during their rendering.  Such renderers include `jakarta.faces.Output  jakarta.faces.Link` and  `jakarta.faces.OutcomeTarget  jakarta.faces.Link`.</p>",
+                "description": "Flag enabling or disabling the inclusion of the  parameter. This flag is  consulted by renderers that consider the  `UIParameter` component associated with this  `<f:param>` during their rendering.  Such renderers include `jakarta.faces.Output  jakarta.faces.Link` and  `jakarta.faces.OutcomeTarget  jakarta.faces.Link`.",
                 "type": "string"
             },
             {
                 "name": "id",
-                "description": "Component identifier of the UIParameter component  to be created.</p>",
+                "description": "Component identifier of the UIParameter component  to be created.",
                 "type": "string"
             },
             {
                 "name": "name",
-                "description": "Name of the parameter to be created.</p>",
+                "description": "Name of the parameter to be created.",
                 "type": "string"
             },
             {
                 "name": "value",
-                "description": "Value of the parameter to be set.</p>",
+                "description": "Value of the parameter to be set.",
                 "type": "string"
             }
         ]
     },
     "f:passThroughAttribute": {
         "name": "f:passThroughAttribute",
-        "description": "<p class=\"changed_added_2_2\">Add an attribute to the  `passThroughAttributes Map` of the `UIComponent`  associated with the closest parent `UIComponent` tag.</p>",
+        "description": "<p class=\"changed_added_2_2\">Add an attribute to the  `passThroughAttributes Map` of the `UIComponent`  associated with the closest parent `UIComponent` tag.",
         "attributes": [
             {
                 "name": "name",
-                "description": "<p class=\"changed_added_2_2\">The name  of the pass through attribute. An attribute with this name,  and the corresponding value will appear on the outer most  markup element in the rendered markup for the component, as  specified in the overview for the HTML_BASIC RenderKit. If  the name of this attribute conflicts with  `Renderer` specific attribute, the value  specified here supercedes the one that would otherwise be  rendered by the `Renderer`</p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_2\">The name  of the pass through attribute. An attribute with this name,  and the corresponding value will appear on the outer most  markup element in the rendered markup for the component, as  specified in the overview for the HTML_BASIC RenderKit. If  the name of this attribute conflicts with  `Renderer` specific attribute, the value  specified here supercedes the one that would otherwise be  rendered by the `Renderer`",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "value",
-                "description": "<p class=\"changed_added_2_2\">The value  of the pass through attribute. </p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_2\">The value  of the pass through attribute.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:passThroughAttributes": {
         "name": "f:passThroughAttributes",
-        "description": "<p class=\"changed_added_2_2\">An EL `ValueExpression` that evaluates to a `Map<String, Object>`.</p>",
+        "description": "<p class=\"changed_added_2_2\">An EL `ValueExpression` that evaluates to a `Map<String, Object>`.",
         "attributes": [
             {
                 "name": "value",
-                "description": "<p class=\"changed_added_2_2\">An EL `ValueExpression` that evaluates to a `Map<String, Object>`.</p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_2\">An EL `ValueExpression` that evaluates to a `Map<String, Object>`.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:phaseListener": {
         "name": "f:phaseListener",
-        "description": "Register a PhaseListener instance on the UIViewRoot in which  this tag is nested.</p>",
+        "description": "Register a PhaseListener instance on the UIViewRoot in which  this tag is nested.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "Value binding expression that evaluates to an object that  implements jakarta.faces.event.PhaseListener.</p>",
+                "description": "Value binding expression that evaluates to an object that  implements jakarta.faces.event.PhaseListener.",
                 "type": "string"
             },
             {
                 "name": "type",
-                "description": "Fully qualified Java class name of a PhaseListener to be  created and registered.</p>",
+                "description": "Fully qualified Java class name of a PhaseListener to be  created and registered.",
                 "type": "string"
             }
         ]
     },
     "f:selectItem": {
         "name": "f:selectItem",
-        "description": "Add a child UISelectItem component to the UIComponent  associated with the closest parent UIComponent tag.</p>",
+        "description": "Add a child UISelectItem component to the UIComponent  associated with the closest parent UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "Value binding expression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.</p>",
+                "description": "Value binding expression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.",
                 "type": "string"
             },
             {
                 "name": "id",
-                "description": "Component identifier of the UISelectItem  component to be created.</p>",
+                "description": "Component identifier of the UISelectItem  component to be created.",
                 "type": "string"
             },
             {
                 "name": "itemDescription",
-                "description": "Description of this option, for use in  development tools.</p>",
+                "description": "Description of this option, for use in  development tools.",
                 "type": "string"
             },
             {
                 "name": "itemDisabled",
-                "description": "Flag indicating whether the option created  by this component is disabled. Expressions  must evaluate to a boolean. Default value  is false.</p>",
+                "description": "Flag indicating whether the option created  by this component is disabled. Expressions  must evaluate to a boolean. Default value  is false.",
                 "type": "boolean"
             },
             {
                 "name": "itemEscaped",
-                "description": "Flag indicating that characters that are sensitive in  the value of the `itemLabel`  attribute must be escaped. This flag is set to \"true\" by  default.</p>",
+                "description": "Flag indicating that characters that are sensitive in  the value of the `itemLabel`  attribute must be escaped. This flag is set to \"true\" by  default.",
                 "type": "string"
             },
             {
                 "name": "itemLabel",
-                "description": "Label to be displayed to the user  for this option.</p>",
+                "description": "Label to be displayed to the user  for this option.",
                 "type": "string"
             },
             {
                 "name": "itemValue",
-                "description": "Value to be returned to the server if this  option is selected by the user.</p>",
+                "description": "Value to be returned to the server if this  option is selected by the user.",
                 "type": "string"
             },
             {
                 "name": "noSelectionOption",
-                "description": "Flag indicating whether the option created by this  component represents the special \"no selection\"  option. Expressions must evaluate to a boolean.  Default value is false.</p>",
+                "description": "Flag indicating whether the option created by this  component represents the special \"no selection\"  option. Expressions must evaluate to a boolean.  Default value is false.",
                 "type": "boolean"
             },
             {
                 "name": "value",
-                "description": "Value binding expression pointing at a  SelectItem instance containing the  information for this option.</p>",
+                "description": "Value binding expression pointing at a  SelectItem instance containing the  information for this option.",
                 "type": "string"
             }
         ]
     },
     "f:selectItems": {
         "name": "f:selectItems",
-        "description": "Add a  child UISelectItems component to the UIComponent associated  with the closed parent UIComponent tag.</p>",
+        "description": "Add a  child UISelectItems component to the UIComponent associated  with the closed parent UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "Value binding expression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.</p>",
+                "description": "Value binding expression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.",
                 "type": "string"
             },
             {
@@ -459,32 +471,32 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "itemDescription",
-                "description": "<p class=\"changed_added_2_0\">evaluates to a String that  will  serve as the description to be shown for the item.</p>",
+                "description": "<p class=\"changed_added_2_0\">evaluates to a String that  will  serve as the description to be shown for the item.",
                 "type": "string"
             },
             {
                 "name": "itemDisabled",
-                "description": "<p class=\"changed_added_2_0\">evaluates to a boolean that  will  determine if the item value is selectable or not.</p>",
+                "description": "<p class=\"changed_added_2_0\">evaluates to a boolean that  will  determine if the item value is selectable or not.",
                 "type": "boolean"
             },
             {
                 "name": "itemLabel",
-                "description": "<p class=\"changed_added_2_0\">evaluates to a String that  will  serve as the label to be shown for the item.</p>",
+                "description": "<p class=\"changed_added_2_0\">evaluates to a String that  will  serve as the label to be shown for the item.",
                 "type": "string"
             },
             {
                 "name": "itemLabelEscaped",
-                "description": "<p class=\"changed_added_2_0\">evaluates to a boolean that will determine if the rendered markup for the item receives normal Faces HTML escaping or not. If not specified, the runtime must behave as if the value were `true`.</p>",
+                "description": "<p class=\"changed_added_2_0\">evaluates to a boolean that will determine if the rendered markup for the item receives normal Faces HTML escaping or not. If not specified, the runtime must behave as if the value were `true`.",
                 "type": "boolean"
             },
             {
                 "name": "itemValue",
-                "description": "<p class=\"changed_added_2_0\">This attribute lets you refer  to a property of the current member of the collection  referenced by the \"value\" attribute, using the value of the  \"var\" attribute as the base. For example,  #{n.id}.</p>",
+                "description": "<p class=\"changed_added_2_0\">This attribute lets you refer  to a property of the current member of the collection  referenced by the \"value\" attribute, using the value of the  \"var\" attribute as the base. For example,  #{n.id}.",
                 "type": "string"
             },
             {
                 "name": "noSelectionValue",
-                "description": "<p class=\"changed_added_2_0\">Is either an EL  expression pointing to the element in the value collection  whose value should be marked as a &#8220;no selection&#8221;  item, or a literal string that exactly matches the value of  the item in the collection that must be marked as the  &#8220;no selection&#8221; item. If the user selects such  an item **and** the field is marked as  required, then it will not pass validation.</p>",
+                "description": "<p class=\"changed_added_2_0\">Is either an EL  expression pointing to the element in the value collection  whose value should be marked as a &#8220;no selection&#8221;  item, or a literal string that exactly matches the value of  the item in the collection that must be marked as the  &#8220;no selection&#8221; item. If the user selects such  an item **and** the field is marked as  required, then it will not pass validation.",
                 "type": "boolean"
             },
             {
@@ -494,14 +506,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "var",
-                "description": "<p class=\"changed_added_2_0\">Expose the value from the  `value` attribute under this request  scoped key so that it  may be referred to in EL for the value of other attributes.</p>",
+                "description": "<p class=\"changed_added_2_0\">Expose the value from the  `value` attribute under this request  scoped key so that it  may be referred to in EL for the value of other attributes.",
                 "type": "string"
             }
         ]
     },
     "f:selectItemGroup": {
         "name": "f:selectItemGroup",
-        "description": "<p class=\"changed_added_4_0\">  **UISelectItemGroup** is a component that may be nested inside a `UISelectMany` or `UISelectOne` component,  and causes the addition of one `SelectItemGroup` of one or more `SelectItem` instances to the list of available options in the parent component.  This component accepts only children of type `UISelectItems` or `UISelectItem`.  </p>",
+        "description": "<p class=\"changed_added_4_0\">  **UISelectItemGroup** is a component that may be nested inside a `UISelectMany` or `UISelectOne` component,  and causes the addition of one `SelectItemGroup` of one or more `SelectItem` instances to the list of available options in the parent component.  This component accepts only children of type `UISelectItems` or `UISelectItem`.",
         "attributes": [
             {
                 "name": "id",
@@ -522,7 +534,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "f:selectItemGroups": {
         "name": "f:selectItemGroups",
-        "description": "<p class=\"changed_added_4_0\">  **UISelectItemGroups** is a component that may be nested inside a `UISelectMany` or `UISelectOne` component,  and causes the addition of one or more `SelectItemGroup` of one or more `SelectItem` instances to the list of available options in the parent component.  This component accepts only children of type `UISelectItems` or `UISelectItem`.  </p>",
+        "description": "<p class=\"changed_added_4_0\">  **UISelectItemGroups** is a component that may be nested inside a `UISelectMany` or `UISelectOne` component,  and causes the addition of one or more `SelectItemGroup` of one or more `SelectItem` instances to the list of available options in the parent component.  This component accepts only children of type `UISelectItems` or `UISelectItem`.",
         "attributes": [
             {
                 "name": "id",
@@ -558,137 +570,140 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "f:setPropertyActionListener": {
         "name": "f:setPropertyActionListener",
-        "description": "Register an ActionListener instance on the UIComponent  associated with the closest parent UIComponent tag.  This actionListener will cause the value given by the \"value\"  attribute to be set into the ValueExpression given by the \"target\"  attribute.</p>",
+        "description": "Register an ActionListener instance on the UIComponent  associated with the closest parent UIComponent tag.  This actionListener will cause the value given by the \"value\"  attribute to be set into the ValueExpression given by the \"target\"  attribute.",
         "attributes": [
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "target",
-                "description": "ValueExpression that is the destination of the value  attribute.</p>",
-                "type": "string"
+                "description": "ValueExpression that is the destination of the value  attribute.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "value",
-                "description": "ValueExpression to be stored as the value of the target  attribute.</p>",
-                "type": "string"
+                "description": "ValueExpression to be stored as the value of the target  attribute.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:subview": {
         "name": "f:subview",
-        "description": "<p class=\"changed_modified_4_0\">Naming Container tag for all Jakarta Faces core and  component tags. It is particularly useful when a nested section included via  <ui:include> or any tag that dynamically includes another  page is included more than once, potentially causing duplicate component IDs.  Each of those nested sections can then be wrapped in its own <f:subview>  with each an unique id.</p>",
+        "description": "<p class=\"changed_modified_4_0\">Naming Container tag for all Jakarta Faces core and  component tags. It is particularly useful when a nested section included via  <ui:include> or any tag that dynamically includes another  page is included more than once, potentially causing duplicate component IDs.  Each of those nested sections can then be wrapped in its own <f:subview>  with each an unique id.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "Value binding expression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.</p>",
+                "description": "Value binding expression to a backing bean  property bound to the component instance for  the UIComponent created by this tag.",
                 "type": "string"
             },
             {
                 "name": "id",
-                "description": "Component identifier of the UINamingContainer  component to be created.</p>",
-                "type": "string"
+                "description": "Component identifier of the UINamingContainer  component to be created.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "rendered",
-                "description": "Flag indicating whether this component (and its  children) should be rendered. Expressions must  evaluate to a boolean.</p>",
+                "description": "Flag indicating whether this component (and its  children) should be rendered. Expressions must  evaluate to a boolean.",
                 "type": "boolean"
             }
         ]
     },
     "f:validateBean": {
         "name": "f:validateBean",
-        "description": "A validator that  delegates the validation of the local value to the Bean  Validation API. The validationGroups attribute serves as a  filter that instructs the Bean Validation API which  contraints to enforce. If there are any constraint  violations reported by Bean Validation, the value is  considered invalid. An  instance of this validator can participate in class-level  validation provided the preconditions mentioned in  `<f:validateWholeBean />` are met. Please  see the documentation for `<f:validateWholeBean  />` and  `jakarta.faces.validator.BeanValidator.validate()` for  the specification and usage example.</p>",
+        "description": "A validator that  delegates the validation of the local value to the Bean  Validation API. The validationGroups attribute serves as a  filter that instructs the Bean Validation API which  contraints to enforce. If there are any constraint  violations reported by Bean Validation, the value is  considered invalid. An  instance of this validator can participate in class-level  validation provided the preconditions mentioned in  `<f:validateWholeBean />` are met. Please  see the documentation for `<f:validateWholeBean  />` and  `jakarta.faces.validator.BeanValidator.validate()` for  the specification and usage example.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an instance of  BeanValidator.</p>",
+                "description": "A ValueExpression that evaluates to an instance of  BeanValidator.",
                 "type": "string"
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "validationGroups",
-                "description": "A comma-separated list of validation groups. A validation group  is a fully-qualified class name.</p>",
+                "description": "A comma-separated list of validation groups. A validation group  is a fully-qualified class name.",
                 "type": "string"
             }
         ]
     },
     "f:validateDoubleRange": {
         "name": "f:validateDoubleRange",
-        "description": "Register a DoubleRangeValidator instance on the  UIComponent associated with the closest parent  UIComponent tag.</p>",
+        "description": "Register a DoubleRangeValidator instance on the  UIComponent associated with the closest parent  UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an instance of  DoubleRangeValidator.</p>",
+                "description": "A ValueExpression that evaluates to an instance of  DoubleRangeValidator.",
                 "type": "string"
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "maximum",
-                "description": "Maximum value allowed for this component.</p>",
+                "description": "Maximum value allowed for this component.",
                 "type": "string"
             },
             {
                 "name": "minimum",
-                "description": "Minimum value allowed for this component.</p>",
+                "description": "Minimum value allowed for this component.",
                 "type": "string"
             }
         ]
     },
     "f:validateLength": {
         "name": "f:validateLength",
-        "description": "Register a LengthValidator instance on the  UIComponent associated with the closest parent  UIComponent tag.</p>",
+        "description": "Register a LengthValidator instance on the  UIComponent associated with the closest parent  UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an instance of  LengthValidator.</p>",
+                "description": "A ValueExpression that evaluates to an instance of  LengthValidator.",
                 "type": "string"
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "maximum",
-                "description": "Maximum length allowed for this component.</p>",
+                "description": "Maximum length allowed for this component.",
                 "type": "string"
             },
             {
                 "name": "minimum",
-                "description": "Minimum length allowed for this component.</p>",
+                "description": "Minimum length allowed for this component.",
                 "type": "string"
             }
         ]
     },
     "f:validateLongRange": {
         "name": "f:validateLongRange",
-        "description": "Register a LongRangeValidator instance on the  UIComponent associated with the closest parent  UIComponent tag.</p>",
+        "description": "Register a LongRangeValidator instance on the  UIComponent associated with the closest parent  UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
@@ -697,22 +712,22 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "maximum",
-                "description": "Maximum value allowed for this component.</p>",
+                "description": "Maximum value allowed for this component.",
                 "type": "string"
             },
             {
                 "name": "minimum",
-                "description": "Minimum value allowed for this component.</p>",
+                "description": "Minimum value allowed for this component.",
                 "type": "string"
             }
         ]
@@ -723,29 +738,30 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an instance of  RegexValidator.</p>",
+                "description": "A ValueExpression that evaluates to an instance of  RegexValidator.",
                 "type": "string"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "pattern",
-                "description": "A regular expression pattern. Remember that, like in  all Java strings, backslash must be escaped with another  backslash.</p>",
-                "type": "string"
+                "description": "A regular expression pattern. Remember that, like in  all Java strings, backslash must be escaped with another  backslash.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:validateRequired": {
         "name": "f:validateRequired",
-        "description": "<p class=\"changed_added_2_0\">A validator that enforces  the presence of a value. It has the same affect as setting the  required attribute on a UIInput to true.</p>",
+        "description": "<p class=\"changed_added_2_0\">A validator that enforces  the presence of a value. It has the same affect as setting the  required attribute on a UIInput to true.",
         "attributes": [
             {
                 "name": "binding",
@@ -754,121 +770,123 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             }
         ]
     },
     "f:validateWholeBean": {
         "name": "f:validateWholeBean",
-        "description": "<p class=\"changed_added_2_3\">Support multi-field validation  by enabling class-level bean validation on CDI based backing  beans. This feature causes a temporary copy of the bean  referenced by the `value` attribute, for the sole  purpose of populating the bean with field values already  validated by `<f:validateBean />` and then  performing class-level validation on the copy. Regardless  of the result of the class-level validation, the copy is  discarded. This feature must explicitly be enabled by  setting the application parameter specified in the javadoc  for the symbolic constant  `jakarta.faces.validator.BeanValidator.ENABLE_VALIDATE_WHOLE_BEAN_PARAM_NAME`.  If this parameter is not set, or is set to false, this tag  must be a no-op. A non-normative example follows the  specification of the feature.</p>",
+        "description": "<p class=\"changed_added_2_3\">Support multi-field validation  by enabling class-level bean validation on CDI based backing  beans. This feature causes a temporary copy of the bean  referenced by the `value` attribute, for the sole  purpose of populating the bean with field values already  validated by `<f:validateBean />` and then  performing class-level validation on the copy. Regardless  of the result of the class-level validation, the copy is  discarded. This feature must explicitly be enabled by  setting the application parameter specified in the javadoc  for the symbolic constant  `jakarta.faces.validator.BeanValidator.ENABLE_VALIDATE_WHOLE_BEAN_PARAM_NAME`.  If this parameter is not set, or is set to false, this tag  must be a no-op. A non-normative example follows the  specification of the feature.",
         "attributes": [
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_3\">A boolean value enabling or  disabling this validation component.</p>",
+                "description": "<p class=\"changed_added_2_3\">A boolean value enabling or  disabling this validation component.",
                 "type": "boolean"
             },
             {
                 "name": "id",
-                "description": "<p class=\"changed_added_2_3\">Component identifier of the  UIInput component to be created.</p>",
+                "description": "<p class=\"changed_added_2_3\">Component identifier of the  UIInput component to be created.",
                 "type": "string"
             },
             {
                 "name": "validationGroups",
-                "description": "<p class=\"changed_added_2_3\">A comma-separated list of  validation groups. A validation group is a  fully-qualified class name.</p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_3\">A comma-separated list of  validation groups. A validation group is a  fully-qualified class name.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "value",
-                "description": "<p class=\"changed_added_2_3\">A ValueExpression referencing the bean to be validated.</p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_3\">A ValueExpression referencing the bean to be validated.",
+                "type": "string",
+                "required": true
             }
         ]
     },
     "f:validator": {
         "name": "f:validator",
-        "description": "Register  a named  Validator instance on the UIComponent associated with the  closest parent UIComponent tag.</p>",
+        "description": "Register  a named  Validator instance on the UIComponent associated with the  closest parent UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "A ValueExpression that evaluates to an object that implements  the jakarta.faces.validator.Validator interface.</p>",
+                "description": "A ValueExpression that evaluates to an object that implements  the jakarta.faces.validator.Validator interface.",
                 "type": "string"
             },
             {
                 "name": "disabled",
-                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.</p>",
+                "description": "<p class=\"changed_added_2_0\">A boolean value  enabling page level determination of whether or not this  validator is enabled on the enclosing component.",
                 "type": "boolean"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "validatorId",
-                "description": "Validator identifier of the Validator  to be created and registered.</p>",
+                "description": "Validator identifier of the Validator  to be created and registered.",
                 "type": "string"
             }
         ]
     },
     "f:valueChangeListener": {
         "name": "f:valueChangeListener",
-        "description": "Register a ValueChangeListener instance on the UIComponent  associated with the closest parent UIComponent tag.</p>",
+        "description": "Register a ValueChangeListener instance on the UIComponent  associated with the closest parent UIComponent tag.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "Value binding expression that evaluates to an object that  implements jakarta.faces.event.ValueChangeListener.</p>",
+                "description": "Value binding expression that evaluates to an object that  implements jakarta.faces.event.ValueChangeListener.",
                 "type": "string"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this attribute  refers  to the value of one of the exposed attached objects within the  composite component inside of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "type",
-                "description": "Fully qualified Java class name of a  ValueChangeListener to be created and registered.</p>",
+                "description": "Fully qualified Java class name of a  ValueChangeListener to be created and registered.",
                 "type": "string"
             }
         ]
     },
     "f:view": {
         "name": "f:view",
-        "description": "Container for all Jakarta Faces  core and component tags used on a  page.</p>",
+        "description": "Container for all Jakarta Faces  core and component tags used on a  page.",
         "attributes": [
             {
                 "name": "afterPhase",
-                "description": "MethodBinding pointing to a method that takes a  jakarta.faces.event.PhaseEvent and returns void. This  method will be called after every phase except for  restore view on an initial request.</p>",
+                "description": "MethodBinding pointing to a method that takes a  jakarta.faces.event.PhaseEvent and returns void. This  method will be called after every phase except for  restore view on an initial request.",
                 "type": "string"
             },
             {
                 "name": "beforePhase",
-                "description": "MethodBinding pointing to a method that takes a  jakarta.faces.event.PhaseEvent and returns void. This method  will be called before every phase except for restore view.</p>",
+                "description": "MethodBinding pointing to a method that takes a  jakarta.faces.event.PhaseEvent and returns void. This method  will be called before every phase except for restore view.",
                 "type": "string"
             },
             {
                 "name": "contentType",
-                "description": "<p class=\"changed_modified_2_0_rev_a\">Specifies the  content-type of the response.</p>",
+                "description": "<p class=\"changed_modified_2_0_rev_a\">Specifies the  content-type of the response.",
                 "type": "string"
             },
             {
                 "name": "contracts",
-                "description": "<p class=\"changed_added_2_2 changed_modified_2_3\">A comma separated list of  resource library contracts that may be used from within  the Facelets chain. If this attribute is present, it  must only be on the outer-most file in the chain of  files that started ultimately with a call to  `ViewDeclarationLanguage.createView()`. Any  use of this attribute on a non-outer-most file is undefined.</p>",
+                "description": "<p class=\"changed_added_2_2 changed_modified_2_3\">A comma separated list of  resource library contracts that may be used from within  the Facelets chain. If this attribute is present, it  must only be on the outer-most file in the chain of  files that started ultimately with a call to  `ViewDeclarationLanguage.createView()`. Any  use of this attribute on a non-outer-most file is undefined.",
                 "type": "string"
             },
             {
                 "name": "encoding",
-                "description": "<p class=\"changed_modified_2_0_rev_a\">Specifies the  character encoding that should be used for the  response.</p>",
+                "description": "<p class=\"changed_modified_2_0_rev_a\">Specifies the  character encoding that should be used for the  response.",
                 "type": "string"
             },
             {
                 "name": "locale",
-                "description": "Locale to use for localizing this page. Expressions  must evaluate to a java.util.Locale or to a String  that is converted to a Locale.</p>",
+                "description": "Locale to use for localizing this page. Expressions  must evaluate to a java.util.Locale or to a String  that is converted to a Locale.",
                 "type": "string"
             },
             {
@@ -878,19 +896,20 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "transient",
-                "description": "<p class=\"changed_added_2_2\">If  `true`, this view must not participate in  state saving or restoring. Note that transient views  may not be used with `@ViewScoped` managed  beans. The implementation must call  `setTransient()` on the  `UIViewRoot`, passing the value of the  attribute as specified in the markup.</p>",
+                "description": "<p class=\"changed_added_2_2\">If  `true`, this view must not participate in  state saving or restoring. Note that transient views  may not be used with `@ViewScoped` managed  beans. The implementation must call  `setTransient()` on the  `UIViewRoot`, passing the value of the  attribute as specified in the markup.",
                 "type": "boolean"
             }
         ]
     },
     "f:viewAction": {
         "name": "f:viewAction",
-        "description": "<p class=\"changed_added_2_2\">This action component specifies  an application-specific command (or action), using an EL  method expression, to be invoked during one of the Faces  lifecycle phases, by default <em>Invoke Application</em>.</p>",
+        "description": "<p class=\"changed_added_2_2\">This action component specifies  an application-specific command (or action), using an EL  method expression, to be invoked during one of the Faces  lifecycle phases, by default <em>Invoke Application</em>.",
         "attributes": [
             {
                 "name": "action",
-                "description": "MethodExpression representing the application action  to invoke when this component is activated by the user. The  expression must evaluate to a public method that takes no  parameters, and returns an Object (the toString() of which  is called to derive the logical outcome) which is passed to  the NavigationHandler for this application.</p>",
-                "type": "string"
+                "description": "MethodExpression representing the application action  to invoke when this component is activated by the user. The  expression must evaluate to a public method that takes no  parameters, and returns an Object (the toString() of which  is called to derive the logical outcome) which is passed to  the NavigationHandler for this application.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "actionListener",
@@ -899,83 +918,84 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "immediate",
-                "description": "Flag indicating that, if this component is activated  by the user, notifications should be delivered to  interested listeners and actions immediately (that is,  during Apply Request Values phase) rather than waiting  until Invoke Application phase.</p>",
+                "description": "Flag indicating that, if this component is activated  by the user, notifications should be delivered to  interested listeners and actions immediately (that is,  during Apply Request Values phase) rather than waiting  until Invoke Application phase.",
                 "type": "boolean"
             },
             {
                 "name": "onPostback",
-                "description": "View actions are most commonly used on the initial  view request. Therefore, view actions do not operate on  postback, by default. This attribute enables a view action  to operate on postback.</p>",
+                "description": "View actions are most commonly used on the initial  view request. Therefore, view actions do not operate on  postback, by default. This attribute enables a view action  to operate on postback.",
                 "type": "boolean"
             },
             {
                 "name": "phase",
-                "description": "Specifies the phase in which the action invocation  should occur using the name of the phase constant in the  PhaseId class (the case does not matter). The value must  be one of APPLY_REQUEST_VALUES, PROCESS_VALIDATIONS,  UPDATE_MODEL_VALUES, or INVOKE_APPLICATION. The default  is INVOKE_APPLICATION.</p>",
+                "description": "Specifies the phase in which the action invocation  should occur using the name of the phase constant in the  PhaseId class (the case does not matter). The value must  be one of APPLY_REQUEST_VALUES, PROCESS_VALIDATIONS,  UPDATE_MODEL_VALUES, or INVOKE_APPLICATION. The default  is INVOKE_APPLICATION.",
                 "type": "string"
             },
             {
                 "name": "rendered",
-                "description": "Like all children of `<f:metadata>`,  a view action has no visual representation in the view.  This attribute has exactly the same effect on a view action  as the `rendered` attribute has on a visual  component. Specifically, if the value of this attribute  evaluates to `false` the component has no  effect.</p>",
+                "description": "Like all children of `<f:metadata>`,  a view action has no visual representation in the view.  This attribute has exactly the same effect on a view action  as the `rendered` attribute has on a visual  component. Specifically, if the value of this attribute  evaluates to `false` the component has no  effect.",
                 "type": "boolean"
             }
         ]
     },
     "f:viewParam": {
         "name": "f:viewParam",
-        "description": "<p class=\"changed_added_2_0\">Used inside of the  metadata facet of a view, this tag causes a UIViewParameter  to be attached as metadata for the current view. Because  `UIViewParameter` extends `UIInput`  all of the attributes and nested child content for any  `UIInput` tags are valid on this tag as well.</p>",
+        "description": "<p class=\"changed_added_2_0\">Used inside of the  metadata facet of a view, this tag causes a UIViewParameter  to be attached as metadata for the current view. Because  `UIViewParameter` extends `UIInput`  all of the attributes and nested child content for any  `UIInput` tags are valid on this tag as well.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "The ValueExpression linking this component to a property in a  backing bean.</p>",
+                "description": "The ValueExpression linking this component to a property in a  backing bean.",
                 "type": "string"
             },
             {
                 "name": "converter",
-                "description": "Converter instance registered with this component.</p>",
+                "description": "Converter instance registered with this component.",
                 "type": "string"
             },
             {
                 "name": "converterMessage",
-                "description": "A ValueExpression enabled attribute that, if present, will be  used as the text of the converter message, replacing any message  that comes from the converter.</p>",
+                "description": "A ValueExpression enabled attribute that, if present, will be  used as the text of the converter message, replacing any message  that comes from the converter.",
                 "type": "string"
             },
             {
                 "name": "for",
-                "description": "<p class=\"changed_added_2_0\">If present, this  attribute refers to the value of one of the exposed  attached objects within the composite component inside  of which this tag is nested.</p>",
+                "description": "<p class=\"changed_added_2_0\">If present, this  attribute refers to the value of one of the exposed  attached objects within the composite component inside  of which this tag is nested.",
                 "type": "string"
             },
             {
                 "name": "id",
-                "description": "The component identifier for this component. This value must be  unique within the closest parent component that is a naming  container.</p>",
+                "description": "The component identifier for this component. This value must be  unique within the closest parent component that is a naming  container.",
                 "type": "string"
             },
             {
                 "name": "name",
-                "description": "<p class=\"changed_modified_2_0_rev_a\">The name  of the request parameter from which the value for this  component is retrieved on an initial request or to  override the stored value on a postback.</p>",
-                "type": "string"
+                "description": "<p class=\"changed_modified_2_0_rev_a\">The name  of the request parameter from which the value for this  component is retrieved on an initial request or to  override the stored value on a postback.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "required",
-                "description": "Flag indicating that the user is required to provide a submitted  value for this input component.</p>",
+                "description": "Flag indicating that the user is required to provide a submitted  value for this input component.",
                 "type": "string"
             },
             {
                 "name": "requiredMessage",
-                "description": "A ValueExpression enabled attribute that, if present, will be  used as the text of the validation message for the \"required\"  facility, if the \"required\" facility is used.</p>",
+                "description": "A ValueExpression enabled attribute that, if present, will be  used as the text of the validation message for the \"required\"  facility, if the \"required\" facility is used.",
                 "type": "string"
             },
             {
                 "name": "validator",
-                "description": "MethodExpression representing a validator method that will be  called  during Process Validations to perform correctness checks on the  value of this component. The expression must evaluate to a  public  method that takes FacesContext, UIComponent, and Object  parameters,  with a return type of void.</p>",
+                "description": "MethodExpression representing a validator method that will be  called  during Process Validations to perform correctness checks on the  value of this component. The expression must evaluate to a  public  method that takes FacesContext, UIComponent, and Object  parameters,  with a return type of void.",
                 "type": "string"
             },
             {
                 "name": "validatorMessage",
-                "description": "A ValueExpression enabled attribute that, if present, will be  used as the text of the validator message, replacing any  message that comes from the validator.</p>",
+                "description": "A ValueExpression enabled attribute that, if present, will be  used as the text of the validator message, replacing any  message that comes from the validator.",
                 "type": "string"
             },
             {
                 "name": "value",
-                "description": "A ValueExpression to which the value of the request parameter, as  determined by the name attribute, is bound. The resolved value of this  expression is used when encoding the view parameter into a bookmarkable link or  redirect URL with view parameter encoding enabled. If this attribute is omitted,  the value of the request parameter will instead be the local value of the  UIViewParameter.</p>",
+                "description": "A ValueExpression to which the value of the request parameter, as  determined by the name attribute, is bound. The resolved value of this  expression is used when encoding the view parameter into a bookmarkable link or  redirect URL with view parameter encoding enabled. If this attribute is omitted,  the value of the request parameter will instead be the local value of the  UIViewParameter.",
                 "type": "string"
             },
             {
@@ -992,61 +1012,62 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "f:websocket": {
         "name": "f:websocket",
-        "description": "<p class=\"changed_added_2_3\">Registers a websocket push  connection in client side by rendering the necessary scripts.  Push messages can be sent from server side via  `jakarta.faces.push.PushContext` interface. See also  `jakarta.faces.push.Push` API documentation for an  elaborate instruction on how to use  `<f:websocket>`. </p>",
+        "description": "<p class=\"changed_added_2_3\">Registers a websocket push  connection in client side by rendering the necessary scripts.  Push messages can be sent from server side via  `jakarta.faces.push.PushContext` interface. See also  `jakarta.faces.push.Push` API documentation for an  elaborate instruction on how to use  `<f:websocket>`.",
         "attributes": [
             {
                 "name": "binding",
-                "description": "<p class=\"changed_added_2_3\">  Value binding expression to a backing bean property bound to the component instance for the `UIComponent` created by this tag.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  Value binding expression to a backing bean property bound to the component instance for the `UIComponent` created by this tag.",
                 "type": "string"
             },
             {
                 "name": "id",
-                "description": "<p class=\"changed_added_2_3\">  Component identifier of the `UIWebsocket` component to be created.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  Component identifier of the `UIWebsocket` component to be created.",
                 "type": "string"
             },
             {
                 "name": "channel",
-                "description": "<p class=\"changed_added_2_3\">  The name of the websocket channel.  It may not be an EL expression and it may only contain alphanumeric characters, hyphens, underscores and periods.  All open websockets on the same channel name will receive the same push notification from the server.  </p>",
-                "type": "string"
+                "description": "<p class=\"changed_added_2_3\">  The name of the websocket channel.  It may not be an EL expression and it may only contain alphanumeric characters, hyphens, underscores and periods.  All open websockets on the same channel name will receive the same push notification from the server.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "scope",
-                "description": "<p class=\"changed_added_2_3\">  The scope of the websocket channel.  It may not be an EL expression and allowed values are `application`, `session` and `view`, case insensitive.  When the value is `application`, then all channels with the same name throughout the application will receive the same push message.  When the value is `session`, then only the channels with the same name in the current user session will receive the same push message.  When the value is `view`, then only the channel in the current view will receive the push message.  The default scope is `application`.  When the `user` attribute is specified, then the default scope is `session`.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  The scope of the websocket channel.  It may not be an EL expression and allowed values are `application`, `session` and `view`, case insensitive.  When the value is `application`, then all channels with the same name throughout the application will receive the same push message.  When the value is `session`, then only the channels with the same name in the current user session will receive the same push message.  When the value is `view`, then only the channel in the current view will receive the push message.  The default scope is `application`.  When the `user` attribute is specified, then the default scope is `session`.",
                 "type": "string"
             },
             {
                 "name": "user",
-                "description": "<p class=\"changed_added_2_3\">  The user identifier of the websocket channel, so that user-targeted push messages can be sent.  It must implement `Serializable` and preferably have low memory footprint.  Suggestion: use `#{request.remoteUser}` or `#{someLoggedInUser.id}`.  All open websockets on the same channel and user will receive the same push message from the server.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  The user identifier of the websocket channel, so that user-targeted push messages can be sent.  It must implement `Serializable` and preferably have low memory footprint.  Suggestion: use `#{request.remoteUser}` or `#{someLoggedInUser.id}`.  All open websockets on the same channel and user will receive the same push message from the server.",
                 "type": "string"
             },
             {
                 "name": "onopen",
-                "description": "<p class=\"changed_added_2_3\">  The JavaScript event handler function that is invoked when the websocket is opened.  The function will be invoked with one argument: the channel name.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  The JavaScript event handler function that is invoked when the websocket is opened.  The function will be invoked with one argument: the channel name.",
                 "type": "string"
             },
             {
                 "name": "onmessage",
-                "description": "<p class=\"changed_added_2_3\">  The JavaScript event handler function that is invoked when a push message is received from the server.  The function will be invoked with three arguments: the push message, the channel name and the raw `MessageEvent` itself.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  The JavaScript event handler function that is invoked when a push message is received from the server.  The function will be invoked with three arguments: the push message, the channel name and the raw `MessageEvent` itself.",
                 "type": "string"
             },
             {
                 "name": "onerror",
-                "description": "<p class=\"changed_added_4_0\">  The JavaScript event handler function that is invoked when a connection error has occurred and the websocket will attempt to reconnect.  The function will be invoked with three arguments: the error reason code, the channel name and the raw `CloseEvent` itself.  Note that this will not be invoked on final close of the websocket, even when the final close is caused by an error.  See also  RFC 6455 section 7.4.1  and  CloseCodes  API for an elaborate list of all close codes.  </p>",
+                "description": "<p class=\"changed_added_4_0\">  The JavaScript event handler function that is invoked when a connection error has occurred and the websocket will attempt to reconnect.  The function will be invoked with three arguments: the error reason code, the channel name and the raw `CloseEvent` itself.  Note that this will not be invoked on final close of the websocket, even when the final close is caused by an error.  See also  RFC 6455 section 7.4.1  and  CloseCodes  API for an elaborate list of all close codes.",
                 "type": "string"
             },
             {
                 "name": "onclose",
-                "description": "<p class=\"changed_added_2_3\">  The JavaScript event handler function that is invoked when the websocket is closed and will not anymore attempt to reconnect.  The function will be invoked with three arguments: the close reason code, the channel name and the raw `CloseEvent` itself.  Note that this will also be invoked when the close is caused by an error and that you can inspect the close reason code if an actual connection error occurred and which one (i.e. when the code is not 1000 or 1008).  See also  RFC 6455 section 7.4.1  and  CloseCodes  API for an elaborate list of all close codes.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  The JavaScript event handler function that is invoked when the websocket is closed and will not anymore attempt to reconnect.  The function will be invoked with three arguments: the close reason code, the channel name and the raw `CloseEvent` itself.  Note that this will also be invoked when the close is caused by an error and that you can inspect the close reason code if an actual connection error occurred and which one (i.e. when the code is not 1000 or 1008).  See also  RFC 6455 section 7.4.1  and  CloseCodes  API for an elaborate list of all close codes.",
                 "type": "string"
             },
             {
                 "name": "connected",
-                "description": "<p class=\"changed_added_2_3\">  Whether to (auto)connect the websocket or not.  Defaults to `true`.  It's interpreted as a JavaScript instruction whether to open or close the websocket push connection.  This attribute is implicitly re-evaluated on every ajax request by a `PreRenderViewEvent` listener on the `UIViewRoot`.  You can also explicitly set it to `false` and then manually control in JavaScript by `faces.push.open(clientId)` and `faces.push.close(clientId)`.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  Whether to (auto)connect the websocket or not.  Defaults to `true`.  It's interpreted as a JavaScript instruction whether to open or close the websocket push connection.  This attribute is implicitly re-evaluated on every ajax request by a `PreRenderViewEvent` listener on the `UIViewRoot`.  You can also explicitly set it to `false` and then manually control in JavaScript by `faces.push.open(clientId)` and `faces.push.close(clientId)`.",
                 "type": "boolean"
             },
             {
                 "name": "rendered",
-                "description": "<p class=\"changed_added_2_3\">  Whether to render the websocket scripts or not.  Defaults to `true`.  This attribute is implicitly re-evaluated on every ajax request by a `PreRenderViewEvent` listener on the `UIViewRoot`.  If the value changes to `false` while the websocket is already opened, then the websocket will implicitly be closed.  </p>",
+                "description": "<p class=\"changed_added_2_3\">  Whether to render the websocket scripts or not.  Defaults to `true`.  This attribute is implicitly re-evaluated on every ajax request by a `PreRenderViewEvent` listener on the `UIViewRoot`.  If the value changes to `false` while the websocket is already opened, then the websocket will implicitly be closed.",
                 "type": "boolean"
             }
         ]
@@ -1057,12 +1078,12 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             },
             {
                 "name": "disableClientWindow",
-                "description": "<p class=\"changed_added_2_2\">Disable appending the `ClientWindow` on the rendering of this element.</p>",
+                "description": "<p class=\"changed_added_2_2\">Disable appending the `ClientWindow` on the rendering of this element.",
                 "type": "boolean"
             }
         ]
@@ -1073,28 +1094,28 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             },
             {
                 "name": "disableClientWindow",
-                "description": "<p class=\"changed_added_2_2\">Disable appending the `ClientWindow` on the rendering of this element.</p>",
+                "description": "<p class=\"changed_added_2_2\">Disable appending the `ClientWindow` on the rendering of this element.",
                 "type": "boolean"
             }
         ]
     },
     "h:head": {
         "name": "h:head",
-        "description": "Render the markup for a `<head>` element.</p>",
+        "description": "Render the markup for a `<head>` element.",
         "attributes": []
     },
     "h:body": {
         "name": "h:body",
-        "description": "Render the markup for a `<body>` element.</p>",
+        "description": "Render the markup for a `<body>` element.",
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -1105,17 +1126,18 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             },
             {
                 "name": "action",
                 "description": "MethodExpression representing the application action to invoke  when this component is activated by the user. The expression  must evaluate to a public method that takes no parameters, and  returns an Object (the toString() of which is called to derive  the logical outcome) which is passed to the NavigationHandler  for this application.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "java.lang.Object action()"
             },
             {
                 "name": "actionListener",
-                "description": "MethodExpression representing an action listener method that  will be notified when this component is activated by the user.  The expression must evaluate to a public method that takes an  ActionEvent parameter, with a return type of void, or to a public method that takes no  arguments with a return type of void. In the latter case, the  method has no way of easily knowing where the event came from,  but this can be useful in cases where a notification is needed  that \"some action happened\".  </p>",
+                "description": "MethodExpression representing an action listener method that  will be notified when this component is activated by the user.  The expression must evaluate to a public method that takes an  ActionEvent parameter, with a return type of void, or to a public method that takes no  arguments with a return type of void. In the latter case, the  method has no way of easily knowing where the event came from,  but this can be useful in cases where a notification is needed  that \"some action happened\".",
                 "type": "string"
             },
             {
@@ -1160,7 +1182,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "image",
-                "description": "Absolute or relative URL of the  image to be displayed for this  button. If specified, this  \"input\" element will be of type  \"image\". Otherwise, it will be  of the type specified by the  \"type\" property with a label  specified by the \"value\"  property. Note  that if the value of this  attribute starts with \"/\", the  rendered value for this  attribute will be prefixed with  the context-root for this  application.  </p>",
+                "description": "Absolute or relative URL of the  image to be displayed for this  button. If specified, this  \"input\" element will be of type  \"image\". Otherwise, it will be  of the type specified by the  \"type\" property with a label  specified by the \"value\"  property. Note  that if the value of this  attribute starts with \"/\", the  rendered value for this  attribute will be prefixed with  the context-root for this  application.",
                 "type": "string"
             },
             {
@@ -1282,21 +1304,22 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:commandLink": {
         "name": "h:commandLink",
-        "description": "Render an HTML \"a\"  anchor  element that acts like a form submit button when  clicked.</p>",
+        "description": "Render an HTML \"a\"  anchor  element that acts like a form submit button when  clicked.",
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             },
             {
                 "name": "action",
                 "description": "MethodExpression representing the application action to invoke  when this component is activated by the user. The expression  must evaluate to a public method that takes no parameters, and  returns an Object (the toString() of which is called to derive  the logical outcome) which is passed to the NavigationHandler  for this application.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "java.lang.Object action()"
             },
             {
                 "name": "actionListener",
-                "description": "MethodExpression representing an action listener method that  will be notified when this component is activated by the user.  The expression must evaluate to a public method that takes an  ActionEvent parameter, with a return type of void, or to a public method that takes no  arguments with a return type of void. In the latter case, the  method has no way of easily knowing where the event came from,  but this can be useful in cases where a notification is needed  that \"some action happened\".  </p>",
+                "description": "MethodExpression representing an action listener method that  will be notified when this component is activated by the user.  The expression must evaluate to a public method that takes an  ActionEvent parameter, with a return type of void, or to a public method that takes no  arguments with a return type of void. In the latter case, the  method has no way of easily knowing where the event came from,  but this can be useful in cases where a notification is needed  that \"some action happened\".",
                 "type": "string"
             },
             {
@@ -1478,7 +1501,8 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "Name of JavaScript function to be declared, e.g. `name=\"functionName\"`.  This can be a namespaced function name, e.g. `name=\"ez.functionName\"`.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "autorun",
@@ -1488,7 +1512,8 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "action",
                 "description": "MethodExpression representing the application action to invoke when this component is activated by the user.  The expression must evaluate to a public method that takes no parameters,  and returns an `Object`.  The `toString()` of the returned `Object` is called to derive the logical outcome.  This outcome is passed to the `NavigationHandler` for this application.",
-                "type": "string"
+                "type": "string",
+                "methodSignature": "java.lang.Object action()"
             },
             {
                 "name": "actionListener",
@@ -1539,7 +1564,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:dataTable": {
         "name": "h:dataTable",
-        "description": "Renders an HTML \"table\" element compliant with the HTML 401  specification. Render the \"caption\" facet, if present, inside a  \"caption\" element immediately below the \"table\" element. If the  \"captionClass\" attribute is specified, render its value as the  value of the \"class\" attribute on the \"caption\" element. If the  \"captionStyle\" attribute is specified, render its value as the  value of the \"style\" attribute on the \"caption\" element.</p>",
+        "description": "Renders an HTML \"table\" element compliant with the HTML 401  specification. Render the \"caption\" facet, if present, inside a  \"caption\" element immediately below the \"table\" element. If the  \"captionClass\" attribute is specified, render its value as the  value of the \"class\" attribute on the \"caption\" element. If the  \"captionStyle\" attribute is specified, render its value as the  value of the \"style\" attribute on the \"caption\" element.",
         "attributes": [
             {
                 "name": "first",
@@ -1728,7 +1753,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -1864,14 +1889,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:graphicImage": {
         "name": "h:graphicImage",
-        "description": "Renders an HTML \"img\"  element. Render the clientId as the value of the \"id\"  attribute.</p>",
+        "description": "Renders an HTML \"img\"  element. Render the clientId as the value of the \"id\"  attribute.",
         "attributes": [
             {
                 "name": "id",
@@ -1920,7 +1945,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "library",
-                "description": "The <em>libraryName</em>  for this resource.</p>",
+                "description": "The <em>libraryName</em>  for this resource.",
                 "type": "string"
             },
             {
@@ -1930,7 +1955,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "name",
-                "description": "The <em>resourceName</em>  for this resource.</p>",
+                "description": "The <em>resourceName</em>  for this resource.",
                 "type": "string"
             },
             {
@@ -2015,14 +2040,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:inputHidden": {
         "name": "h:inputHidden",
-        "description": "Renders an HTML \"input\" element of type  \"hidden\".</p>",
+        "description": "Renders an HTML \"input\" element of type  \"hidden\".",
         "attributes": [
             {
                 "name": "converter",
@@ -2076,7 +2101,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -2088,7 +2113,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:inputSecret": {
         "name": "h:inputSecret",
-        "description": "Renders an HTML \"input\" element of \"type\" \"password\".</p>",
+        "description": "Renders an HTML \"input\" element of \"type\" \"password\".",
         "attributes": [
             {
                 "name": "converter",
@@ -2142,7 +2167,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -2292,14 +2317,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:inputText": {
         "name": "h:inputText",
-        "description": "Renders an HTML \"input\"  element of \"type\" \"text\".</p>",
+        "description": "Renders an HTML \"input\"  element of \"type\" \"text\".",
         "attributes": [
             {
                 "name": "converter",
@@ -2358,7 +2383,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -2508,14 +2533,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:inputTextarea": {
         "name": "h:inputTextarea",
-        "description": "Renders an HTML \"textarea\" element.</p>",
+        "description": "Renders an HTML \"textarea\" element.",
         "attributes": [
             {
                 "name": "converter",
@@ -2569,7 +2594,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -2709,19 +2734,20 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:message": {
         "name": "h:message",
-        "description": "Render a single message for a specific component.</p>",
+        "description": "Render a single message for a specific component.",
         "attributes": [
             {
                 "name": "for",
                 "description": "Client identifier of the component for which to display  messages.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "id",
@@ -2820,14 +2846,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:messages": {
         "name": "h:messages",
-        "description": "The  same as for the  Message renderer, but output all the messages. If an \"id\" attribute has been  specified,  it must be rendered on the outermost markup corresponding to this  component. If the value of the \"layout\" attribute is  \"table\", render nested \"table\", \"tr\", and \"td\" elements, in that  order. If the value of the \"layout\" attribute is \"list\", or the  \"layout\" attribute is not specified, render nested \"ul\", \"li\"  elements, in that order. Output the value of the \"style\" attribute  as the value of the \"style\" attribute, output the value of the  \"styleClass\" attribute as the value of the \"class\" attribute, and  output the dir and lang attributes. Output these values on the  \"table\" element or the \"ul\" element. Output the values of the  \"errorStyle\", \"fatalStyle\", \"infoStyle\", \"warnStyle\" attributes as  the value of the \"style\" attribute on either the \"tr\" element or  the \"li\" element. Output the values of the \"errorClass\",  \"fatalClass\", \"infoClass\", \"warnClass\" attributes as the value of  the \"class\" attribute on either the \"tr\" element or the \"li\"  element. The component is a `UIMessages`, and  there is  no \"for\" attribute. Therefore, use either `null`  to  obtain the messages from the `FacesContext`  or the empty  string if the components \"globalOnly\" property is  `true`. If the layout was \"table\" close out  the table  elements, otherwise, close out the list elements.</p>",
+        "description": "The  same as for the  Message renderer, but output all the messages. If an \"id\" attribute has been  specified,  it must be rendered on the outermost markup corresponding to this  component. If the value of the \"layout\" attribute is  \"table\", render nested \"table\", \"tr\", and \"td\" elements, in that  order. If the value of the \"layout\" attribute is \"list\", or the  \"layout\" attribute is not specified, render nested \"ul\", \"li\"  elements, in that order. Output the value of the \"style\" attribute  as the value of the \"style\" attribute, output the value of the  \"styleClass\" attribute as the value of the \"class\" attribute, and  output the dir and lang attributes. Output these values on the  \"table\" element or the \"ul\" element. Output the values of the  \"errorStyle\", \"fatalStyle\", \"infoStyle\", \"warnStyle\" attributes as  the value of the \"style\" attribute on either the \"tr\" element or  the \"li\" element. Output the values of the \"errorClass\",  \"fatalClass\", \"infoClass\", \"warnClass\" attributes as the value of  the \"class\" attribute on either the \"tr\" element or the \"li\"  element. The component is a `UIMessages`, and  there is  no \"for\" attribute. Therefore, use either `null`  to  obtain the messages from the `FacesContext`  or the empty  string if the components \"globalOnly\" property is  `true`. If the layout was \"table\" close out  the table  elements, otherwise, close out the list elements.",
         "attributes": [
             {
                 "name": "for",
@@ -2943,7 +2969,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:outputFormat": {
         "name": "h:outputFormat",
-        "description": "Render parameterized text. Obtain the  `style`, `styleClass`,  `dir`, and  `lang` attributees from this component. If  any are  present, render a \"span\" element. Output the  `styleClass` attribute (if present) as the  value of the  `class` attribute. Output the `style`  attribute as the value of the `style`  attribute.  Output the `dir` and `lang`  attributes as  pass through attributes. Accrue a list of the values of all child  `UIParameter` components of this component.  If there  are one or more accumulated parameter values, convert the list of  parameter values to an `Object` array, call  `MessageFormat.format()`, passing the  `value` of this component as the first  argument, and  the array of parameter values as the second argument, and render  the result. Otherwise, render the `value` of  this  component unmodified.</p>",
+        "description": "Render parameterized text. Obtain the  `style`, `styleClass`,  `dir`, and  `lang` attributees from this component. If  any are  present, render a \"span\" element. Output the  `styleClass` attribute (if present) as the  value of the  `class` attribute. Output the `style`  attribute as the value of the `style`  attribute.  Output the `dir` and `lang`  attributes as  pass through attributes. Accrue a list of the values of all child  `UIParameter` components of this component.  If there  are one or more accumulated parameter values, convert the list of  parameter values to an `Object` array, call  `MessageFormat.format()`, passing the  `value` of this component as the first  argument, and  the array of parameter values as the second argument, and render  the result. Otherwise, render the `value` of  this  component unmodified.",
         "attributes": [
             {
                 "name": "converter",
@@ -3002,7 +3028,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -3143,7 +3169,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -3319,18 +3345,18 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:outputStylesheet": {
         "name": "h:outputStylesheet",
-        "description": "Render the markup for a `<link>` element that  renders the style `Resource` specified by the optional  `name` and `library` attributes.</p>",
+        "description": "Render the markup for a `<link>` element that  renders the style `Resource` specified by the optional  `name` and `library` attributes.",
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -3396,18 +3422,18 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:outputScript": {
         "name": "h:outputScript",
-        "description": "Render the markup for a `<script>` element that  renders the script `Resource` specified by the optional  `name` attribute and `library` attributes.</p>",
+        "description": "Render the markup for a `<script>` element that  renders the script `Resource` specified by the optional  `name` attribute and `library` attributes.",
         "attributes": [
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -3588,7 +3614,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
@@ -3631,7 +3657,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:selectBooleanCheckbox": {
         "name": "h:selectBooleanCheckbox",
-        "description": "Renders an HTML \"input\" element of type \"checkbox\".</p>",
+        "description": "Renders an HTML \"input\" element of type \"checkbox\".",
         "attributes": [
             {
                 "name": "converter",
@@ -3685,7 +3711,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -3815,14 +3841,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:selectManyCheckbox": {
         "name": "h:selectManyCheckbox",
-        "description": "Render an HTML checkbox  list.</p>",
+        "description": "Render an HTML checkbox  list.",
         "attributes": [
             {
                 "name": "converter",
@@ -3876,7 +3902,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -3891,7 +3917,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "collectionType",
-                "description": "<p class=\"changed_modified_2_0\"> Optional  attribute that is a literal string that is the fully qualified  class name of a concrete class that implements  `java.util.Collection`, or an EL  expression that  evaluates to either 1. such a String, or 2. the  `Class` object itself. </p>",
+                "description": "<p class=\"changed_modified_2_0\"> Optional  attribute that is a literal string that is the fully qualified  class name of a concrete class that implements  `java.util.Collection`, or an EL  expression that  evaluates to either 1. such a String, or 2. the  `Class` object itself.",
                 "type": "string"
             },
             {
@@ -3916,7 +3942,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "hideNoSelectionOption",
-                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.</p>",
+                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.",
                 "type": "boolean"
             },
             {
@@ -4046,14 +4072,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:selectManyListbox": {
         "name": "h:selectManyListbox",
-        "description": "Render an HTML option  list.</p>",
+        "description": "Render an HTML option  list.",
         "attributes": [
             {
                 "name": "converter",
@@ -4107,7 +4133,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -4117,7 +4143,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "collectionType",
-                "description": "<p class=\"changed_modified_2_0\"> Optional  attribute that is a literal string that is the fully qualified  class name of a concrete class that implements  `java.util.Collection`, or an EL  expression that  evaluates to either 1. such a String, or 2. the  `Class` object itself. </p>",
+                "description": "<p class=\"changed_modified_2_0\"> Optional  attribute that is a literal string that is the fully qualified  class name of a concrete class that implements  `java.util.Collection`, or an EL  expression that  evaluates to either 1. such a String, or 2. the  `Class` object itself.",
                 "type": "string"
             },
             {
@@ -4142,7 +4168,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "hideNoSelectionOption",
-                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.</p>",
+                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.",
                 "type": "boolean"
             },
             {
@@ -4257,14 +4283,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:selectManyMenu": {
         "name": "h:selectManyMenu",
-        "description": "Render an HTML option  list.</p>",
+        "description": "Render an HTML option  list.",
         "attributes": [
             {
                 "name": "converter",
@@ -4318,7 +4344,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -4328,7 +4354,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "collectionType",
-                "description": "<p class=\"changed_modified_2_0\"> Optional  attribute that is a literal string that is the fully qualified  class name of a concrete class that implements  `java.util.Collection`, or an EL  expression that  evaluates to either 1. such a String, or 2. the  `Class` object itself. </p>",
+                "description": "<p class=\"changed_modified_2_0\"> Optional  attribute that is a literal string that is the fully qualified  class name of a concrete class that implements  `java.util.Collection`, or an EL  expression that  evaluates to either 1. such a String, or 2. the  `Class` object itself.",
                 "type": "string"
             },
             {
@@ -4353,7 +4379,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "hideNoSelectionOption",
-                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.</p>",
+                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.",
                 "type": "boolean"
             },
             {
@@ -4463,14 +4489,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:selectOneListbox": {
         "name": "h:selectOneListbox",
-        "description": "Render an HTML option list.</p>",
+        "description": "Render an HTML option list.",
         "attributes": [
             {
                 "name": "converter",
@@ -4524,7 +4550,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -4554,7 +4580,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "hideNoSelectionOption",
-                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.</p>",
+                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.",
                 "type": "boolean"
             },
             {
@@ -4669,14 +4695,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:selectOneMenu": {
         "name": "h:selectOneMenu",
-        "description": "Render an HTML option list.</p>",
+        "description": "Render an HTML option list.",
         "attributes": [
             {
                 "name": "converter",
@@ -4730,7 +4756,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -4760,7 +4786,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "hideNoSelectionOption",
-                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.</p>",
+                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.",
                 "type": "boolean"
             },
             {
@@ -4870,14 +4896,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:selectOneRadio": {
         "name": "h:selectOneRadio",
-        "description": "Render a set of html \"input\" elements of type \"radio\".</p>",
+        "description": "Render a set of html \"input\" elements of type \"radio\".",
         "attributes": [
             {
                 "name": "converter",
@@ -4931,7 +4957,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "valueChangeListener",
-                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".  </p>",
+                "description": "MethodExpression representing a value change listener method  that will be notified when a new value has been set for this  input component. The expression must evaluate to a public  method that takes a `ValueChangeEvent`  parameter,  with a return type of void, or  to a public method that takes no arguments with a return type  of void. In the latter case, the method has no way of easily  knowing what the new value is, but this can be useful in cases  where a notification is needed that \"this value  changed\".",
                 "type": "string"
             },
             {
@@ -4966,7 +4992,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "hideNoSelectionOption",
-                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.</p>",
+                "description": "<p class=\"changed_modified_2_0\">  Flag indicating that, if this component is activated by the  user,  The \"no selection option\", if any, must be hidden.",
                 "type": "boolean"
             },
             {
@@ -5086,14 +5112,14 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             }
         ]
     },
     "h:column": {
         "name": "h:column",
-        "description": "Renders a UIComponent that represents a single column of  data within a parent `UIData` component.</p>",
+        "description": "Renders a UIComponent that represents a single column of  data within a parent `UIData` component.",
         "attributes": [
             {
                 "name": "rendered",
@@ -5129,7 +5155,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:inputFile": {
         "name": "h:inputFile",
-        "description": "<p class=\"changed_added_2_2\">Renders  an HTML \"input\" element of \"type\" \"file\". The standard HTML_BASIC  RenderKit specifies behavior that assumes Servlet 3.0 or later.  Portlet implementations must override this implementation with a  semantically equivalent one that functions under the constraints  of the Portlet specification.</p>",
+        "description": "<p class=\"changed_added_2_2\">Renders  an HTML \"input\" element of \"type\" \"file\". The standard HTML_BASIC  RenderKit specifies behavior that assumes Servlet 3.0 or later.  Portlet implementations must override this implementation with a  semantically equivalent one that functions under the constraints  of the Portlet specification.",
         "attributes": [
             {
                 "name": "converter",
@@ -5283,7 +5309,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "role",
-                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.  </p>",
+                "description": "<p class=\"changed_added_2_2\">Per the WAI-ARIA spec and its  relationship to HTML5 (Section title ARIA Role Attriubute),  every HTML element may have a \"role\" attribute whose value  must be passed through unmodified on the element on which it  is declared in the final rendered markup. The attribute, if  specified, must have a value that is a string literal that is,  or an EL Expression that evaluates to, a set of  space-separated tokens representing the various WAI-ARIA roles  that the element belongs to.",
                 "type": "string"
             },
             {
@@ -5315,7 +5341,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "h:doctype": {
         "name": "h:doctype",
-        "description": "Render the markup for  a `<!DOCTYPE>` declaration.</p>",
+        "description": "Render the markup for  a `<!DOCTYPE>` declaration.",
         "attributes": [
             {
                 "name": "converter",
@@ -5356,11 +5382,11 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "ui:component": {
         "name": "ui:component",
-        "description": "This tag is the same as  `ui:composition`, except for two things: Faces creates a  component and adds it directly to the tree, and there's no associated  template.  </p>",
+        "description": "This tag is the same as  `ui:composition`, except for two things: Faces creates a  component and adds it directly to the tree, and there's no associated  template.",
         "attributes": [
             {
                 "name": "id",
-                "description": "The identifier of the component that Faces inserts into the  component tree. If an identifier is  not explicitly specified by the page author, Faces will assign an  identifier based on the algorithm  that it uses for all components.  </p>",
+                "description": "The identifier of the component that Faces inserts into the  component tree. If an identifier is  not explicitly specified by the page author, Faces will assign an  identifier based on the algorithm  that it uses for all components.",
                 "type": "string"
             },
             {
@@ -5388,11 +5414,11 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "ui:debug": {
         "name": "ui:debug",
-        "description": "When the `ui:debug` tag is placed in an XHTML  page, it creates a component and adds it to the  component tree. That debug component captures debugging information,  namely the current state of the component  tree and the scoped variables in the application, when the component  is rendered. If the user presses CTRL + SHIFT + d,  Faces opens a window that shows the debugging information captured by  the debug component.  </p>",
+        "description": "When the `ui:debug` tag is placed in an XHTML  page, it creates a component and adds it to the  component tree. That debug component captures debugging information,  namely the current state of the component  tree and the scoped variables in the application, when the component  is rendered. If the user presses CTRL + SHIFT + d,  Faces opens a window that shows the debugging information captured by  the debug component.",
         "attributes": [
             {
                 "name": "hotkey",
-                "description": "Defines a single character, that, pressed in conjunction with  CTRL and SHIFT, will display the Faces debug window.  By default, the hotkey is 'd'. <em>The value for the  hotkey attribute cannot be an EL expression.</em>  </p>",
+                "description": "Defines a single character, that, pressed in conjunction with  CTRL and SHIFT, will display the Faces debug window.  By default, the hotkey is 'd'. <em>The value for the  hotkey attribute cannot be an EL expression.</em>",
                 "type": "string"
             },
             {
@@ -5404,12 +5430,13 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "ui:define": {
         "name": "ui:define",
-        "description": "The `define` tag defines content  that is inserted into a page by a template. The `define`  tag can be used inside `ui:composition`, `ui:component`,  `ui:decorate`, and `ui:fragment`  tags.</p>",
+        "description": "The `define` tag defines content  that is inserted into a page by a template. The `define`  tag can be used inside `ui:composition`, `ui:component`,  `ui:decorate`, and `ui:fragment`  tags.",
         "attributes": [
             {
                 "name": "name",
-                "description": "Assigns a name to the content inside a `define`  tag. That name is used by corresponding `ui:insert`  tags in a template that insert the named content into a page.</p>",
-                "type": "string"
+                "description": "Assigns a name to the content inside a `define`  tag. That name is used by corresponding `ui:insert`  tags in a template that insert the named content into a page.",
+                "type": "string",
+                "required": true
             }
         ]
     },
@@ -5426,7 +5453,7 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
     },
     "ui:fragment": {
         "name": "ui:fragment",
-        "description": "The `fragment`  tag is identical to the `component` tag, except  that `ui:fragment`, unlike  `ui:component`, Faces does not disregard all content  outside of the tag.</p>",
+        "description": "The `fragment`  tag is identical to the `component` tag, except  that `ui:fragment`, unlike  `ui:component`, Faces does not disregard all content  outside of the tag.",
         "attributes": [
             {
                 "name": "id",
@@ -5435,30 +5462,31 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "binding",
-                "description": "Binds the component to a backing bean property, as specified  in section 3.1.5 \"Component Bindings\" of the Jakarta Faces Specification Document.  The  Java language type of this property must be a class that extends  `jakarta.faces.component.UIComponent`. The scope of  the bean on which this property resides must be no wider than  request scope. If either of these conditions are not met, the  results are undefined.</p>",
+                "description": "Binds the component to a backing bean property, as specified  in section 3.1.5 \"Component Bindings\" of the Jakarta Faces Specification Document.  The  Java language type of this property must be a class that extends  `jakarta.faces.component.UIComponent`. The scope of  the bean on which this property resides must be no wider than  request scope. If either of these conditions are not met, the  results are undefined.",
                 "type": "string"
             },
             {
                 "name": "rendered",
-                "description": "Controls whether the fragment component is rendered.  Valid values for this attribute are either the strings  \"true\" or \"false\" or an EL expression that evaluates to  either \"true\" or \"false\".  </p>",
+                "description": "Controls whether the fragment component is rendered.  Valid values for this attribute are either the strings  \"true\" or \"false\" or an EL expression that evaluates to  either \"true\" or \"false\".",
                 "type": "string"
             }
         ]
     },
     "ui:include": {
         "name": "ui:include",
-        "description": "Use this tag &mdash;which  is very similar to JSP's `jsp:include` &mdash; to  encapsulate and reuse content among multiple XHTML  pages. There are three things this tag can include: plain  XHTML, and XHTML pages that have either a  `composition` tag or a `component`  tag. </p>",
+        "description": "Use this tag &mdash;which  is very similar to JSP's `jsp:include` &mdash; to  encapsulate and reuse content among multiple XHTML  pages. There are three things this tag can include: plain  XHTML, and XHTML pages that have either a  `composition` tag or a `component`  tag.",
         "attributes": [
             {
                 "name": "src",
                 "description": "The filename of an XHTML page to include. The filename is relative to the XHTML page that was originally loaded. When the included file is intended to come from a resource library contract, the value of this attribute must be an absolute path starting with \"/\".",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
     "ui:insert": {
         "name": "ui:insert",
-        "description": "Inserts content into a template. That content is defined &mdash;with  the `ui:define` tag &mdash; in either a  `ui:composition`, `ui:component`,  `ui:decorate`, or `ui:fragment`.</p>",
+        "description": "Inserts content into a template. That content is defined &mdash;with  the `ui:define` tag &mdash; in either a  `ui:composition`, `ui:component`,  `ui:decorate`, or `ui:fragment`.",
         "attributes": [
             {
                 "name": "name",
@@ -5474,156 +5502,162 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "The name of the parameter.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "value",
                 "description": "The value of the  parameter. Notice that this attribute's value can be an EL expression,  which means that you can pass objects to either an included file or a  template.",
-                "type": "string"
+                "type": "string",
+                "required": true
             }
         ]
     },
     "ui:repeat": {
         "name": "ui:repeat",
-        "description": "Use this tag as an alternative to  `h:dataTable` or `c:forEach`</p>",
+        "description": "Use this tag as an alternative to  `h:dataTable` or `c:forEach`",
         "attributes": [
             {
                 "name": "begin",
-                "description": "If value specified: Iteration begins at the item located at the specified index.  First item of the collection has index 0.  If value not specified: Iteration begins with index set at the specified value.  </p>",
+                "description": "If value specified: Iteration begins at the item located at the specified index.  First item of the collection has index 0.  If value not specified: Iteration begins with index set at the specified value.",
                 "type": "string"
             },
             {
                 "name": "end",
-                "description": "If value specified: Iteration ends at the item located at the specified index (inclusive).  If value not specified: Iteration ends when index reaches the specified value (inclusive).  </p>",
+                "description": "If value specified: Iteration ends at the item located at the specified index (inclusive).  If value not specified: Iteration ends when index reaches the specified value (inclusive).",
                 "type": "string"
             },
             {
                 "name": "offset",
-                "description": "Read-write property setting the offset from the  beginning of the  collection from which to start the iteration. If not set, this  offset  is not considered and iteration will start at the beginning of  the  collection.</p>",
+                "description": "Read-write property setting the offset from the  beginning of the  collection from which to start the iteration. If not set, this  offset  is not considered and iteration will start at the beginning of  the  collection.",
                 "type": "string"
             },
             {
                 "name": "size",
-                "description": "Read-write property setting the size of the collection  to iterate.  If this value is less than the actual size of the collection, a  `FacesException` must be thrown.</p>",
+                "description": "Read-write property setting the size of the collection  to iterate.  If this value is less than the actual size of the collection, a  `FacesException` must be thrown.",
                 "type": "string"
             },
             {
                 "name": "step",
-                "description": "Iteration  will only process every step items of the collection,  starting with the first one.</p>",
+                "description": "Iteration  will only process every step items of the collection,  starting with the first one.",
                 "type": "string"
             },
             {
                 "name": "value",
-                "description": "The name of a collection of items that this tag  iterates over. The  collection may be a `List`, `array`,  `java.sql.ResultSet`, `java.lang.Iterable`,  `java.util.Map` or an individual java Object. If the  collection is null, this tag does nothing.</p>",
-                "type": "string"
+                "description": "The name of a collection of items that this tag  iterates over. The  collection may be a `List`, `array`,  `java.sql.ResultSet`, `java.lang.Iterable`,  `java.util.Map` or an individual java Object. If the  collection is null, this tag does nothing.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "var",
-                "description": "Name of the exported scoped variable for the current item of  the iteration. This scoped variable has nested visibility.  </p>",
-                "type": "string"
+                "description": "Name of the exported scoped variable for the current item of  the iteration. This scoped variable has nested visibility.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "varStatus",
-                "description": "Name of the exported request scoped variable for the status  of the iteration. The object the name points to is a POJO  with the following read-only JavaBeans properties. This  scoped variable has nested visibility.  </p>",
+                "description": "Name of the exported request scoped variable for the status  of the iteration. The object the name points to is a POJO  with the following read-only JavaBeans properties. This  scoped variable has nested visibility.",
                 "type": "string"
             },
             {
                 "name": "rendered",
-                "description": "Controls whether the repeat component is rendered.  Valid values for this attribute are either the strings  \"true\" or \"false\" or an EL expression that evaluates to  either \"true\" or \"false\".  </p>",
+                "description": "Controls whether the repeat component is rendered.  Valid values for this attribute are either the strings  \"true\" or \"false\" or an EL expression that evaluates to  either \"true\" or \"false\".",
                 "type": "string"
             }
         ]
     },
     "ui:remove": {
         "name": "ui:remove",
-        "description": "Remove content from a page.</p>",
+        "description": "Remove content from a page.",
         "attributes": []
     },
     "cc:actionSource": {
         "name": "cc:actionSource",
-        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `ActionSource2` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `ActionSource2` may be attached to the composite component. Consider this excerpt from <em>the using page</em>:  </p>",
+        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `ActionSource2` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `ActionSource2` may be attached to the composite component. Consider this excerpt from <em>the using page</em>:",
         "attributes": [
             {
                 "name": "name",
-                "description": "The value of this attribute maps back to the \"for\" attribute on an attachable object  nested within a composite component. If the \"targets\" attribute is not specified,  this value also represents the component ID of the target component within the  that the `<cc:implementation>`  ActionListener should be mapped to. </p>",
-                "type": "string"
+                "description": "The value of this attribute maps back to the \"for\" attribute on an attachable object  nested within a composite component. If the \"targets\" attribute is not specified,  this value also represents the component ID of the target component within the  that the `<cc:implementation>`  ActionListener should be mapped to.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "targets",
-                "description": "If present, this must be a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema.</p>",
+                "description": "If present, this must be a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema.",
                 "type": "string"
             },
             {
                 "name": "hidden",
-                "description": "The \"hidden\" flag is used to identify features that are intended only for tool use, and which should not be exposed to humans.</p>",
+                "description": "The \"hidden\" flag is used to identify features that are intended only for tool use, and which should not be exposed to humans.",
                 "type": "string"
             }
         ]
     },
     "cc:attribute": {
         "name": "cc:attribute",
-        "description": "If this element has a `method-signature` attribute, the value of the `targets` attribute must be interpreted as a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema. Each entry in the list must be interpreted as the id of an inner component to which the `MethodExpression` from the <em>composite component tag</em> in the <em>using page</em> must be applied. If this element has a `method-signature` attribute, but no `targets` attribute, the value of the `name` attribute is used as the single entry in the list. If the value of the `name` attribute is **not** one of the special values listed in the description of the `name attribute`, `targets` (or its derived value) need not correspond to the id of an inner component.</p>",
+        "description": "If this element has a `method-signature` attribute, the value of the `targets` attribute must be interpreted as a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema. Each entry in the list must be interpreted as the id of an inner component to which the `MethodExpression` from the <em>composite component tag</em> in the <em>using page</em> must be applied. If this element has a `method-signature` attribute, but no `targets` attribute, the value of the `name` attribute is used as the single entry in the list. If the value of the `name` attribute is **not** one of the special values listed in the description of the `name attribute`, `targets` (or its derived value) need not correspond to the id of an inner component.",
         "attributes": [
             {
                 "name": "default",
-                "description": "If this attribute is not required, and a  value is not supplied by the page author, use this as  the default value.</p>",
+                "description": "If this attribute is not required, and a  value is not supplied by the page author, use this as  the default value.",
                 "type": "string"
             },
             {
                 "name": "displayName",
-                "description": "The name to display in a tool palette  containing this component. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "The name to display in a tool palette  containing this component. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "expert",
-                "description": "Is this component only for expert users?  The value of this attribute will be set as the value for  this property on the <em>composite component bean  descriptor</em>.</p>",
+                "description": "Is this component only for expert users?  The value of this attribute will be set as the value for  this property on the <em>composite component bean  descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "hidden",
-                "description": "The \"hidden\" flag is used to identify features that are intended only  for tool use, and which should not be exposed to humans. The value of  this attribute will be set as the value for this property on the  <em>composite component bean descriptor</em>.</p>",
+                "description": "The \"hidden\" flag is used to identify features that are intended only  for tool use, and which should not be exposed to humans. The value of  this attribute will be set as the value for this property on the  <em>composite component bean descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "method-signature",
-                "description": "Declares that this attribute must be a `MethodExpression` whose method signature is described by the value of this attribute. The signature must be described using fully qualified class names wherever a type is required. This attribute is mutually exclusive with the \"type\" attribute. If both attributes are present, the \"method-signature\" attribute is ignored.</p>",
+                "description": "Declares that this attribute must be a `MethodExpression` whose method signature is described by the value of this attribute. The signature must be described using fully qualified class names wherever a type is required. This attribute is mutually exclusive with the \"type\" attribute. If both attributes are present, the \"method-signature\" attribute is ignored.",
                 "type": "string"
             },
             {
                 "name": "name",
                 "description": "The name of the attribute as it must appear on the <em>composite component tag</em> in the <em>using page</em>. If the value of the <em>name</em> attribute is equal to (without the quotes) &#8220;action&#8221;, &#8220;actionListener&#8221;, &#8220;validator&#8221;, or &#8220;valueChangeListener&#8221;, the action described in ViewHandler.retargetMethodExpressions() must be taken to handle the attribute. In these cases, the `method-signature` attribute, if present, must be ignored as its value is derived as described in `retargetMethodExpressions()`.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "preferred",
-                "description": "Is this a \"preferred\" component. The value  of this attribute will be set as the value for this  property on the <em>composite component bean  descriptor</em>.</p>",
+                "description": "Is this a \"preferred\" component. The value  of this attribute will be set as the value for this  property on the <em>composite component bean  descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "required",
-                "description": "True if the page author must supply a value  for this attribute. The default value is false.</p>",
+                "description": "True if the page author must supply a value  for this attribute. The default value is false.",
                 "type": "string"
             },
             {
                 "name": "shortDescription",
-                "description": "A short description of the purpose of this  component. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "A short description of the purpose of this  component. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "targets",
-                "description": "If this element has a `method-signature` attribute, the value of the `targets` attribute must be interpreted as a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema. Each entry in the list must be interpreted as the id of an inner component to which the `MethodExpression` from the <em>composite component tag</em> in the <em>using page</em> must be applied. If this element has a `method-signature` attribute, but no `targets` attribute, the value of the `name` attribute is used as the single entry in the list. If the value of the `name` attribute is **not** one of the special values listed in the description of the `name attribute`, `targets` (or its derived value) need not correspond to the id of an inner component.</p>",
+                "description": "If this element has a `method-signature` attribute, the value of the `targets` attribute must be interpreted as a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema. Each entry in the list must be interpreted as the id of an inner component to which the `MethodExpression` from the <em>composite component tag</em> in the <em>using page</em> must be applied. If this element has a `method-signature` attribute, but no `targets` attribute, the value of the `name` attribute is used as the single entry in the list. If the value of the `name` attribute is **not** one of the special values listed in the description of the `name attribute`, `targets` (or its derived value) need not correspond to the id of an inner component.",
                 "type": "string"
             },
             {
                 "name": "type",
-                "description": "Declares that this attribute must be a `ValueExpression`  whose expected type is given by the value of this attribute. If  not  specified, and no \"method-signature\" attribute is present,  `java.lang.Object` is assumed. This  attribute is mutually  exclusive with the \"method-signature\" attribute. If both attributes are  present, the  \"method-signature\" attribute is ignored. </p>",
+                "description": "Declares that this attribute must be a `ValueExpression`  whose expected type is given by the value of this attribute. If  not  specified, and no \"method-signature\" attribute is present,  `java.lang.Object` is assumed. This  attribute is mutually  exclusive with the \"method-signature\" attribute. If both attributes are  present, the  \"method-signature\" attribute is ignored.",
                 "type": "string"
             }
         ]
     },
     "cc:clientBehavior": {
         "name": "cc:clientBehavior",
-        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `ClientBehaviorHolder` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `ClientBehaviorHolder` may be attached to the composite component.</p>",
+        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `ClientBehaviorHolder` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `ClientBehaviorHolder` may be attached to the composite component.",
         "attributes": [
             {
                 "name": "default",
@@ -5632,183 +5666,189 @@ export const JSF_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "event",
-                "description": "The evaluated value of this attribute will be passed as the first argument to the `addClientBehavior()` method on `ClientBehaviorHolder`.</p>",
+                "description": "The evaluated value of this attribute will be passed as the first argument to the `addClientBehavior()` method on `ClientBehaviorHolder`.",
                 "type": "string"
             },
             {
                 "name": "name",
-                "description": "The value of this attribute maps back to the \"for\" attribute on an attachable object  nested within a composite component. If the \"targets\" attribute is not specified,  this value also represents the component ID of the target component within the  that the `<cc:implementation>`  to which the ActionListener should be mapped. </p>",
-                "type": "string"
+                "description": "The value of this attribute maps back to the \"for\" attribute on an attachable object  nested within a composite component. If the \"targets\" attribute is not specified,  this value also represents the component ID of the target component within the  that the `<cc:implementation>`  to which the ActionListener should be mapped.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "targets",
-                "description": "If present, this must be a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema.</p>",
+                "description": "If present, this must be a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema.",
                 "type": "string"
             }
         ]
     },
     "cc:editableValueHolder": {
         "name": "cc:editableValueHolder",
-        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `EditableValueHolder` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `EditableValueHolder` may be attached to the composite component.The example from `<cc:valueHolder>` still applies.  </p>",
+        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `EditableValueHolder` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `EditableValueHolder` may be attached to the composite component.The example from `<cc:valueHolder>` still applies.",
         "attributes": [
             {
                 "name": "name",
-                "description": "The value of this attribute maps back to the \"for\" attribute on  an attachable object  nested within a composite component. If the \"targets\" attribute  is not specified,  this value also represents the component ID of the target  component within the  that the `<cc:implementation>`  to which the ActionListener should be mapped.  </p>",
-                "type": "string"
+                "description": "The value of this attribute maps back to the \"for\" attribute on  an attachable object  nested within a composite component. If the \"targets\" attribute  is not specified,  this value also represents the component ID of the target  component within the  that the `<cc:implementation>`  to which the ActionListener should be mapped.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "targets",
-                "description": "If present, this must be a space (not tab) separated  list of client  ids (relative to the <em>top level component</em>)  of components within  the `<cc:implementation>`  section. Space is  used as the delimiter for compatibility with the IDREFS and  NMTOKENS  data types from the XML Schema.</p>",
+                "description": "If present, this must be a space (not tab) separated  list of client  ids (relative to the <em>top level component</em>)  of components within  the `<cc:implementation>`  section. Space is  used as the delimiter for compatibility with the IDREFS and  NMTOKENS  data types from the XML Schema.",
                 "type": "string"
             }
         ]
     },
     "cc:extension": {
         "name": "cc:extension",
-        "description": "Used within a `<cc:interface>`  section,  within any sub-element of that section, to include XML content not  defined by this specification. This element can be used to  incorporate  JSR-276  metadata into a composite component.</p>",
+        "description": "Used within a `<cc:interface>`  section,  within any sub-element of that section, to include XML content not  defined by this specification. This element can be used to  incorporate  JSR-276  metadata into a composite component.",
         "attributes": []
     },
     "cc:facet": {
         "name": "cc:facet",
-        "description": "Declares that this composite component supports a facet  with the  name given by the value of the \"name\" attribute. </p>",
+        "description": "Declares that this composite component supports a facet  with the  name given by the value of the \"name\" attribute.",
         "attributes": [
             {
                 "name": "displayName",
-                "description": "The name to display in a tool palette  containing this component. The value of this attribute will be  set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "The name to display in a tool palette  containing this component. The value of this attribute will be  set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "expert",
-                "description": "Is this facet only for expert users?  The value of this attribute will be set as the value for  this property on the <em>composite component bean  descriptor</em>.</p>",
+                "description": "Is this facet only for expert users?  The value of this attribute will be set as the value for  this property on the <em>composite component bean  descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "hidden",
-                "description": "The \"hidden\" flag is used to identify features that are intended only  for tool use, and which should not be exposed to humans.</p>",
+                "description": "The \"hidden\" flag is used to identify features that are intended only  for tool use, and which should not be exposed to humans.",
                 "type": "string"
             },
             {
                 "name": "name",
-                "description": "The name of the attribute as it must appear  on the <em>composite component tag</em> in the  <em>using page</em>.</p>",
-                "type": "string"
+                "description": "The name of the attribute as it must appear  on the <em>composite component tag</em> in the  <em>using page</em>.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "preferred",
-                "description": "Is this a \"preferred\" facet. The value  of this attribute will be set as the value for this  property on the <em>composite component bean  descriptor</em>.</p>",
+                "description": "Is this a \"preferred\" facet. The value  of this attribute will be set as the value for this  property on the <em>composite component bean  descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "required",
-                "description": "True if the page author must supply a facet with this  name.</p>",
+                "description": "True if the page author must supply a facet with this  name.",
                 "type": "string"
             },
             {
                 "name": "shortDescription",
-                "description": "A short description of the purpose of this  facet. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "A short description of the purpose of this  facet. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             }
         ]
     },
     "cc:implementation": {
         "name": "cc:implementation",
-        "description": "Defines the implementation of the composite  component. There must be zero or one of these in a  composite component markup file. If a  `<cc:interface>` element appears,  there must be a corresponding  `<composite-implementation>` element. If no  `<cc:interface>` element appears,  the `<composite-implementation>` element is  optional. </p>",
+        "description": "Defines the implementation of the composite  component. There must be zero or one of these in a  composite component markup file. If a  `<cc:interface>` element appears,  there must be a corresponding  `<composite-implementation>` element. If no  `<cc:interface>` element appears,  the `<composite-implementation>` element is  optional.",
         "attributes": []
     },
     "cc:insertChildren": {
         "name": "cc:insertChildren",
-        "description": "This element is used in the  `<cc:implementation>`  section. Any child  components or template text within the composite component tag in  the  using page will be re-parented into the composite component at the  point  indicated by this tag's placement within the  `<cc:implementation>`  section. The normal  use-case for this element is to have only one occurrence within the  `<cc:implementation>`  section. Inserting  multiple occurrences may cause duplicate id errors. The results are  undefined if there are multiple occurrences of this element in the  `<cc:implementation>`  section.</p>",
+        "description": "This element is used in the  `<cc:implementation>`  section. Any child  components or template text within the composite component tag in  the  using page will be re-parented into the composite component at the  point  indicated by this tag's placement within the  `<cc:implementation>`  section. The normal  use-case for this element is to have only one occurrence within the  `<cc:implementation>`  section. Inserting  multiple occurrences may cause duplicate id errors. The results are  undefined if there are multiple occurrences of this element in the  `<cc:implementation>`  section.",
         "attributes": []
     },
     "cc:insertFacet": {
         "name": "cc:insertFacet",
-        "description": "The presence of this tag in a `<cc:implementation>` section must cause the named facet to be taken from the facet map of the <em>top level component</em> and inserted as a facet child of the component in which this element is nested. The results are undefined if there are facets in the composite component tag in the using page, but there is no correspondingly named occurrence of this element in the `<cc:implementation>` section.</p>",
+        "description": "The presence of this tag in a `<cc:implementation>` section must cause the named facet to be taken from the facet map of the <em>top level component</em> and inserted as a facet child of the component in which this element is nested. The results are undefined if there are facets in the composite component tag in the using page, but there is no correspondingly named occurrence of this element in the `<cc:implementation>` section.",
         "attributes": [
             {
                 "name": "name",
-                "description": "The name of the facet child on the <em>top level  component</em> which  must be inserted as a facet child of the component in which this  element  is nested.</p>",
-                "type": "string"
+                "description": "The name of the facet child on the <em>top level  component</em> which  must be inserted as a facet child of the component in which this  element  is nested.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "required",
-                "description": "If `true`, and there is no such  facet present on the top  level component, a `TagException` must be  thrown, containing  the `Location`, the facet name, and a  localized descriptive  error message.</p>",
+                "description": "If `true`, and there is no such  facet present on the top  level component, a `TagException` must be  thrown, containing  the `Location`, the facet name, and a  localized descriptive  error message.",
                 "type": "string"
             }
         ]
     },
     "cc:interface": {
         "name": "cc:interface",
-        "description": "This  element declares the usage contract for a composite  component. Optionally, and at the component author's  discretion, this contract exposes the features of one or  more inner components to the page author. The page author  can work with the composite component as a single component  whose feature set is the union of the features declared in  the usage contract.</p>",
+        "description": "This  element declares the usage contract for a composite  component. Optionally, and at the component author's  discretion, this contract exposes the features of one or  more inner components to the page author. The page author  can work with the composite component as a single component  whose feature set is the union of the features declared in  the usage contract.",
         "attributes": [
             {
                 "name": "componentType",
-                "description": "The `component-type` of the `UIComponent`  that  will serve as the <em>composite component root</em>  for this composite  component. The declared `component-family`  for this  component must be `jakarta.faces.NamingContainer`.</p>",
+                "description": "The `component-type` of the `UIComponent`  that  will serve as the <em>composite component root</em>  for this composite  component. The declared `component-family`  for this  component must be `jakarta.faces.NamingContainer`.",
                 "type": "string"
             },
             {
                 "name": "displayName",
-                "description": "The name to display in a tool palette  containing this component. The value of this attribute will be  set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "The name to display in a tool palette  containing this component. The value of this attribute will be  set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "expert",
-                "description": "Is this component only for expert users?  The value of this attribute will be set as the value for  this property on the <em>composite component bean  descriptor</em>.</p>",
+                "description": "Is this component only for expert users?  The value of this attribute will be set as the value for  this property on the <em>composite component bean  descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "hidden",
-                "description": "The \"hidden\" flag is used to identify features that are  intended only for tool use, and which should not be exposed to humans.</p>",
+                "description": "The \"hidden\" flag is used to identify features that are  intended only for tool use, and which should not be exposed to humans.",
                 "type": "string"
             },
             {
                 "name": "name",
-                "description": "The name of this composite component.  Advisory only. The real name is taken from the  filename. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "The name of this composite component.  Advisory only. The real name is taken from the  filename. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "preferred",
-                "description": "Is this a \"preferred\" component. The value  of this attribute will be set as the value for this  property on the <em>composite component bean  descriptor</em>.</p>",
+                "description": "Is this a \"preferred\" component. The value  of this attribute will be set as the value for this  property on the <em>composite component bean  descriptor</em>.",
                 "type": "string"
             },
             {
                 "name": "shortDescription",
-                "description": "A short description of the purpose of this  component. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.</p>",
+                "description": "A short description of the purpose of this  component. The value of this attribute will be set as  the value for this property on the <em>composite  component bean descriptor</em>.",
                 "type": "string"
             }
         ]
     },
     "cc:renderFacet": {
         "name": "cc:renderFacet",
-        "description": "This element is used in the `<cc:implementation>` section. The facet with the name equal to the value of the name attribute, given by the page author in the using page, will be rendered at this point in the composite component VDL view. </p>",
+        "description": "This element is used in the `<cc:implementation>` section. The facet with the name equal to the value of the name attribute, given by the page author in the using page, will be rendered at this point in the composite component VDL view.",
         "attributes": [
             {
                 "name": "name",
-                "description": "The value of the name attribute as it must appear on an `<f:facet>` tag nested within the <em>composite component tag</em> in the <em>using page</em>.</p>",
-                "type": "string"
+                "description": "The value of the name attribute as it must appear on an `<f:facet>` tag nested within the <em>composite component tag</em> in the <em>using page</em>.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "required",
-                "description": "If `true`, and there is no such  facet present on the top  level component, a `TagException` must be  thrown, containing  the `Location`, the facet name, and a  localized descriptive  error message.</p>",
+                "description": "If `true`, and there is no such  facet present on the top  level component, a `TagException` must be  thrown, containing  the `Location`, the facet name, and a  localized descriptive  error message.",
                 "type": "string"
             }
         ]
     },
     "cc:valueHolder": {
         "name": "cc:valueHolder",
-        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `ValueHolder` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `ValueHolder` may be attached to the composite component. Consider this excerpt from <em>the using page</em>:  </p>",
+        "description": "Declares that the composite component whose contract is declared by the `<cc:interface>` in which this element is nested exposes an implementation of `ValueHolder` suitable for use as the target of <em>attached objects</em> in <em>the using page</em>. Any attached objects suitable for implementations of `ValueHolder` may be attached to the composite component. Consider this excerpt from <em>the using page</em>:",
         "attributes": [
             {
                 "name": "hidden",
-                "description": "The \"hidden\" flag is used to identify features that are  intended only for tool use, and which should not be exposed to humans.</p>",
+                "description": "The \"hidden\" flag is used to identify features that are  intended only for tool use, and which should not be exposed to humans.",
                 "type": "string"
             },
             {
                 "name": "name",
-                "description": "The value of this attribute maps back to the \"for\" attribute on an attachable object  nested within a composite component. If the \"targets\" attribute is not specified,  this value also represents the component ID of the target component within the  that the `<cc:implementation>`  ActionListener should be mapped to. </p>",
-                "type": "string"
+                "description": "The value of this attribute maps back to the \"for\" attribute on an attachable object  nested within a composite component. If the \"targets\" attribute is not specified,  this value also represents the component ID of the target component within the  that the `<cc:implementation>`  ActionListener should be mapped to.",
+                "type": "string",
+                "required": true
             },
             {
                 "name": "targets",
-                "description": "If present, this must be a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema. </p></p>",
+                "description": "If present, this must be a space (not tab) separated list of client ids (relative to the <em>top level component</em>) of components within the `<cc:implementation>` section. Space is used as the delimiter for compatibility with the IDREFS and NMTOKENS data types from the XML Schema.",
                 "type": "string"
             }
         ]

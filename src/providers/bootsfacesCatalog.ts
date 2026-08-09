@@ -1,5 +1,6 @@
 import { JsfTag } from './jsfCatalog';
 
+export const BOOTSFACES_VERSION = '2.0.1';
 export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
     "b:accordion": {
         "name": "b:accordion",
@@ -775,7 +776,8 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "Label text.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "visible",
@@ -8070,7 +8072,8 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "The Label for the button dropdown.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "visible",
@@ -8486,7 +8489,8 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "The Label for the Dropdown.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "visible",
@@ -17464,7 +17468,8 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "value",
                 "description": "The value the ProgressBar should indicate. See the label attribute, if the exact value should be shown in text form.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "visible",
@@ -17861,7 +17866,8 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             {
                 "name": "name",
                 "description": "Name of the JavaScript function.",
-                "type": "string"
+                "type": "string",
+                "required": true
             },
             {
                 "name": "onclick",
@@ -18087,7 +18093,7 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "title",
-                "description": "Set a custom <a> title if required.",
+                "description": "Set a custom title if required.",
                 "type": "string"
             },
             {
@@ -19788,12 +19794,12 @@ export const BOOTSFACES_CATALOG: Record<string, JsfTag> = {
             },
             {
                 "name": "button-container",
-                "description": "HTML snippet of the container holding both the button as well as the dropdown. Default: <div class='btn-group' style='display:block' />. Note that the original definition of the widget doesn't use the style definition. We've added it to fix a rendering bug.",
+                "description": "HTML snippet of the container holding both the button as well as the dropdown. Default: . Note that the original definition of the widget doesn't use the style definition. We've added it to fix a rendering bug.",
                 "type": "string"
             },
             {
                 "name": "buttonContainer",
-                "description": "HTML snippet of the container holding both the button as well as the dropdown. Default: <div class='btn-group' style='display:block' />. Note that the original definition of the widget doesn't use the style definition. We've added it to fix a rendering bug.",
+                "description": "HTML snippet of the container holding both the button as well as the dropdown. Default: . Note that the original definition of the widget doesn't use the style definition. We've added it to fix a rendering bug.",
                 "type": "string"
             },
             {
